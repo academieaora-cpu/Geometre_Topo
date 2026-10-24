@@ -21,7 +21,8 @@ local…), seul l’adaptateur dans `astro.config.mjs` et ce document changent :
 
 1. Créer un projet sur supabase.com (région la plus proche : Europe, ex. Francfort).
 2. *Project Settings › Database › Connection string* : copier la chaîne **Transaction pooler** (port `6543`) → `DATABASE_URL`.
-3. Appliquer le schéma depuis un poste disposant de Node.js :
+3. Les tables sont **créées automatiquement** à la première demande reçue (schéma idempotent). Facultatif,
+   pour les créer à l’avance depuis un poste disposant de Node.js :
    ```bash
    DATABASE_URL="postgres://…:6543/postgres" npm run db:migrate
    ```
@@ -32,7 +33,10 @@ local…), seul l’adaptateur dans `astro.config.mjs` et ce document changent :
 > activité** et doit alors être réactivé manuellement. Pour un site professionnel, prévoir l’offre **Pro** ou l’option B.
 > Ne pas compter sur les requêtes de surveillance pour contourner cette règle.
 
-### Option B — Neon (alternative à faible coût)
+### Option B — Neon (alternative à faible coût, la plus simple)
+
+Vercel › projet › **Storage › Create Database › Neon** › *Connect* : la variable `DATABASE_URL` est ajoutée
+automatiquement au projet ; redéployer, c’est tout (les tables se créent seules).
 
 L’offre gratuite de Neon met la base en veille après quelques minutes d’inactivité mais **la réveille automatiquement**
 à la connexion suivante (délai d’environ une seconde) : aucune intervention manuelle. Utiliser la chaîne « pooled ».

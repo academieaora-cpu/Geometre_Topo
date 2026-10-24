@@ -41,6 +41,7 @@ export default defineConfig({
   env: {
     schema: {
       DATABASE_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      POSTGRES_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
       SESSION_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
       ADMIN_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
       ADMIN_PASSWORD_HASH: envField.string({ context: 'server', access: 'secret', optional: true }),

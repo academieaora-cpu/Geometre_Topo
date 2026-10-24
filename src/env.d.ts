@@ -16,3 +16,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_GA_ID?: string;
   readonly PUBLIC_GOOGLE_SITE_VERIFICATION?: string;
 }
+
+declare module '*.sql?raw' {
+  const content: string;
+  export default content;
+}
