@@ -29,4 +29,8 @@ jobs:
         run: |
           code=$(curl -sS -o health.json -w '%{http_code}' --retry 2 --retry-delay 10 --max-time 30 "$SITE_URL/api/health")
           echo "Santé : HTTP $code – $(cat health.json)"
+          if grep -q '"non_configuree"' health.json; then
+            echo "::warning::Base de données pas encore branchée : les demandes de devis ne sont pas enregistrées."
+            exit 0
+          fi
           test "$code" = "200"

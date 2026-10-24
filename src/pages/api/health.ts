@@ -1,12 +1,12 @@
 import type { APIRoute } from 'astro';
-import { sql } from '../../server/db.ts';
+import { DatabaseNotConfiguredError, sql } from '../../server/db.ts';
 import { json } from '../../server/http.ts';
 
 export const prerender = false;
 
 /**
- * Point de contrôle pour la surveillance (UptimeRobot…).
- * 200 = site et base de données opérationnels ; 503 = base indisponible.
+ * Point de contrôle pour la surveillance (bipeur GitHub, UptimeRobot…).
+ * 200 = site et base de données opérationnels ; 503 = base indisponible ou non configurée.
  * Aucune information interne (version, erreur, hôte) n'est divulguée.
  */
 export const GET: APIRoute = async () => {
@@ -16,8 +16,8 @@ export const GET: APIRoute = async () => {
       sql()`select 1`,
       new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000)),
     ]);
-  } catch {
-    database = 'indisponible';
+  } catch (err) {
+    database = err instanceof DatabaseNotConfiguredError ? 'non_configuree' : 'indisponible';
   }
   const ok = database === 'ok';
   return json({ status: ok ? 'ok' : 'degrade', database, time: new Date().toISOString() }, ok ? 200 : 503);
