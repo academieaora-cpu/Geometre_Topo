@@ -73,6 +73,15 @@ Créer un compte gratuit sur https://uptimerobot.com, puis deux moniteurs :
 - `/api/health` ne renvoie que `{"status","database","time"}` : aucune donnée interne.
 - La surveillance **détecte** les pannes ; elle ne garantit pas une disponibilité de 100 %.
 
+### Bipeur intégré (GitHub Actions)
+
+Le dépôt contient `.github/workflows/bipeur.yml` : toutes les 10 minutes, GitHub interroge la page d’accueil et
+`/api/health`. Cela maintient les fonctions et la base sollicitées, et **en cas d’échec GitHub envoie un e-mail**.
+Réglages : *Settings › Secrets and variables › Actions › Variables* → `SITE_URL` = URL du site ; vérifier dans
+*Settings (profil) › Notifications › Actions* que les alertes d’échec sont activées. GitHub suspend les tâches
+planifiées après 60 jours sans activité sur le dépôt : un simple commit les relance. UptimeRobot reste recommandé
+en complément (surveillance indépendante de GitHub).
+
 ## 6. Google Search Console et référencement local
 
 1. search.google.com/search-console › *Ajouter une propriété* › **Domaine** (vérification DNS, recommandée)

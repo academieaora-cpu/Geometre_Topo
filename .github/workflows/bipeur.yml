@@ -1,0 +1,32 @@
+# « Bipeur » : vérifie toutes les 10 minutes que le site et sa base de données répondent.
+# - Garde actives les fonctions serveur et la base (requête réelle via /api/health).
+# - En cas d'échec, l'exécution passe en rouge et GitHub envoie un e-mail d'alerte
+#   (Settings > Notifications > Actions : « Send notifications for failed workflows only »).
+# URL du site : variable de dépôt SITE_URL (Settings > Secrets and variables > Actions > Variables).
+name: Bipeur (surveillance du site)
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE_URL: ${{ vars.SITE_URL || 'https://geometre-topo.vercel.app' }}
+    steps:
+      - name: Page d'accueil
+        run: |
+          code=$(curl -sS -o page.html -w '%{http_code}' --retry 2 --retry-delay 10 --max-time 30 "$SITE_URL/")
+          echo "Accueil : HTTP $code"
+          test "$code" = "200"
+          grep -q "Géomètre Topo" page.html
+      - name: Fonctions serveur et base de données
+        run: |
+          code=$(curl -sS -o health.json -w '%{http_code}' --retry 2 --retry-delay 10 --max-time 30 "$SITE_URL/api/health")
+          echo "Santé : HTTP $code – $(cat health.json)"
+          test "$code" = "200"
