@@ -218,3 +218,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Site Astro / Node ---
+node_modules/
+.astro/
+.vercel/
+.output/
+.env
+.env.*
+!.env.example
+*.log

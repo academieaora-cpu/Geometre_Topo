@@ -1,0 +1,32 @@
+---
+import BaseLayout from './BaseLayout.astro';
+interface Props { title: string }
+const admin = Astro.locals.admin;
+---
+<BaseLayout title={`${Astro.props.title} – Administration Géomètre Topo`} description="Espace privé." noindex bare>
+  <header class="admin-bar">
+    <div class="container bar">
+      <a href="/admin" class="brand"><img src="/images/logo-96.webp" width="64" height="40" alt="" /> Prospects</a>
+      {admin && (
+        <div class="who">
+          <span class="small">{admin}</span>
+          <form method="post" action="/api/admin/logout"><button class="btn btn--ghost-light" type="submit">Déconnexion</button></form>
+        </div>
+      )}
+    </div>
+  </header>
+  <div class="container admin-main">
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  .admin-bar { background: var(--navy-900); color: var(--white); }
+  .bar { display: flex; align-items: center; justify-content: space-between; min-height: 60px; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--white); font-weight: 700; text-decoration: none; }
+  .brand img { height: 40px; width: auto; }
+  .who { display: flex; align-items: center; gap: 12px; }
+  .who .btn { min-height: 40px; padding: 6px 14px; }
+  .admin-main { padding-block: 24px 64px; }
+  :global(body) { background: var(--surface); }
+</style>

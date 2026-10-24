@@ -1,0 +1,191 @@
+{
+  "borne-peinte-limite": {
+    "width": 1378,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/borne-peinte-limite-400.webp",
+        "width": 400,
+        "height": 697
+      },
+      {
+        "src": "/images/photos/borne-peinte-limite-720.webp",
+        "width": 720,
+        "height": 1254
+      },
+      {
+        "src": "/images/photos/borne-peinte-limite-1080.webp",
+        "width": 1080,
+        "height": 1881
+      }
+    ]
+  },
+  "borne-terrain-humide": {
+    "width": 1350,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/borne-terrain-humide-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/borne-terrain-humide-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/borne-terrain-humide-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
+  "implantation-prisme-mur": {
+    "width": 1380,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/implantation-prisme-mur-400.webp",
+        "width": 400,
+        "height": 696
+      },
+      {
+        "src": "/images/photos/implantation-prisme-mur-720.webp",
+        "width": 720,
+        "height": 1252
+      },
+      {
+        "src": "/images/photos/implantation-prisme-mur-1080.webp",
+        "width": 1080,
+        "height": 1878
+      }
+    ]
+  },
+  "jalons-borne-existante": {
+    "width": 1382,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/jalons-borne-existante-400.webp",
+        "width": 400,
+        "height": 695
+      },
+      {
+        "src": "/images/photos/jalons-borne-existante-720.webp",
+        "width": 720,
+        "height": 1250
+      },
+      {
+        "src": "/images/photos/jalons-borne-existante-1080.webp",
+        "width": 1080,
+        "height": 1876
+      }
+    ]
+  },
+  "portrait-alain-stephane-olouou": {
+    "width": 1280,
+    "height": 1130,
+    "variants": [
+      {
+        "src": "/images/photos/portrait-alain-stephane-olouou-400.webp",
+        "width": 400,
+        "height": 353
+      },
+      {
+        "src": "/images/photos/portrait-alain-stephane-olouou-720.webp",
+        "width": 720,
+        "height": 636
+      },
+      {
+        "src": "/images/photos/portrait-alain-stephane-olouou-1080.webp",
+        "width": 1080,
+        "height": 953
+      }
+    ]
+  },
+  "pose-borne-beton": {
+    "width": 1458,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/pose-borne-beton-400.webp",
+        "width": 400,
+        "height": 658
+      },
+      {
+        "src": "/images/photos/pose-borne-beton-720.webp",
+        "width": 720,
+        "height": 1185
+      },
+      {
+        "src": "/images/photos/pose-borne-beton-1080.webp",
+        "width": 1080,
+        "height": 1778
+      }
+    ]
+  },
+  "recepteur-gnss-trepied": {
+    "width": 1350,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/recepteur-gnss-trepied-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-trepied-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-trepied-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
+  "releve-gnss-borne": {
+    "width": 1377,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/releve-gnss-borne-400.webp",
+        "width": 400,
+        "height": 697
+      },
+      {
+        "src": "/images/photos/releve-gnss-borne-720.webp",
+        "width": 720,
+        "height": 1255
+      },
+      {
+        "src": "/images/photos/releve-gnss-borne-1080.webp",
+        "width": 1080,
+        "height": 1882
+      }
+    ]
+  },
+  "visuel-conseil-achat-terrain": {
+    "width": 2160,
+    "height": 2015,
+    "variants": [
+      {
+        "src": "/images/photos/visuel-conseil-achat-terrain-400.webp",
+        "width": 400,
+        "height": 373
+      },
+      {
+        "src": "/images/photos/visuel-conseil-achat-terrain-720.webp",
+        "width": 720,
+        "height": 672
+      },
+      {
+        "src": "/images/photos/visuel-conseil-achat-terrain-1080.webp",
+        "width": 1080,
+        "height": 1008
+      }
+    ]
+  }
+}

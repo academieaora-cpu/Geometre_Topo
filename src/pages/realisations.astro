@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Photo from '../components/Photo.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { gallery, galleryCategories, type GalleryCategory } from '../data/gallery.ts';
+import { projects } from '../data/projects.ts';
+import { getService } from '../data/services.ts';
+
+const photos = gallery.filter((p) => p.category !== 'portrait');
+const categories = (Object.keys(galleryCategories) as GalleryCategory[]).filter((c) => photos.some((p) => p.category === c));
+---
+<BaseLayout
+  title="Réalisations et chantiers – photos de terrain | Géomètre Topo"
+  description="Photos authentiques des interventions de Géomètre Topo à Yaoundé et environs : pose et recherche de bornes, relevés GNSS, implantations au prisme."
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Réalisations', href: '/realisations' }]} />
+      <h1>Réalisations et chantiers</h1>
+      <p class="lead">
+        Des photos prises lors de nos interventions réelles. Par respect pour nos clients, aucune localisation précise,
+        aucun nom ni aucune donnée foncière n’est publié.
+      </p>
+    </div>
+  </section>
+
+  {projects.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <h2>Projets réalisés</h2>
+        <div class="grid grid--2">
+          {projects.map((p) => {
+            const service = getService(p.service);
+            return (
+              <article class="card project">
+                {p.photos[0] && <Photo slug={p.photos[0]} sizes="(min-width: 900px) 45vw, 90vw" ratio="16 / 10" />}
+                {service && <span class="tag">{service.name}</span>}
+                <h3>{p.title}</h3>
+                {p.locality && <p class="small muted">{p.locality}</p>}
+                <p><strong>Besoin :</strong> {p.need}</p>
+                <p><strong>Travail réalisé :</strong> {p.work}</p>
+                {p.result && <p><strong>Résultat :</strong> {p.result}</p>}
+                {service && <a href={`/services/${service.slug}#formulaire`} class="btn btn--outline">Un projet similaire ?</a>}
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container">
+      <h2>Galerie de terrain</h2>
+      <div class="filters" role="group" aria-label="Filtrer les photos" data-filters hidden>
+        <button type="button" class="chip" aria-pressed="true" data-filter="tout">Toutes</button>
+        {categories.map((c) => <button type="button" class="chip" aria-pressed="false" data-filter={c}>{galleryCategories[c]}</button>)}
+      </div>
+      <ul class="gallery" data-gallery>
+        {photos.map((p) => (
+          <li data-category={p.category}>
+            <a href={`/images/photos/${p.slug}-1080.webp`} class="zoom" aria-label={`Agrandir : ${p.caption}`}>
+              <Photo slug={p.slug} sizes="(min-width: 900px) 33vw, 50vw" ratio="3 / 4" />
+            </a>
+            <p class="caption"><span class="tag">{galleryCategories[p.category]}</span> {p.caption}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <CtaBand location="realisations" title="Vous avez un projet similaire ?" text="Décrivez votre terrain et votre besoin : nous vous proposons une intervention adaptée." />
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const filters = document.querySelector<HTMLElement>('[data-filters]');
+  const items = document.querySelectorAll<HTMLElement>('[data-gallery] > li');
+  if (filters) {
+    filters.hidden = false;
+    filters.addEventListener('click', (e) => {
+      const btn = (e.target as Element).closest<HTMLButtonElement>('[data-filter]');
+      if (!btn) return;
+      const f = btn.dataset.filter;
+      filters.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      items.forEach((li) => { li.hidden = f !== 'tout' && li.dataset.category !== f; });
+    });
+  }
+</script>
+
+<style>
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .chip {
+    min-height: 44px; padding: 8px 16px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--white);
+    font: inherit; font-weight: 600; color: var(--navy-900); cursor: pointer;
+  }
+  .chip[aria-pressed='true'] { background: var(--navy-900); color: var(--white); border-color: var(--navy-900); }
+  .gallery { list-style: none; padding: 0; display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+  .gallery li { margin: 0; }
+  .gallery li[hidden] { display: none; }
+  .zoom { display: block; }
+  .gallery :global(img) { aspect-ratio: 3 / 4; }
+  .caption { font-size: .92rem; color: var(--muted); margin: 8px 0 0; }
+  .project .tag { margin: 16px 0 8px; }
+  .project :global(img) { aspect-ratio: 16 / 10; }
+</style>

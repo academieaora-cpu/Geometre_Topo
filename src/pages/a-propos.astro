@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../config/site.ts';
+import { about } from '../data/about.ts';
+import { personJsonLd } from '../data/seo.ts';
+
+const values = [
+  { icon: 'target', title: 'La précision', text: 'Des mesures réalisées avec des instruments adaptés et vérifiées avant d’être remises.' },
+  { icon: 'chat', title: 'Des explications claires', text: 'Vous comprenez ce qui a été mesuré, ce que cela signifie et ce qu’il reste à faire.' },
+  { icon: 'shield', title: 'La discrétion', text: 'Vos documents et informations foncières restent confidentiels.' },
+  { icon: 'check', title: 'L’honnêteté', text: 'Nous vous disons ce qu’un géomètre peut faire… et ce qui relève d’autres intervenants.' },
+];
+---
+<BaseLayout
+  title={`${site.owner}, géomètre topographe à Yaoundé | Géomètre Topo`}
+  description={`Découvrez ${site.owner}, géomètre topographe à Yaoundé : son approche du terrain, sa façon d’accompagner les clients et les équipements utilisés.`}
+  jsonLd={[personJsonLd(Astro.site!)]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'À propos', href: '/a-propos' }]} />
+      <h1>{site.owner}, géomètre topographe</h1>
+      <p class="lead">Un professionnel de terrain, au service des propriétaires, des familles et des acteurs de la construction à Yaoundé.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col">
+      <Photo slug="portrait-alain-stephane-olouou" eager sizes="(min-width: 900px) 45vw, 90vw" class="portrait" />
+      <div>
+        <h2>Présentation</h2>
+        <p>
+          Je suis {site.owner}, géomètre topographe et fondateur de Géomètre Topo. J’interviens à Yaoundé et dans ses environs
+          pour les levés topographiques, la recherche de bornes, les implantations et l’accompagnement technique des projets fonciers.
+        </p>
+        <p>
+          Sur le terrain, je constate chaque jour les difficultés que rencontrent les propriétaires : bornes disparues,
+          superficies incertaines, terrains achetés sans vérification, constructions mal implantées. Mon travail consiste à
+          apporter des <strong>mesures fiables</strong> et des <strong>explications compréhensibles</strong>, pour que vous
+          puissiez décider en connaissance de cause.
+        </p>
+        {about.education.length > 0 && (
+          <>
+            <h3>Formation</h3>
+            <ul class="check-list">{about.education.map((e) => <li>{e}</li>)}</ul>
+          </>
+        )}
+        <a class="btn btn--primary" href="/devis" data-track="cta_devis" data-track-location="a_propos">Me confier votre projet</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <div class="section-head">
+        <h2>Mon approche</h2>
+        <p>Un accompagnement qui commence par l’écoute de votre besoin, pas par un tarif standard.</p>
+      </div>
+      <div class="grid grid--4">
+        {values.map((v) => (
+          <div class="card">
+            <span class="icon-badge"><Icon name={v.icon} /></span>
+            <h3>{v.title}</h3>
+            <p class="muted">{v.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col">
+      <div>
+        <h2>Équipements utilisés</h2>
+        <ul class="check-list">{about.equipment.map((e) => <li>{e}</li>)}</ul>
+        {about.software.length > 0 && (
+          <>
+            <h3>Logiciels</h3>
+            <ul class="check-list">{about.software.map((e) => <li>{e}</li>)}</ul>
+          </>
+        )}
+        <h2>Comment j’accompagne mes clients</h2>
+        <ol class="steps">
+          <li><h3>J’écoute</h3><p>Votre projet, vos inquiétudes et les documents dont vous disposez.</p></li>
+          <li><h3>Je vous propose</h3><p>Les travaux réellement utiles, avec un devis clair.</p></li>
+          <li><h3>Je mesure</h3><p>Sur le terrain, avec rigueur, à la date convenue.</p></li>
+          <li><h3>J’explique</h3><p>Les résultats, les éventuels écarts et les suites possibles.</p></li>
+        </ol>
+      </div>
+      <div class="photos">
+        <Photo slug="recepteur-gnss-trepied" caption sizes="(min-width: 900px) 22vw, 45vw" ratio="3 / 4" />
+        <Photo slug="implantation-prisme-mur" caption sizes="(min-width: 900px) 22vw, 45vw" ratio="3 / 4" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container"><CtaBand location="a_propos_bas" /></div>
+  </section>
+</BaseLayout>
+
+<style>
+  .portrait :global(img) { aspect-ratio: 1 / 1; object-position: center 25%; }
+  .photos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+</style>

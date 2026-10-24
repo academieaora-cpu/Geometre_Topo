@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Photo from '../../components/Photo.astro';
+import CtaBand from '../../components/CtaBand.astro';
+
+const articles = (await getCollection('conseils', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' });
+---
+<BaseLayout
+  title="Conseils pour propriétaires et acquéreurs de terrain | Géomètre Topo"
+  description="Conseils pratiques d’un géomètre topographe à Yaoundé : vérifier un terrain avant achat, retrouver ses bornes, préparer un projet de construction."
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Conseils', href: '/conseils' }]} />
+      <h1>Conseils pour votre terrain</h1>
+      <p class="lead">Des réponses claires aux questions que se posent les propriétaires, acquéreurs et porteurs de projet.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--3">
+        {articles.map((a) => (
+          <article class="card card--link post">
+            {a.data.image && <Photo slug={a.data.image} alt="" sizes="(min-width: 900px) 33vw, 90vw" ratio="16 / 10" />}
+            <p class="small muted date"><time datetime={a.data.publishedAt.toISOString()}>{fmt.format(a.data.publishedAt)}</time></p>
+            <h2 class="h3"><a href={`/conseils/${a.id}`} class="plain">{a.data.title}</a></h2>
+            <p class="muted">{a.data.description}</p>
+            <span class="more" aria-hidden="true">Lire l’article →</span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container"><CtaBand location="conseils_liste" /></div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post { padding: 0; overflow: hidden; }
+  .post > :not(.photo) { padding-inline: 22px; }
+  .post :global(img) { border-radius: 0; aspect-ratio: 16 / 10; }
+  .post .date { margin: 16px 0 6px; }
+  .post .more { padding-bottom: 22px; }
+  .post h2 { font-size: 1.2rem; }
+  .plain { color: inherit; text-decoration: none; }
+  .plain::after { content: ''; position: absolute; inset: 0; }
+</style>

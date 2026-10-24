@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import ContactLinks from '../../components/ContactLinks.astro';
+import { activeServices } from '../../data/services.ts';
+
+const groups = [
+  { title: 'Pour votre terrain', slugs: ['leve-topographique', 'bornage-recherche-de-bornes', 'plan-topographique', 'conseil-terrain'] },
+  { title: 'Pour vos démarches foncières', slugs: ['travaux-preparatoires-dossier-foncier', 'morcellement-de-terrain', 'lotissement'] },
+  { title: 'Pour vos constructions et chantiers', slugs: ['implantation-batiment', 'nivellement-altimetrie', 'topographie-btp'] },
+]
+  .map((g) => ({ ...g, services: activeServices.filter((s) => g.slugs.includes(s.slug)) }))
+  .filter((g) => g.services.length);
+---
+<BaseLayout
+  title="Services topographiques et fonciers à Yaoundé | Géomètre Topo"
+  description="Levé topographique, recherche de bornes, bornage, morcellement, plan de terrain, implantation, nivellement : les prestations de Géomètre Topo à Yaoundé et environs."
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Services', href: '/services' }]} />
+      <h1>Services topographiques et fonciers</h1>
+      <p class="lead">
+        Trouvez la prestation qui correspond à votre situation. Si vous hésitez, décrivez simplement votre besoin : nous
+        vous orientons vers les travaux réellement utiles.
+      </p>
+      <ContactLinks location="services_hero" light />
+    </div>
+  </section>
+
+  {groups.map((g, i) => (
+    <section class:list={['section', i % 2 === 1 && 'section--surface']}>
+      <div class="container">
+        <h2>{g.title}</h2>
+        <div class="grid grid--3">
+          {g.services.map((s) => <ServiceCard service={s} />)}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section">
+    <div class="container">
+      <CtaBand location="services_bas" title="Vous ne savez pas quelle prestation choisir ?" text="Expliquez votre situation : nous vous dirons quelles vérifications sont utiles, sans engagement." />
+    </div>
+  </section>
+</BaseLayout>

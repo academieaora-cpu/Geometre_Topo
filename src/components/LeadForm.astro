@@ -1,0 +1,403 @@
+---
+/**
+ * Formulaire de qualification des prospects.
+ * - Fonctionne sans JavaScript (envoi classique + redirection serveur).
+ * - Avec JavaScript : validation immédiate, envoi en arrière-plan, confirmation
+ *   affichée uniquement après enregistrement réel, conservation de la saisie en cas d'échec.
+ */
+import Icon from './Icon.astro';
+import { serviceOptions } from '../data/services.ts';
+import { site } from '../config/site.ts';
+import { DOCUMENTS, PREFERRED_CONTACTS, SITUATIONS, TIMELINES } from '../server/validation.ts';
+
+interface Props {
+  /** Service présélectionné (slug). */
+  service?: string;
+  variant?: 'full' | 'compact';
+  source?: 'formulaire_devis' | 'formulaire_contact' | 'formulaire_service';
+  title?: string;
+  submitLabel?: string;
+  id?: string;
+}
+
+const {
+  service = '',
+  variant = 'full',
+  source = 'formulaire_devis',
+  title,
+  submitLabel = 'Envoyer ma demande',
+  id = 'formulaire',
+} = Astro.props;
+const full = variant === 'full';
+const uid = id;
+---
+<div class="lead-form-wrap" id={id}>
+  {title && <h2 class="form-title">{title}</h2>}
+  <form
+    class="lead-form"
+    action="/api/leads"
+    method="post"
+    novalidate
+    data-lead-form
+    data-source={source}
+    data-wa-number={site.whatsapp}
+  >
+    <p class="small muted req-note">Les champs marqués <span aria-hidden="true">*</span><span class="sr-only">d’un astérisque</span> sont obligatoires.</p>
+
+    <div class="form-error" role="alert" tabindex="-1" hidden data-form-error></div>
+
+    <fieldset>
+      <legend>Vos coordonnées</legend>
+      <div class="field">
+        <label for={`${uid}-fullName`}>Nom et prénom <span class="req" aria-hidden="true">*</span></label>
+        <input id={`${uid}-fullName`} name="fullName" type="text" autocomplete="name" required minlength="2" maxlength="120" aria-describedby={`${uid}-fullName-err`} />
+        <p class="err" id={`${uid}-fullName-err`} data-err="fullName"></p>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for={`${uid}-phone`}>Téléphone <span class="req" aria-hidden="true">*</span></label>
+          <input id={`${uid}-phone`} name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" placeholder="+237 6XX XX XX XX" aria-describedby={`${uid}-phone-err`} />
+          <p class="err" id={`${uid}-phone-err`} data-err="phone"></p>
+        </div>
+        <div class="field">
+          <label for={`${uid}-email`}>Adresse e-mail <span class="req" aria-hidden="true">*</span></label>
+          <input id={`${uid}-email`} name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" aria-describedby={`${uid}-email-err`} />
+          <p class="err" id={`${uid}-email-err`} data-err="email"></p>
+        </div>
+      </div>
+      <div class="field">
+        <span class="label" id={`${uid}-pc-label`}>Comment préférez-vous être recontacté ? <span class="req" aria-hidden="true">*</span></span>
+        <div class="choices" role="radiogroup" aria-labelledby={`${uid}-pc-label`} aria-describedby={`${uid}-preferredContact-err`}>
+          {Object.entries(PREFERRED_CONTACTS).map(([value, label], i) => (
+            <label class="choice"><input type="radio" name="preferredContact" value={value} required checked={i === 0} /> {label}</label>
+          ))}
+        </div>
+        <p class="err" id={`${uid}-preferredContact-err`} data-err="preferredContact"></p>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Votre projet</legend>
+      {full ? (
+        <div class="field">
+          <label for={`${uid}-service`}>Service recherché <span class="req" aria-hidden="true">*</span></label>
+          <select id={`${uid}-service`} name="service" required aria-describedby={`${uid}-service-err`}>
+            <option value="" disabled selected={!service}>Choisir un service…</option>
+            {serviceOptions.map((o) => <option value={o.value} selected={o.value === service}>{o.label}</option>)}
+          </select>
+          <p class="err" id={`${uid}-service-err`} data-err="service"></p>
+        </div>
+      ) : (
+        <input type="hidden" name="service" value={service || 'autre'} />
+      )}
+      <div class="row">
+        <div class="field">
+          <label for={`${uid}-locality`}>Localité du terrain <span class="req" aria-hidden="true">*</span></label>
+          <input id={`${uid}-locality`} name="locality" type="text" required maxlength="120" placeholder="Ex. Yaoundé, Soa, Mfou…" autocomplete="address-level2" aria-describedby={`${uid}-locality-err`} />
+          <p class="err" id={`${uid}-locality-err`} data-err="locality"></p>
+        </div>
+        {full && (
+          <div class="field">
+            <label for={`${uid}-neighborhood`}>Quartier ou village <span class="opt">(facultatif)</span></label>
+            <input id={`${uid}-neighborhood`} name="neighborhood" type="text" maxlength="120" />
+          </div>
+        )}
+      </div>
+      {full && (
+        <>
+          <div class="row">
+            <div class="field">
+              <label for={`${uid}-situation`}>Situation actuelle <span class="opt">(facultatif)</span></label>
+              <select id={`${uid}-situation`} name="situation">
+                <option value="">Choisir…</option>
+                {Object.entries(SITUATIONS).map(([v, l]) => <option value={v}>{l}</option>)}
+              </select>
+            </div>
+            <div class="field">
+              <label for={`${uid}-area`}>Superficie approximative <span class="opt">(facultatif)</span></label>
+              <input id={`${uid}-area`} name="area" type="text" maxlength="60" placeholder="Ex. 500 m², 1 ha" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for={`${uid}-timeline`}>Délai souhaité <span class="opt">(facultatif)</span></label>
+              <select id={`${uid}-timeline`} name="timeline">
+                <option value="">Choisir…</option>
+                {Object.entries(TIMELINES).map(([v, l]) => <option value={v}>{l}</option>)}
+              </select>
+            </div>
+            <div class="field">
+              <label for={`${uid}-hasDocuments`}>Avez-vous des documents ou plans ? <span class="opt">(facultatif)</span></label>
+              <select id={`${uid}-hasDocuments`} name="hasDocuments">
+                <option value="">Choisir…</option>
+                {Object.entries(DOCUMENTS).map(([v, l]) => <option value={v}>{l}</option>)}
+              </select>
+            </div>
+          </div>
+        </>
+      )}
+      <div class="field">
+        <label for={`${uid}-description`}>{full ? 'Décrivez votre besoin' : 'Votre message'} <span class="opt">(facultatif)</span></label>
+        <textarea id={`${uid}-description`} name="description" rows="4" maxlength="3000" placeholder="Ex. Je souhaite vérifier les limites d’un terrain avant de l’acheter…"></textarea>
+        <p class="hint">Inutile d’envoyer vos titres fonciers ou coordonnées GPS à ce stade : nous vous dirons quels documents préparer.</p>
+      </div>
+    </fieldset>
+
+    <div class="consents">
+      <div class="field">
+        <label class="choice choice--top">
+          <input type="checkbox" name="consentProcessing" value="true" required aria-describedby={`${uid}-consentProcessing-err`} />
+          <span>J’accepte que Géomètre Topo utilise ces informations pour étudier ma demande et me recontacter. <span class="req" aria-hidden="true">*</span></span>
+        </label>
+        <p class="err" id={`${uid}-consentProcessing-err`} data-err="consentProcessing"></p>
+      </div>
+      <label class="choice choice--top">
+        <input type="checkbox" name="consentMarketing" value="true" />
+        <span>J’accepte de recevoir occasionnellement des conseils et informations de Géomètre Topo (facultatif, désinscription à tout moment).</span>
+      </label>
+      <p class="small muted">
+        Vos données ne sont ni vendues ni partagées. Elles sont conservées au maximum 3 ans après le dernier échange.
+        Vous pouvez demander leur consultation, rectification ou suppression à tout moment.
+        <a href="/confidentialite">Politique de confidentialité</a>.
+      </p>
+    </div>
+
+    <!-- Piège à robots : champ invisible pour les humains -->
+    <div class="hp" aria-hidden="true">
+      <label>Ne pas remplir ce champ <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <input type="hidden" name="startedAt" value="" />
+    <input type="hidden" name="source" value={source} />
+    <input type="hidden" name="sourcePage" value="" />
+    <input type="hidden" name="referrer" value="" />
+    <input type="hidden" name="utmSource" value="" />
+    <input type="hidden" name="utmMedium" value="" />
+    <input type="hidden" name="utmCampaign" value="" />
+
+    <button type="submit" class="btn btn--primary btn--block submit" data-submit>
+      <span data-submit-label>{submitLabel}</span>
+    </button>
+  </form>
+
+  <div class="success" hidden data-success tabindex="-1">
+    <span class="success-icon"><Icon name="check" size={28} /></span>
+    <h2>Votre demande est bien enregistrée</h2>
+    <p>Référence : <strong data-ref></strong></p>
+    <p>Nous revenons vers vous rapidement, par le moyen de contact que vous avez choisi.</p>
+    <div class="btn-row" data-wa-wrap hidden>
+      <a class="btn btn--whatsapp" href="#" target="_blank" rel="noopener" data-wa-continue data-track="click_whatsapp" data-track-location="apres_formulaire">
+        <Icon name="whatsapp" />Continuer sur WhatsApp
+      </a>
+    </div>
+    <p class="small muted" data-wa-wrap-note hidden>
+      Le bouton ouvre WhatsApp avec un message prérempli (service, localité, référence). Rien n’est envoyé tant que vous ne validez pas l’envoi dans WhatsApp.
+    </p>
+  </div>
+</div>
+
+<script>
+  import { track } from '../scripts/analytics.ts';
+
+  type Errors = Record<string, string>;
+  const DRAFT_KEY = 'gt_brouillon_demande';
+
+  function validate(data: Record<string, string>): Errors {
+    const e: Errors = {};
+    if ((data.fullName ?? '').trim().length < 2) e.fullName = 'Indiquez votre nom et prénom.';
+    const digits = (data.phone ?? '').replace(/\D/g, '');
+    if (digits.length < 8 || digits.length > 15) e.phone = 'Indiquez un numéro de téléphone valide (8 à 15 chiffres).';
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test((data.email ?? '').trim())) e.email = 'Indiquez une adresse e-mail valide (ex. nom@exemple.com).';
+    if (!data.preferredContact) e.preferredContact = 'Choisissez un moyen de contact.';
+    if (!data.service) e.service = 'Choisissez un service dans la liste.';
+    if ((data.locality ?? '').trim().length < 2) e.locality = 'Indiquez la localité du terrain.';
+    if (data.consentProcessing !== 'true') e.consentProcessing = 'Votre accord est nécessaire pour que nous puissions traiter votre demande.';
+    return e;
+  }
+
+  function serialize(form: HTMLFormElement): Record<string, string> {
+    const out: Record<string, string> = {};
+    new FormData(form).forEach((v, k) => { out[k] = String(v); });
+    return out;
+  }
+
+  function showErrors(form: HTMLFormElement, errors: Errors): void {
+    form.querySelectorAll<HTMLElement>('[data-err]').forEach((p) => {
+      const key = p.dataset.err!;
+      p.textContent = errors[key] ?? '';
+      form.querySelectorAll<HTMLInputElement>(`[name="${key}"]`).forEach((input) => {
+        if (errors[key]) input.setAttribute('aria-invalid', 'true');
+        else input.removeAttribute('aria-invalid');
+      });
+    });
+    const first = Object.keys(errors)[0];
+    if (first) form.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
+  }
+
+  function saveDraft(form: HTMLFormElement): void {
+    try {
+      const d = serialize(form);
+      for (const k of ['website', 'startedAt', 'consentProcessing', 'consentMarketing']) delete d[k];
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+    } catch { /* stockage indisponible */ }
+  }
+
+  function restoreDraft(form: HTMLFormElement): void {
+    try {
+      const raw = sessionStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw) as Record<string, string>;
+      for (const [k, v] of Object.entries(d)) {
+        if (['source', 'sourcePage', 'referrer', 'utmSource', 'utmMedium', 'utmCampaign'].includes(k)) continue;
+        const els = form.querySelectorAll<HTMLInputElement>(`[name="${k}"]`);
+        els.forEach((el) => {
+          if (el.type === 'radio') el.checked = el.value === v;
+          else if (el.type !== 'hidden' && !el.value) el.value = v;
+        });
+      }
+    } catch { /* brouillon illisible : ignoré */ }
+  }
+
+  function setup(form: HTMLFormElement): void {
+    const wrap = form.closest<HTMLElement>('.lead-form-wrap')!;
+    const formError = form.querySelector<HTMLElement>('[data-form-error]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const label = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const defaultLabel = label.textContent ?? 'Envoyer';
+    const set = (name: string, value: string) => {
+      const el = form.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+      if (el) el.value = value;
+    };
+
+    const params = new URLSearchParams(location.search);
+    set('startedAt', String(Date.now()));
+    set('sourcePage', location.pathname);
+    set('referrer', document.referrer && !document.referrer.startsWith(location.origin) ? document.referrer : '');
+    set('utmSource', params.get('utm_source') ?? '');
+    set('utmMedium', params.get('utm_medium') ?? '');
+    set('utmCampaign', params.get('utm_campaign') ?? '');
+    const preset = params.get('service');
+    const select = form.querySelector<HTMLSelectElement>('select[name="service"]');
+    if (preset && select && [...select.options].some((o) => o.value === preset)) select.value = preset;
+    restoreDraft(form);
+
+    let started = false;
+    form.addEventListener('input', () => {
+      if (!started) {
+        started = true;
+        track('form_start', { form: form.dataset.source });
+      }
+      saveDraft(form);
+    });
+
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      formError.hidden = true;
+      const data = serialize(form);
+      const errors = validate(data);
+      showErrors(form, errors);
+      if (Object.keys(errors).length) return;
+
+      if (!navigator.onLine) {
+        formError.textContent = 'Vous semblez hors connexion. Votre saisie est conservée : réessayez dès que la connexion revient.';
+        formError.hidden = false;
+        return;
+      }
+
+      submit.disabled = true;
+      label.textContent = 'Envoi en cours…';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+          signal: AbortSignal.timeout(20000),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (res.ok && body.ok && body.reference) {
+          try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
+          track('generate_lead', { form: form.dataset.source, service: data.service });
+          showSuccess(wrap, form, body.reference, data);
+          return;
+        }
+        if (res.status === 422 && body.errors) {
+          showErrors(form, body.errors);
+          formError.textContent = 'Certains champs sont à corriger.';
+        } else {
+          formError.textContent = body.error ?? 'Votre demande n’a pas pu être enregistrée. Votre saisie est conservée : réessayez.';
+        }
+        formError.hidden = false;
+      } catch {
+        formError.textContent = 'La connexion a été interrompue et votre demande n’a pas été enregistrée. Votre saisie est conservée : réessayez.';
+        formError.hidden = false;
+      } finally {
+        submit.disabled = false;
+        label.textContent = defaultLabel;
+      }
+      if (!formError.hidden) {
+        track('form_error', { form: form.dataset.source });
+        formError.focus();
+        formError.scrollIntoView({ block: 'center' });
+      }
+    });
+  }
+
+  function showSuccess(wrap: HTMLElement, form: HTMLFormElement, reference: string, data: Record<string, string>): void {
+    const success = wrap.querySelector<HTMLElement>('[data-success]')!;
+    success.querySelector('[data-ref]')!.textContent = reference;
+    const waNumber = form.dataset.waNumber;
+    if (waNumber) {
+      const service = form.querySelector<HTMLSelectElement>('select[name="service"]');
+      const serviceLabel = service?.selectedOptions[0]?.textContent?.trim() ?? '';
+      // Uniquement des informations non sensibles : ni téléphone, ni e-mail, ni description.
+      const msg = `Bonjour Géomètre Topo, je viens d’envoyer la demande ${reference}` +
+        (serviceLabel && data.service !== 'autre' ? ` (${serviceLabel})` : '') +
+        (data.locality ? ` pour un terrain à ${data.locality}` : '') + '.';
+      success.querySelector<HTMLAnchorElement>('[data-wa-continue]')!.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
+      success.querySelector<HTMLElement>('[data-wa-wrap]')!.hidden = false;
+      success.querySelector<HTMLElement>('[data-wa-wrap-note]')!.hidden = false;
+    }
+    form.hidden = true;
+    success.hidden = false;
+    success.focus();
+    success.scrollIntoView({ block: 'center' });
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form[data-lead-form]').forEach(setup);
+</script>
+
+<style>
+  .lead-form-wrap { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: clamp(18px, 4vw, 32px); box-shadow: var(--shadow); }
+  .form-title { font-size: clamp(1.3rem, 2.6vw, 1.6rem); }
+  fieldset { border: 0; padding: 0; margin: 0 0 8px; min-width: 0; }
+  legend { font-weight: 800; color: var(--navy-900); font-size: 1.05rem; margin-bottom: 10px; padding: 0; }
+  .row { display: grid; gap: 0 16px; }
+  @media (min-width: 640px) { .row { grid-template-columns: 1fr 1fr; } }
+  .field { margin-bottom: 14px; }
+  label, .label { display: block; font-weight: 600; margin-bottom: 6px; font-size: .97rem; }
+  .req { color: var(--danger); }
+  .opt { font-weight: 400; color: var(--muted); font-size: .9em; }
+  input[type='text'], input[type='tel'], input[type='email'], select, textarea {
+    width: 100%; min-height: 48px; padding: 10px 12px; font: inherit; font-size: 16px; color: var(--ink);
+    background: var(--white); border: 1.5px solid #b9bccb; border-radius: var(--radius);
+  }
+  textarea { min-height: 110px; resize: vertical; }
+  input:focus, select:focus, textarea:focus { border-color: var(--navy-700); outline: 3px solid rgb(245 165 36 / 45%); outline-offset: 0; }
+  [aria-invalid='true'] { border-color: var(--danger) !important; background: var(--danger-100) !important; }
+  .err { color: var(--danger); font-size: .9rem; margin: 6px 0 0; font-weight: 600; }
+  .err:empty { display: none; }
+  .hint { font-size: .88rem; color: var(--muted); margin: 6px 0 0; }
+  .choices { display: flex; flex-wrap: wrap; gap: 8px; }
+  .choice { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; margin: 0; min-height: 44px; padding: 6px 14px 6px 10px; border: 1.5px solid var(--line); border-radius: var(--radius); cursor: pointer; }
+  .choice input { width: 20px; height: 20px; accent-color: var(--navy-900); flex: none; }
+  .choice--top { align-items: flex-start; border: 0; padding: 4px 0; font-size: .95rem; }
+  .choice--top input { margin-top: 3px; }
+  .consents { margin: 8px 0 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .form-error { background: var(--danger-100); color: var(--danger); border: 1px solid #f3b8b2; padding: 12px 14px; border-radius: var(--radius); font-weight: 600; margin-bottom: 16px; }
+  .req-note { margin-bottom: 14px; }
+  .submit { font-size: 1.05rem; min-height: 54px; }
+  .success { text-align: center; padding: 16px 0; }
+  .success:focus { outline: none; }
+  .success .btn-row { justify-content: center; margin: 16px 0 8px; }
+  .success-icon { display: inline-grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: var(--green-100); color: var(--success); margin-bottom: 12px; }
+</style>

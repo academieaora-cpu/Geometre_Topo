@@ -1,0 +1,98 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Photo from '../../components/Photo.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import ContactLinks from '../../components/ContactLinks.astro';
+import { activeServices } from '../../data/services.ts';
+import { site } from '../../config/site.ts';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('conseils', ({ data }) => !data.draft);
+  return articles.map((article) => ({ params: { slug: article.id }, props: { article } }));
+}
+
+interface Props { article: CollectionEntry<'conseils'> }
+const { article } = Astro.props;
+const { Content } = await render(article);
+const d = article.data;
+const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' });
+const linked = activeServices.filter((s) => d.services.includes(s.slug));
+const base = Astro.site!.href.replace(/\/$/, '');
+const url = `${base}/conseils/${article.id}`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: d.title,
+  description: d.description,
+  datePublished: d.publishedAt.toISOString(),
+  dateModified: (d.updatedAt ?? d.publishedAt).toISOString(),
+  mainEntityOfPage: url,
+  inLanguage: 'fr',
+  image: d.image ? `${base}/images/photos/${d.image}-1080.webp` : `${base}/images/og-geometre-topo.jpg`,
+  author: { '@type': 'Person', '@id': `${base}/a-propos#personne`, name: site.owner },
+  publisher: { '@id': `${base}/#entreprise` },
+};
+---
+<BaseLayout
+  title={`${d.metaTitle ?? d.title} | Géomètre Topo`}
+  description={d.description}
+  ogType="article"
+  jsonLd={[jsonLd]}
+  image={d.image ? `/images/photos/${d.image}-1080.webp` : undefined}
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Conseils', href: '/conseils' }, { name: d.title, href: `/conseils/${article.id}` }]} />
+      <h1>{d.title}</h1>
+      <p class="small">
+        Par {site.owner}, géomètre topographe ·
+        <time datetime={d.publishedAt.toISOString()}>{fmt.format(d.publishedAt)}</time>
+        {d.updatedAt && <> · mis à jour le <time datetime={d.updatedAt.toISOString()}>{fmt.format(d.updatedAt)}</time></>}
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col two-col--wide-left article">
+      <article class="prose">
+        <p class="lead">{d.description}</p>
+        <Content />
+        <div class="notice notice--info">
+          <p class="mb-0">
+            Cet article donne des repères généraux. Chaque terrain est différent : pour votre situation, demandez l’avis d’un
+            professionnel.
+          </p>
+        </div>
+      </article>
+      <aside class="aside">
+        {d.image && <Photo slug={d.image} caption sizes="(min-width: 900px) 30vw, 90vw" ratio="3 / 4" />}
+        {linked.length > 0 && (
+          <div class="card">
+            <h2 class="h3">Prestations liées</h2>
+            <ul>{linked.map((s) => <li><a href={`/services/${s.slug}`}>{s.name}</a></li>)}</ul>
+          </div>
+        )}
+        <div class="card">
+          <h2 class="h3">Une question sur votre terrain ?</h2>
+          <ContactLinks location={`article_${article.id}`} />
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container narrow">
+      <LeadForm id="formulaire" service={d.ctaService} title="Décrivez votre terrain" submitLabel="Faire étudier mon projet" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .aside { display: grid; gap: 20px; }
+  .aside h2 { font-size: 1.15rem; }
+  .aside ul { margin: 0; }
+  .narrow { max-width: 820px; }
+  .page-hero .small { color: #c9c9e6; }
+</style>

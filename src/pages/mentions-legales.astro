@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { site } from '../config/site.ts';
+import { legal } from '../data/legal.ts';
+const pending = 'en cours de mise à jour';
+---
+<BaseLayout
+  title="Mentions légales | Géomètre Topo"
+  description="Mentions légales du site Géomètre Topo : éditeur, responsable de la publication, hébergement et propriété intellectuelle."
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Mentions légales', href: '/mentions-legales' }]} />
+      <h1>Mentions légales</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <h2>Éditeur du site</h2>
+      <table>
+        <tbody>
+          <tr><th scope="row">Nom commercial</th><td>{site.name}</td></tr>
+          <tr><th scope="row">Responsable</th><td>{site.owner}, {site.ownerTitle}</td></tr>
+          <tr><th scope="row">Statut juridique</th><td>{legal.legalStatus || pending}</td></tr>
+          <tr><th scope="row">RCCM</th><td>{legal.rccm || pending}</td></tr>
+          <tr><th scope="row">NIU</th><td>{legal.niu || pending}</td></tr>
+          {legal.professionalRegistration && <tr><th scope="row">Inscription professionnelle</th><td>{legal.professionalRegistration}</td></tr>}
+          <tr><th scope="row">Adresse</th><td>{legal.postalAddress || 'Yaoundé, Cameroun'}</td></tr>
+          <tr><th scope="row">Téléphone</th><td>{site.phone || pending}</td></tr>
+          <tr><th scope="row">E-mail</th><td>{site.email ? <a href={`mailto:${site.email}`}>{site.email}</a> : pending}</td></tr>
+        </tbody>
+      </table>
+      <p>Responsable de la publication : {site.owner}.</p>
+
+      <h2>Hébergement</h2>
+      <p>{legal.host.name} – {legal.host.address} – <a href={legal.host.url} rel="noopener">{legal.host.url}</a></p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>
+        Les textes, photographies, logo et éléments graphiques du site sont la propriété de {site.name} ou utilisés avec
+        autorisation. Toute reproduction sans accord préalable est interdite. Les photographies présentent des interventions
+        réelles ; aucune donnée permettant d’identifier un client ou un terrain n’y est publiée.
+      </p>
+
+      <h2>Responsabilité</h2>
+      <p>
+        Les articles et informations publiés sur ce site ont une vocation informative générale. Ils ne remplacent ni une
+        étude de votre situation par un professionnel, ni un conseil juridique. Les prestations topographiques ne valent pas
+        décision administrative : la délivrance de documents fonciers relève des autorités compétentes.
+      </p>
+
+      <h2>Données personnelles</h2>
+      <p>Voir la <a href="/confidentialite">politique de confidentialité</a>.</p>
+    </div>
+  </section>
+</BaseLayout>

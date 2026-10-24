@@ -1,0 +1,52 @@
+---
+/** Boutons de contact direct (téléphone, WhatsApp, e-mail). N'affiche que les canaux configurés. */
+import Icon from './Icon.astro';
+import { defaultWhatsappMessage, site, whatsappLink } from '../config/site.ts';
+
+interface Props {
+  whatsappMessage?: string;
+  location: string;
+  variant?: 'buttons' | 'list';
+  light?: boolean;
+}
+const { whatsappMessage = defaultWhatsappMessage, location, variant = 'buttons', light = false } = Astro.props;
+const wa = whatsappLink(whatsappMessage);
+const hasAny = Boolean(wa || site.phoneHref || site.email);
+---
+{variant === 'buttons' ? (
+  <div class="btn-row">
+    <a class="btn btn--primary" href="/devis" data-track="cta_devis" data-track-location={location}>Demander un devis</a>
+    {wa && (
+      <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener" data-track="click_whatsapp" data-track-location={location}>
+        <Icon name="whatsapp" />Écrire sur WhatsApp
+      </a>
+    )}
+    {site.phoneHref && (
+      <a class:list={['btn', light ? 'btn--ghost-light' : 'btn--outline']} href={site.phoneHref} data-track="click_phone" data-track-location={location}>
+        <Icon name="phone" />Appeler
+      </a>
+    )}
+  </div>
+) : (
+  <ul class="contact-list">
+    {wa && (
+      <li><Icon name="whatsapp" /><a href={wa} target="_blank" rel="noopener" data-track="click_whatsapp" data-track-location={location}>WhatsApp{site.phone ? ` : ${site.phone}` : ''}</a></li>
+    )}
+    {site.phoneHref && (
+      <li><Icon name="phone" /><a href={site.phoneHref} data-track="click_phone" data-track-location={location}>{site.phone}</a></li>
+    )}
+    {site.email && (
+      <li><Icon name="mail" /><a href={`mailto:${site.email}`} data-track="click_email" data-track-location={location}>{site.email}</a></li>
+    )}
+    <li><Icon name="pin" /><span>Yaoundé et environs (Centre, Cameroun)</span></li>
+    {site.hours && <li><Icon name="clock" /><span>{site.hours}</span></li>}
+    {!hasAny && <li class="muted">Coordonnées en cours de mise à jour : utilisez le formulaire de demande.</li>}
+  </ul>
+)}
+
+<style>
+  .contact-list { list-style: none; padding: 0; margin: 0; }
+  .contact-list li { display: flex; gap: 12px; align-items: flex-start; margin: 0 0 12px; }
+  .contact-list a { color: inherit; }
+  .contact-list :global(svg) { flex: none; margin-top: 3px; color: var(--green-500); }
+</style>

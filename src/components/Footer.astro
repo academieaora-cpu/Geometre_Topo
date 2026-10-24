@@ -1,0 +1,63 @@
+---
+import ContactLinks from './ContactLinks.astro';
+import { site } from '../config/site.ts';
+import { activeServices } from '../data/services.ts';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container cols">
+    <div>
+      <img src="/images/logo-96.webp" width="77" height="48" alt="Géomètre Topo" loading="lazy" />
+      <p class="about">
+        {site.owner}, géomètre topographe. Levés, bornes, implantations et accompagnement de vos projets fonciers à Yaoundé et dans ses environs.
+      </p>
+    </div>
+    <div>
+      <h2>Services</h2>
+      <ul>
+        {activeServices.slice(0, 7).map((s) => <li><a href={`/services/${s.slug}`}>{s.name}</a></li>)}
+        <li><a href="/services">Tous les services</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Le site</h2>
+      <ul>
+        <li><a href="/a-propos">À propos</a></li>
+        <li><a href="/realisations">Réalisations</a></li>
+        <li><a href="/conseils">Conseils</a></li>
+        <li><a href="/devis">Demande de devis</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Contact</h2>
+      <ContactLinks variant="list" location="footer" />
+    </div>
+  </div>
+  <div class="container legal">
+    <p>© {year} {site.name}. Tous droits réservés.</p>
+    <ul>
+      <li><a href="/mentions-legales">Mentions légales</a></li>
+      <li><a href="/confidentialite">Confidentialité</a></li>
+      <li><a href="/confidentialite#cookies">Cookies</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--navy-900); border-top: 4px solid var(--green-500); color: #c9c9e6; padding-top: 56px; font-size: .95rem; }
+  .cols { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); padding-bottom: 32px; }
+  .about { margin-top: 14px; }
+  h2 { color: var(--white); font-size: 1rem; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { margin: 0 0 8px; }
+  a { color: #e3e3f5; text-decoration: none; }
+  a:hover { color: var(--white); text-decoration: underline; }
+  .legal {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-block: 20px 96px;
+    border-top: 1px solid rgb(255 255 255 / 12%); font-size: .88rem;
+  }
+  .legal p { margin: 0; }
+  .legal ul { display: flex; flex-wrap: wrap; gap: 16px; }
+  .legal li { margin: 0; }
+</style>

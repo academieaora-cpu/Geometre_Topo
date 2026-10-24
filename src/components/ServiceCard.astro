@@ -1,0 +1,17 @@
+---
+import Icon from './Icon.astro';
+import type { Service } from '../data/services.ts';
+interface Props { service: Service; headingLevel?: 'h2' | 'h3' }
+const { service, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+---
+<article class="card card--link">
+  <span class="icon-badge"><Icon name={service.icon} /></span>
+  <Heading><a href={`/services/${service.slug}`} class="stretched">{service.name}</a></Heading>
+  <p class="muted">{service.summary}</p>
+  <span class="more" aria-hidden="true">En savoir plus →</span>
+</article>
+
+<style>
+  .stretched { color: inherit; text-decoration: none; }
+</style>

@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import LeadForm from '../components/LeadForm.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+---
+<BaseLayout
+  title="Demande de devis géomètre topographe à Yaoundé | Géomètre Topo"
+  description="Demandez un devis à Géomètre Topo : levé topographique, bornes, morcellement, implantation… Décrivez votre terrain en quelques minutes depuis votre téléphone."
+  hideFab
+>
+  <section class="page-hero compact">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Demande de devis', href: '/devis' }]} />
+      <h1>Demande de devis</h1>
+      <p class="lead">Quelques informations sur votre terrain suffisent. Comptez environ 3 minutes.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col two-col--wide-left">
+      <LeadForm id="formulaire" submitLabel="Envoyer ma demande de devis" />
+      <aside class="stack">
+        <div class="card">
+          <h2 class="h3">Ce qui se passe ensuite</h2>
+          <ol class="steps">
+            <li><h3>Réception</h3><p>Votre demande est enregistrée et vous recevez une référence.</p></li>
+            <li><h3>Prise de contact</h3><p>Nous vous recontactons par le moyen choisi pour préciser le besoin.</p></li>
+            <li><h3>Devis</h3><p>Vous recevez une proposition claire avant toute intervention.</p></li>
+          </ol>
+        </div>
+        <div class="card">
+          <h2 class="h3">Vous préférez échanger directement ?</h2>
+          <ContactLinks variant="list" location="devis_aside" />
+        </div>
+        <p class="small muted">
+          Conseil : préparez la localité du terrain, sa superficie approximative et l’usage prévu. Pas besoin d’envoyer vos
+          documents fonciers à ce stade. <a href="/conseils/preparer-demande-devis-topographique">En savoir plus</a>
+        </p>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .compact { padding-block: clamp(24px, 4vw, 40px); }
+  aside h2 { font-size: 1.15rem; }
+  aside .steps li { padding: 12px 12px 12px 58px; }
+  aside .steps li::before { left: 12px; top: 12px; width: 32px; height: 32px; }
+</style>

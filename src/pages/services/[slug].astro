@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Photo from '../../components/Photo.astro';
+import Faq from '../../components/Faq.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import ContactLinks from '../../components/ContactLinks.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import { activeServices, type Service } from '../../data/services.ts';
+import { photosForService } from '../../data/gallery.ts';
+import { serviceJsonLd } from '../../data/seo.ts';
+import { getCollection } from 'astro:content';
+
+export function getStaticPaths() {
+  return activeServices.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+
+interface Props { service: Service }
+const { service } = Astro.props;
+const photos = photosForService(service.slug, 3);
+const related = activeServices.filter((s) => s.slug !== service.slug).slice(0, 3);
+const articles = (await getCollection('conseils', ({ data }) => !data.draft && data.services.includes(service.slug))).slice(0, 3);
+---
+<BaseLayout
+  title={service.metaTitle}
+  description={service.metaDescription}
+  jsonLd={[serviceJsonLd(Astro.site!, service)]}
+  whatsappMessage={service.whatsapp}
+  image={photos[0] ? `/images/photos/${photos[0].slug}-1080.webp` : undefined}
+  imageAlt={photos[0]?.alt}
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Services', href: '/services' }, { name: service.name, href: `/services/${service.slug}` }]} />
+      <h1>{service.title}</h1>
+      <p class="lead">{service.summary}</p>
+      <ContactLinks whatsappMessage={service.whatsapp} location={`service_${service.slug}`} light />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col two-col--wide-left">
+      <div>
+        <h2>Le problème</h2>
+        <p class="lead">{service.problem}</p>
+        <h2>Dans quels cas ce service est utile</h2>
+        <ul class="check-list">{service.situations.map((s) => <li>{s}</li>)}</ul>
+      </div>
+      {photos[0] && <Photo slug={photos[0].slug} caption sizes="(min-width: 900px) 35vw, 90vw" ratio="3 / 4" class="side-photo" />}
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <h2>Comment se déroule la prestation</h2>
+      <ol class="steps">
+        {service.steps.map((s) => <li><h3>{s.title}</h3><p>{s.text}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col">
+      <div>
+        <h2>Les informations à préparer</h2>
+        <ul class="check-list">{service.documents.map((d) => <li>{d}</li>)}</ul>
+      </div>
+      <div>
+        <h2>Ce qu’il faut savoir</h2>
+        <ul class="warn-list">{service.limits.map((l) => <li>{l}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  {photos.length > 1 && (
+    <section class="section section--surface">
+      <div class="container">
+        <h2>Sur le terrain</h2>
+        <div class="grid grid--3">
+          {photos.map((p) => <Photo slug={p.slug} caption sizes="(min-width: 900px) 33vw, 90vw" ratio="3 / 4" />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container two-col two-col--wide-left">
+      <div>
+        <h2>Questions fréquentes</h2>
+        <Faq items={service.faq} />
+        {articles.length > 0 && (
+          <div class="read-more">
+            <h3>À lire aussi</h3>
+            <ul>{articles.map((a) => <li><a href={`/conseils/${a.id}`}>{a.data.title}</a></li>)}</ul>
+          </div>
+        )}
+      </div>
+      <LeadForm
+        id="formulaire"
+        service={service.slug}
+        source="formulaire_service"
+        title={`Demander un devis : ${service.name.toLowerCase()}`}
+        submitLabel="Faire étudier mon projet"
+      />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <h2>Autres prestations</h2>
+      <div class="grid grid--3">{related.map((s) => <ServiceCard service={s} />)}</div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .side-photo { max-width: 420px; justify-self: center; width: 100%; }
+  .read-more { margin-top: 32px; }
+</style>

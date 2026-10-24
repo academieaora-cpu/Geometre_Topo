@@ -1,0 +1,12 @@
+---
+import type { Faq } from '../data/services.ts';
+interface Props { items: Faq[]; }
+---
+<div class="faq">
+  {Astro.props.items.map((item) => (
+    <details>
+      <summary>{item.q}</summary>
+      <div><p>{item.a}</p></div>
+    </details>
+  ))}
+</div>

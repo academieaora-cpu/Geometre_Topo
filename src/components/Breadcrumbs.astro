@@ -1,0 +1,14 @@
+---
+import { breadcrumbJsonLd } from '../data/seo.ts';
+interface Props { items: { name: string; href: string }[] }
+const items = [{ name: 'Accueil', href: '/' }, ...Astro.props.items];
+const jsonLd = breadcrumbJsonLd(Astro.site!, items);
+---
+<nav class="breadcrumbs" aria-label="Fil d’Ariane">
+  <ol>
+    {items.map((item, i) => (
+      <li>{i === items.length - 1 ? <span aria-current="page">{item.name}</span> : <a href={item.href}>{item.name}</a>}</li>
+    ))}
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

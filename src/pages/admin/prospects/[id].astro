@@ -1,0 +1,139 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { serviceOptions } from '../../../data/services.ts';
+import { getLead } from '../../../server/leads.ts';
+import { DOCUMENTS, LEAD_SOURCES, LEAD_STATUSES, PREFERRED_CONTACTS, SITUATIONS, TIMELINES } from '../../../server/validation.ts';
+
+export const prerender = false;
+
+const found = await getLead(Astro.params.id ?? '');
+if (!found) return Astro.redirect('/admin?msg=introuvable');
+const { lead, events } = found;
+
+const label = (map: Record<string, string>, key: string | null) => (key ? map[key] ?? key : '—');
+const service = serviceOptions.find((s) => s.value === lead.service)?.label ?? lead.service;
+const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Douala' });
+const phoneDigits = lead.phone.replace(/\D/g, '');
+const waHref = phoneDigits ? `https://wa.me/${phoneDigits}?text=${encodeURIComponent(`Bonjour ${lead.full_name.split(' ')[0]}, c’est Géomètre Topo, suite à votre demande ${lead.reference}.`)}` : '';
+const messages: Record<string, string> = {
+  statut: 'Statut mis à jour.',
+  note: 'Note ajoutée.',
+  anonymise: 'Données personnelles effacées.',
+  confirmation: 'Cochez la case de confirmation pour cette action.',
+  'note-vide': 'La note est vide.',
+};
+const msg = messages[Astro.url.searchParams.get('msg') ?? ''];
+const eventLabels: Record<string, string> = { created: 'Création', status: 'Statut', note: 'Note', notification: 'Notification', anonymized: 'Anonymisation' };
+---
+<AdminLayout title={`Prospect ${lead.reference}`}>
+  <p><a href="/admin">← Retour à la liste</a></p>
+  {msg && <p class="notice notice--info" role="status">{msg}</p>}
+
+  <div class="head">
+    <div>
+      <h1 class="h2">{lead.full_name}</h1>
+      <p class="muted">{lead.reference} · reçu le {fmt.format(lead.created_at)} · <span class={`status status--${lead.status}`}>{LEAD_STATUSES[lead.status]}</span></p>
+    </div>
+    {!lead.anonymized_at && (
+      <div class="btn-row">
+        {phoneDigits && <a class="btn btn--outline" href={`tel:+${phoneDigits}`}>Appeler</a>}
+        {waHref && <a class="btn btn--whatsapp" href={waHref} target="_blank" rel="noopener">WhatsApp</a>}
+        {lead.email && <a class="btn btn--outline" href={`mailto:${lead.email}?subject=${encodeURIComponent(`Votre demande ${lead.reference} – Géomètre Topo`)}`}>E-mail</a>}
+      </div>
+    )}
+  </div>
+
+  <div class="layout">
+    <section class="card">
+      <h2 class="h3">Demande</h2>
+      <dl>
+        <dt>Téléphone</dt><dd>{lead.phone || '—'}</dd>
+        <dt>E-mail</dt><dd>{lead.email || '—'}</dd>
+        <dt>Contact préféré</dt><dd>{label(PREFERRED_CONTACTS, lead.preferred_contact)}</dd>
+        <dt>Service</dt><dd>{service}</dd>
+        <dt>Localité</dt><dd>{lead.locality}{lead.neighborhood ? ` – ${lead.neighborhood}` : ''}</dd>
+        <dt>Superficie</dt><dd>{lead.area ?? '—'}</dd>
+        <dt>Situation</dt><dd>{label(SITUATIONS, lead.situation)}</dd>
+        <dt>Délai</dt><dd>{label(TIMELINES, lead.timeline)}</dd>
+        <dt>Documents</dt><dd>{label(DOCUMENTS, lead.has_documents)}</dd>
+        <dt>Description</dt><dd class="pre">{lead.description ?? '—'}</dd>
+        <dt>Source</dt><dd>{label(LEAD_SOURCES, lead.source)}{lead.source_page && ` · ${lead.source_page}`}{lead.referrer && ` · via ${lead.referrer}`}</dd>
+        {(lead.utm_source || lead.utm_campaign) && <><dt>Campagne</dt><dd>{[lead.utm_source, lead.utm_medium, lead.utm_campaign].filter(Boolean).join(' / ')}</dd></>}
+        <dt>Consentements</dt><dd>Traitement : oui ({fmt.format(lead.consent_at)}) · Prospection : {lead.consent_marketing ? 'oui' : 'non'}</dd>
+        <dt>Notification</dt><dd>{lead.notification_status}</dd>
+      </dl>
+    </section>
+
+    <div class="side">
+      <section class="card">
+        <h2 class="h3">Statut commercial</h2>
+        <form method="post" action={`/api/admin/leads/${lead.id}`}>
+          <input type="hidden" name="action" value="status" />
+          <label for="status" class="sr-only">Statut</label>
+          <select id="status" name="status">
+            {Object.entries(LEAD_STATUSES).map(([v, l]) => <option value={v} selected={lead.status === v}>{l}</option>)}
+          </select>
+          <button class="btn btn--primary btn--block" type="submit">Mettre à jour</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2 class="h3">Ajouter une note</h2>
+        <form method="post" action={`/api/admin/leads/${lead.id}`}>
+          <input type="hidden" name="action" value="note" />
+          <label for="note" class="sr-only">Note interne</label>
+          <textarea id="note" name="note" rows="4" maxlength="4000" required placeholder="Appel effectué, visite prévue le…, devis envoyé…"></textarea>
+          <button class="btn btn--primary btn--block" type="submit">Enregistrer la note</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2 class="h3">Historique</h2>
+        <ol class="timeline">
+          {events.map((e) => (
+            <li>
+              <span class="small muted">{fmt.format(e.created_at)} · {eventLabels[e.type] ?? e.type}{e.actor && e.actor !== 'site' ? ` · ${e.actor}` : ''}</span>
+              <p class="pre">{e.content}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="card danger">
+        <h2 class="h3">Données personnelles</h2>
+        {!lead.anonymized_at && (
+          <form method="post" action={`/api/admin/leads/${lead.id}`}>
+            <input type="hidden" name="action" value="anonymize" />
+            <label class="check"><input type="checkbox" name="confirm" value="oui" required /> Je confirme l’effacement des données personnelles (nom, téléphone, e-mail, description, notes)</label>
+            <button class="btn btn--outline btn--block" type="submit">Anonymiser</button>
+          </form>
+        )}
+        <form method="post" action={`/api/admin/leads/${lead.id}`}>
+          <input type="hidden" name="action" value="delete" />
+          <label class="check"><input type="checkbox" name="confirm" value="oui" required /> Je confirme la suppression définitive de cette demande</label>
+          <button class="btn btn--outline btn--block del" type="submit">Supprimer définitivement</button>
+        </form>
+      </section>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+  .head h1 { font-size: 1.6rem; margin-bottom: 4px; }
+  .layout { display: grid; gap: 16px; }
+  @media (min-width: 960px) { .layout { grid-template-columns: 1.4fr 1fr; align-items: start; } }
+  .side { display: grid; gap: 16px; }
+  h2 { font-size: 1.1rem; }
+  dl { display: grid; grid-template-columns: minmax(110px, 30%) 1fr; gap: 8px 14px; margin: 0; }
+  dt { font-weight: 700; color: var(--muted); font-size: .9rem; }
+  dd { margin: 0; overflow-wrap: anywhere; }
+  .pre { white-space: pre-wrap; margin: 0; }
+  select, textarea { width: 100%; min-height: 44px; padding: 8px 10px; font: inherit; font-size: 16px; border: 1.5px solid #b9bccb; border-radius: 8px; margin-bottom: 10px; background: var(--white); }
+  .timeline { list-style: none; padding: 0; margin: 0; max-height: 420px; overflow-y: auto; }
+  .timeline li { border-left: 3px solid var(--line); padding: 0 0 12px 12px; margin: 0; }
+  .check { display: flex; gap: 8px; align-items: flex-start; font-size: .9rem; margin-bottom: 8px; }
+  .check input { margin-top: 4px; }
+  .danger form + form { margin-top: 16px; }
+  .del { color: var(--danger); }
+</style>

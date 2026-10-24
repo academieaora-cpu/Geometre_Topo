@@ -1,0 +1,26 @@
+{
+  "name": "geometre-topo",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/check-config.mjs && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "node --test tests/*.test.ts",
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "admin:hash": "node scripts/hash-password.mjs",
+    "images": "python3 scripts/optimize-images.py"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/vercel": "^11.0.16",
+    "astro": "^7.3.8",
+    "postgres": "^3.4.9"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "typescript": "^6.0.3"
+  }
+}

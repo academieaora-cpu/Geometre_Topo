@@ -1,0 +1,30 @@
+---
+import { site } from '../config/site.ts';
+---
+<div id="gt-analytics" data-ga={site.gaId}>
+  {site.gaId && (
+    <div class="consent" role="dialog" aria-live="polite" aria-label="Mesure d’audience" hidden>
+      <p>
+        Nous aimerions mesurer la fréquentation du site (Google Analytics) pour l’améliorer. Aucune donnée saisie dans les
+        formulaires n’est transmise. <a href="/confidentialite#cookies">En savoir plus</a>
+      </p>
+      <div class="btn-row">
+        <button type="button" class="btn btn--primary" data-consent="oui">Accepter</button>
+        <button type="button" class="btn btn--outline" data-consent="non">Refuser</button>
+      </div>
+    </div>
+  )}
+</div>
+<script>
+  import '../scripts/analytics.ts';
+</script>
+
+<style>
+  .consent {
+    position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 60; max-width: 560px;
+    background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 18px;
+    box-shadow: var(--shadow-lg); font-size: .95rem;
+  }
+  .consent[hidden] { display: none; }
+  .consent .btn { min-height: 44px; }
+</style>

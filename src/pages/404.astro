@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { activeServices } from '../data/services.ts';
+---
+<BaseLayout title="Page introuvable | Géomètre Topo" description="Cette page n’existe pas ou a été déplacée." noindex>
+  <section class="section">
+    <div class="container narrow">
+      <p class="eyebrow">Erreur 404</p>
+      <h1>Cette page est introuvable</h1>
+      <p class="lead">Comme une borne disparue, cette page n’est plus à l’endroit indiqué. Voici quelques repères :</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href="/">Accueil</a>
+        <a class="btn btn--outline" href="/devis">Demander un devis</a>
+      </div>
+      <h2>Nos services</h2>
+      <ul>{activeServices.map((s) => <li><a href={`/services/${s.slug}`}>{s.name}</a></li>)}</ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .narrow { max-width: 760px; }
+  h2 { margin-top: 40px; }
+</style>

@@ -1,0 +1,217 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+import Faq from '../components/Faq.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { activeServices } from '../data/services.ts';
+import { site } from '../config/site.ts';
+import { homeFaq } from '../data/faq.ts';
+
+const featured = activeServices.filter((s) =>
+  ['leve-topographique', 'bornage-recherche-de-bornes', 'morcellement-de-terrain', 'implantation-batiment', 'plan-topographique', 'travaux-preparatoires-dossier-foncier'].includes(s.slug),
+);
+
+const problems = [
+  { icon: 'search', title: 'Des limites incertaines', text: 'Vous ne savez pas exactement où s’arrête votre terrain, ou une clôture voisine vous semble mal placée.', href: '/services/bornage-recherche-de-bornes' },
+  { icon: 'marker', title: 'Des bornes introuvables', text: 'Les bornes ont disparu sous la végétation, ont été arrachées ou n’ont jamais été retrouvées.', href: '/services/bornage-recherche-de-bornes' },
+  { icon: 'split', title: 'Un terrain à morceler', text: 'Vente d’une partie, partage familial ou création de lots : le découpage doit être juste et réalisable.', href: '/services/morcellement-de-terrain' },
+  { icon: 'building', title: 'Une construction à préparer', text: 'Avant de construire, il faut connaître le terrain et implanter le bâtiment au bon endroit.', href: '/services/implantation-batiment' },
+];
+
+const steps = [
+  { title: 'Vous décrivez votre besoin', text: 'Par le formulaire, WhatsApp ou téléphone, avec les documents dont vous disposez.' },
+  { title: 'Nous étudions la situation', text: 'Nous identifions les travaux utiles et vous envoyons un devis clair.' },
+  { title: 'Intervention sur le terrain', text: 'Mesures au récepteur GNSS et/ou à la station totale, à la date convenue.' },
+  { title: 'Remise des résultats', text: 'Plans, constats ou repères implantés, avec des explications compréhensibles.' },
+];
+
+const homePhotos = ['pose-borne-beton', 'releve-gnss-borne', 'implantation-prisme-mur', 'jalons-borne-existante'];
+---
+<BaseLayout
+  title="Géomètre topographe à Yaoundé – Levés, bornage, implantation | Géomètre Topo"
+  description={site.description}
+>
+  <!-- 1. Message principal -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <p class="eyebrow">Géomètre topographe · Yaoundé et environs</p>
+        <h1>Votre terrain mesuré avec précision, votre projet sécurisé</h1>
+        <p class="lead">
+          Vous avez un terrain à sécuriser ou un projet de construction à préparer ? Géomètre Topo vous accompagne dans vos
+          travaux topographiques et fonciers à Yaoundé et ses environs.
+        </p>
+        <ContactLinks location="hero" light />
+        <ul class="trust">
+          <li><Icon name="target" size={20} />Récepteur GNSS et station totale</li>
+          <li><Icon name="pin" size={20} />Intervention à Yaoundé et environs</li>
+          <li><Icon name="shield" size={20} />Explications claires, données confidentielles</li>
+        </ul>
+      </div>
+      <div class="hero-photo">
+        <Photo slug="releve-gnss-borne" eager sizes="(min-width: 900px) 40vw, 90vw" ratio="4 / 5" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Prestations -->
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Prestations</p>
+        <h2 id="services-title">Des travaux topographiques adaptés à votre situation</h2>
+        <p>Particuliers, familles, promoteurs ou entreprises du BTP : chaque intervention commence par la compréhension de votre besoin.</p>
+      </div>
+      <div class="grid grid--3">
+        {featured.map((s) => <ServiceCard service={s} />)}
+      </div>
+      <p class="center more-link"><a class="btn btn--outline" href="/services">Voir toutes les prestations</a></p>
+    </div>
+  </section>
+
+  <!-- 3. Problèmes fréquents -->
+  <section class="section section--surface" aria-labelledby="problems-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Situations fréquentes</p>
+        <h2 id="problems-title">Vous vous reconnaissez dans l’une de ces situations ?</h2>
+      </div>
+      <div class="grid grid--4">
+        {problems.map((p) => (
+          <article class="card card--link">
+            <span class="icon-badge"><Icon name={p.icon} /></span>
+            <h3><a href={p.href} class="plain">{p.title}</a></h3>
+            <p class="muted">{p.text}</p>
+            <span class="more" aria-hidden="true">Voir la solution →</span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Réalisations -->
+  <section class="section" aria-labelledby="work-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Sur le terrain</p>
+        <h2 id="work-title">Nos interventions, en photos</h2>
+        <p>Des photos authentiques de nos descentes sur le terrain : pose et recherche de bornes, relevés GNSS, implantations.</p>
+      </div>
+      <div class="photo-grid">
+        {homePhotos.map((slug) => <Photo slug={slug} caption sizes="(min-width: 900px) 25vw, 50vw" ratio="3 / 4" />)}
+      </div>
+      <p class="center more-link"><a class="btn btn--outline" href="/realisations">Voir toutes les photos</a></p>
+    </div>
+  </section>
+
+  <!-- 5. Présentation -->
+  <section class="section section--navy" aria-labelledby="about-title">
+    <div class="container two-col about">
+      <Photo slug="portrait-alain-stephane-olouou" sizes="(min-width: 900px) 40vw, 90vw" class="portrait" />
+      <div>
+        <p class="eyebrow">Votre interlocuteur</p>
+        <h2 id="about-title">{site.owner}, géomètre topographe</h2>
+        <p>
+          Derrière Géomètre Topo, il y a un professionnel de terrain. Je me déplace sur votre parcelle, je prends le temps de
+          comprendre votre situation et je vous explique les résultats en termes simples.
+        </p>
+        <p>
+          Mon objectif : que vous connaissiez précisément votre terrain avant d’acheter, de construire ou d’engager une
+          démarche foncière.
+        </p>
+        <a class="btn btn--ghost-light" href="/a-propos">Découvrir mon approche</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Processus -->
+  <section class="section section--surface" aria-labelledby="process-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Comment ça se passe</p>
+        <h2 id="process-title">Un déroulement simple, en 4 étapes</h2>
+      </div>
+      <ol class="steps steps--row">
+        {steps.map((s) => <li><h3>{s.title}</h3><p>{s.text}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7. FAQ + zone -->
+  <section class="section" aria-labelledby="faq-title">
+    <div class="container two-col two-col--wide-left">
+      <div>
+        <p class="eyebrow">Questions fréquentes</p>
+        <h2 id="faq-title">Vos questions, nos réponses</h2>
+        <Faq items={homeFaq} />
+      </div>
+      <aside class="card zone" aria-labelledby="zone-title">
+        <span class="icon-badge"><Icon name="map" /></span>
+        <h2 id="zone-title" class="h3">Zone d’intervention</h2>
+        <p>
+          Géomètre Topo intervient principalement à <strong>Yaoundé</strong> et dans ses environs (région du Centre).
+        </p>
+        <p class="muted small">
+          Votre terrain est plus éloigné ? Indiquez sa localité dans votre demande : nous vous dirons si une intervention
+          est possible et dans quelles conditions.
+        </p>
+        <a href="/contact" class="btn btn--outline btn--block">Nous contacter</a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 8. Formulaire -->
+  <section class="section section--surface" aria-labelledby="formulaire-title">
+    <div class="container two-col">
+      <div>
+        <p class="eyebrow">Demande de devis</p>
+        <h2 id="formulaire-title">Faites étudier votre projet</h2>
+        <p class="lead">Décrivez votre terrain et votre besoin. Vous serez recontacté par le moyen de votre choix.</p>
+        <ul class="check-list">
+          <li>Une réponse adaptée à votre situation réelle</li>
+          <li>Un devis clair avant toute intervention</li>
+          <li>Aucun document sensible demandé au premier contact</li>
+        </ul>
+      </div>
+      <LeadForm id="formulaire" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    background: var(--navy-900); color: #e3e3f5; padding-block: clamp(32px, 6vw, 72px);
+    background-image:
+      linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-grid { display: grid; gap: 32px; align-items: center; }
+  @media (min-width: 900px) { .hero-grid { grid-template-columns: 1.25fr 1fr; } }
+  .hero h1 { color: var(--white); }
+  .hero .lead { color: #d3d4ee; margin-bottom: 24px; }
+  .hero .eyebrow { color: var(--green-500); }
+  .trust { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 10px; font-size: .95rem; color: #d3d4ee; }
+  .trust li { display: flex; gap: 10px; align-items: center; margin: 0; }
+  .trust :global(svg) { color: var(--green-500); flex: none; }
+  .hero-photo { max-width: 460px; justify-self: center; width: 100%; }
+  .hero-photo :global(img) { aspect-ratio: 4 / 5; box-shadow: 0 20px 50px rgb(0 0 0 / 35%); border: 4px solid rgb(255 255 255 / 10%); }
+  @media (max-width: 899px) { .hero-photo { max-width: 360px; } }
+
+  .more-link { margin-top: 32px; }
+  .plain { color: inherit; text-decoration: none; }
+  .card--link .plain::after { content: ''; position: absolute; inset: 0; }
+
+  .photo-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 900px) { .photo-grid { grid-template-columns: repeat(4, 1fr); } }
+  .photo-grid :global(img) { aspect-ratio: 3 / 4; }
+
+  .about { align-items: center; }
+  .about :global(.portrait img) { aspect-ratio: 1 / 1; object-position: center 25%; max-width: 440px; margin-inline: auto; }
+  .about p { color: #d3d4ee; }
+
+  .zone h2 { font-size: 1.3rem; }
+</style>

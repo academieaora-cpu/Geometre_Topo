@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+import Icon from '../components/Icon.astro';
+---
+<!-- Page atteinte uniquement après un enregistrement réussi (envoi sans JavaScript). -->
+<BaseLayout title="Demande enregistrée | Géomètre Topo" description="Votre demande a bien été enregistrée." noindex>
+  <section class="section">
+    <div class="container narrow center">
+      <span class="ok"><Icon name="check" size={32} /></span>
+      <h1>Votre demande est bien enregistrée</h1>
+      <p class="lead" data-ref-line>Nous revenons vers vous rapidement, par le moyen de contact que vous avez choisi.</p>
+      <p><a href="/">Retour à l’accueil</a> · <a href="/conseils">Lire nos conseils</a></p>
+      <ContactLinks location="confirmation" />
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const ref = new URLSearchParams(location.search).get('ref');
+  const line = document.querySelector('[data-ref-line]');
+  if (ref && /^GT-\d{6}-[A-Z0-9]{5}$/.test(ref) && line) line.textContent = `Référence : ${ref}. ${line.textContent}`;
+</script>
+
+<style>
+  .narrow { max-width: 680px; }
+  .ok { display: inline-grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: var(--green-100); color: var(--success); margin-bottom: 16px; }
+  .narrow :global(.btn-row) { justify-content: center; }
+</style>

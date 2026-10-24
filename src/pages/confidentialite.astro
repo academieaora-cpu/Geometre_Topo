@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { site } from '../config/site.ts';
+import { legal } from '../data/legal.ts';
+const contact = site.email ? site.email : 'le formulaire de contact du site';
+---
+<BaseLayout
+  title="Politique de confidentialité et cookies | Géomètre Topo"
+  description="Comment Géomètre Topo collecte, utilise et protège les données personnelles transmises via le site, durées de conservation et droits des personnes."
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Confidentialité', href: '/confidentialite' }]} />
+      <h1>Politique de confidentialité</h1>
+      <p class="lead">Dernière mise à jour : {legal.privacyUpdatedAt}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <h2>1. Qui est responsable de vos données ?</h2>
+      <p>
+        Le responsable du traitement est <strong>{site.owner}</strong>, exerçant sous le nom commercial
+        <strong>{site.name}</strong> (géomètre topographe, Yaoundé, Cameroun). Pour toute question relative à vos données :
+        {site.email ? <a href={`mailto:${site.email}`}>{site.email}</a> : <a href="/contact">formulaire de contact</a>}.
+      </p>
+
+      <h2>2. Quelles données collectons-nous ?</h2>
+      <p>Lorsque vous remplissez un formulaire de demande ou de contact :</p>
+      <ul>
+        <li>vos nom et prénom, numéro de téléphone, adresse e-mail et moyen de contact préféré ;</li>
+        <li>les informations sur votre projet : service recherché, localité et quartier du terrain, superficie approximative, situation, délai, disponibilité de documents, description libre ;</li>
+        <li>vos choix de consentement et leur date ;</li>
+        <li>des informations techniques : page d’origine de la demande, site référent (nom de domaine uniquement), paramètres de campagne éventuels, et une <strong>empreinte irréversible</strong> de votre adresse IP servant uniquement à limiter les envois abusifs (l’adresse IP elle-même n’est pas conservée).</li>
+      </ul>
+      <p>
+        Nous ne demandons ni coordonnées GPS précises, ni copie de titre foncier, ni pièce d’identité au premier contact.
+        Merci de ne pas en inclure dans le champ de description.
+      </p>
+
+      <h2>3. Pourquoi les utilisons-nous ?</h2>
+      <ul>
+        <li><strong>Étudier votre demande, vous recontacter et établir un devis</strong> : sur la base de votre accord, donné en cochant la case prévue, et des mesures préalables à un éventuel contrat.</li>
+        <li><strong>Assurer le suivi commercial</strong> de votre demande (statut, notes internes, historique des échanges).</li>
+        <li><strong>Vous envoyer des conseils ou informations</strong> : uniquement si vous avez coché la case facultative prévue à cet effet. Vous pouvez retirer cet accord à tout moment.</li>
+        <li><strong>Protéger le site</strong> contre les envois automatisés et les accès non autorisés.</li>
+      </ul>
+      <p>Vos données ne sont <strong>ni vendues, ni louées, ni cédées</strong> à des tiers à des fins commerciales.</p>
+
+      <h2>4. Qui peut y accéder ?</h2>
+      <p>
+        Seul le responsable de Géomètre Topo (et, le cas échéant, les personnes qu’il habilite) accède aux demandes, via un
+        espace d’administration protégé par mot de passe. Des prestataires techniques interviennent pour faire fonctionner le
+        site, sans droit d’utiliser vos données pour leur propre compte :
+      </p>
+      <ul>
+        {legal.processors.map((p) => <li><strong>{p.name}</strong> – {p.role} ({p.location})</li>)}
+      </ul>
+      <p>
+        Certains de ces prestataires sont situés hors du Cameroun. Nous les sélectionnons pour leurs garanties de sécurité
+        (chiffrement des échanges, contrôle des accès).
+      </p>
+
+      <h2>5. Combien de temps les conservons-nous ?</h2>
+      <ul>
+        <li><strong>Demandes n’ayant pas abouti</strong> : 3 ans maximum après le dernier échange, puis suppression ou anonymisation.</li>
+        <li><strong>Demandes ayant donné lieu à une prestation</strong> : pendant la durée de la relation, puis selon les obligations légales applicables (comptables notamment).</li>
+        <li><strong>Tentatives de connexion à l’administration</strong> : 7 jours.</li>
+        <li><strong>Préférence de mesure d’audience</strong> : conservée dans votre navigateur jusqu’à ce que vous l’effaciez.</li>
+      </ul>
+      <p>L’anonymisation efface le nom, le téléphone, l’e-mail et le texte libre ; seules des informations statistiques sont conservées.</p>
+
+      <h2>6. Vos droits</h2>
+      <p>
+        Conformément à la réglementation applicable au Cameroun en matière de protection des données à caractère personnel,
+        vous pouvez demander l’<strong>accès</strong> à vos données, leur <strong>rectification</strong>, leur
+        <strong>suppression</strong>, vous <strong>opposer</strong> à leur utilisation ou retirer votre consentement aux
+        communications. Écrivez-nous via {contact} en précisant la référence de votre demande si vous l’avez. Nous pouvons
+        vous demander de confirmer votre identité avant d’agir.
+      </p>
+
+      <h2>7. Sécurité</h2>
+      <p>
+        Le site est servi exclusivement en HTTPS. Les demandes sont enregistrées dans une base de données à accès restreint ;
+        l’espace d’administration est protégé par mot de passe haché, session sécurisée et limitation des tentatives de
+        connexion. Les formulaires sont protégés contre les envois automatisés.
+      </p>
+
+      <h2 id="cookies">8. Cookies et mesure d’audience</h2>
+      {site.gaId ? (
+        <>
+          <p>
+            Avec votre accord uniquement, le site utilise <strong>Google Analytics 4</strong> pour mesurer sa fréquentation
+            (pages consultées, clics sur les boutons de contact, envoi réussi d’un formulaire). Aucune donnée saisie dans les
+            formulaires (nom, téléphone, e-mail, description) n’est transmise à cet outil. Sans votre accord, aucun cookie de
+            mesure n’est déposé.
+          </p>
+          <p><a href="#cookies" data-consent-reset>Modifier mes préférences de mesure d’audience</a></p>
+        </>
+      ) : (
+        <p>Le site n’utilise actuellement <strong>aucun cookie de mesure d’audience ni de publicité</strong>.</p>
+      )}
+      <p>
+        Un cookie strictement nécessaire est utilisé uniquement dans l’espace d’administration (session de connexion). Le
+        formulaire conserve temporairement votre saisie dans votre navigateur (stockage de session) afin qu’elle ne soit
+        pas perdue en cas de coupure de connexion ; elle est effacée après l’envoi réussi ou à la fermeture de l’onglet.
+      </p>
+
+      <h2>9. WhatsApp</h2>
+      <p>
+        Les boutons WhatsApp ouvrent l’application avec un message prérempli que vous pouvez modifier ; rien n’est envoyé
+        sans votre validation. Les échanges sur WhatsApp sont soumis aux conditions et à la politique de confidentialité de
+        WhatsApp.
+      </p>
+
+      <h2>10. Modifications</h2>
+      <p>Cette politique peut être mise à jour. La date de dernière mise à jour figure en haut de la page.</p>
+    </div>
+  </section>
+</BaseLayout>

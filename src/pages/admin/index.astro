@@ -1,0 +1,145 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { serviceOptions } from '../../data/services.ts';
+import { DatabaseNotConfiguredError } from '../../server/db.ts';
+import { leadsLast7Days, listLeads, PAGE_SIZE, statusCounts, type LeadRow } from '../../server/leads.ts';
+import { notificationsConfigured } from '../../server/notify.ts';
+import { LEAD_STATUSES, PREFERRED_CONTACTS } from '../../server/validation.ts';
+
+export const prerender = false;
+
+const p = Astro.url.searchParams;
+const filters = {
+  q: (p.get('q') ?? '').trim().slice(0, 100),
+  status: p.get('status') ?? '',
+  service: p.get('service') ?? '',
+  from: p.get('from') ?? '',
+  to: p.get('to') ?? '',
+  page: Math.max(1, Number(p.get('page')) || 1),
+};
+
+let rows: LeadRow[] = [];
+let total = 0;
+let counts: Record<string, number> = {};
+let week = 0;
+let dbError = '';
+try {
+  [{ rows, total }, counts, week] = await Promise.all([
+    listLeads({ ...filters, status: filters.status || undefined, service: filters.service || undefined }),
+    statusCounts(),
+    leadsLast7Days(),
+  ]);
+} catch (err) {
+  dbError = err instanceof DatabaseNotConfiguredError
+    ? 'La base de données n’est pas configurée (variable DATABASE_URL).'
+    : 'La base de données est inaccessible pour le moment.';
+  console.error('[admin] liste', err instanceof Error ? err.message : err);
+}
+
+const services = Object.fromEntries(serviceOptions.map((s) => [s.value, s.label]));
+const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+const qs = (extra: Record<string, string | number>) => {
+  const u = new URLSearchParams();
+  for (const [k, v] of Object.entries({ ...filters, ...extra })) if (v !== '' && v !== undefined && !(k === 'page' && v === 1)) u.set(k, String(v));
+  return u.toString();
+};
+const exportQs = qs({ page: 1 });
+const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Africa/Douala' });
+const msg = p.get('msg');
+---
+<AdminLayout title="Prospects">
+  {msg === 'supprime' && <p class="notice notice--info">Le prospect a été supprimé définitivement.</p>}
+  {!notificationsConfigured() && (
+    <p class="notice">Les notifications e-mail ne sont pas configurées : consultez régulièrement cette page pour voir les nouvelles demandes.</p>
+  )}
+  {dbError ? <p class="notice">{dbError}</p> : (
+    <>
+      <div class="kpis">
+        <a class="kpi card" href="/admin?status=nouveau"><strong>{counts.nouveau ?? 0}</strong><span>Nouveaux</span></a>
+        <a class="kpi card" href="/admin?status=a_contacter"><strong>{counts.a_contacter ?? 0}</strong><span>À contacter</span></a>
+        <a class="kpi card" href="/admin?status=devis_a_preparer"><strong>{counts.devis_a_preparer ?? 0}</strong><span>Devis à préparer</span></a>
+        <a class="kpi card" href="/admin?status=confirme"><strong>{counts.confirme ?? 0}</strong><span>Prestations confirmées</span></a>
+        <div class="kpi card"><strong>{week}</strong><span>Demandes sur 7 jours</span></div>
+      </div>
+
+      <form class="filters card" method="get" action="/admin">
+        <div>
+          <label for="q">Recherche</label>
+          <input id="q" name="q" type="search" value={filters.q} placeholder="Nom, téléphone, e-mail, localité, référence…" />
+        </div>
+        <div>
+          <label for="status">Statut</label>
+          <select id="status" name="status">
+            <option value="">Tous (hors archivés)</option>
+            {Object.entries(LEAD_STATUSES).map(([v, l]) => <option value={v} selected={filters.status === v}>{l} ({counts[v] ?? 0})</option>)}
+          </select>
+        </div>
+        <div>
+          <label for="service">Service</label>
+          <select id="service" name="service">
+            <option value="">Tous</option>
+            {serviceOptions.map((s) => <option value={s.value} selected={filters.service === s.value}>{s.label}</option>)}
+          </select>
+        </div>
+        <div><label for="from">Du</label><input id="from" name="from" type="date" value={filters.from} /></div>
+        <div><label for="to">Au</label><input id="to" name="to" type="date" value={filters.to} /></div>
+        <div class="actions">
+          <button class="btn btn--primary" type="submit">Filtrer</button>
+          <a class="btn btn--outline" href="/admin">Réinitialiser</a>
+          <a class="btn btn--outline" href={`/api/admin/export${exportQs ? `?${exportQs}` : ''}`}>Export CSV</a>
+        </div>
+      </form>
+
+      <p class="small muted">{total} demande{total > 1 ? 's' : ''}</p>
+      {rows.length === 0 ? <p class="card">Aucune demande ne correspond à ces critères.</p> : (
+        <div class="table-wrap card">
+          <table>
+            <thead><tr><th>Date</th><th>Prospect</th><th>Service</th><th>Localité</th><th>Contact</th><th>Statut</th></tr></thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr class:list={[r.status === 'nouveau' && 'is-new']}>
+                  <td>{fmt.format(r.created_at)}<br /><span class="small muted">{r.reference}</span></td>
+                  <td><a href={`/admin/prospects/${r.id}`}><strong>{r.full_name}</strong></a><br /><span class="small">{r.phone}</span></td>
+                  <td>{services[r.service] ?? r.service}</td>
+                  <td>{r.locality}{r.neighborhood && <span class="small muted"><br />{r.neighborhood}</span>}</td>
+                  <td>{PREFERRED_CONTACTS[r.preferred_contact as keyof typeof PREFERRED_CONTACTS] ?? r.preferred_contact}</td>
+                  <td><span class={`status status--${r.status}`}>{LEAD_STATUSES[r.status]}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {pages > 1 && (
+        <nav class="pager" aria-label="Pagination">
+          {filters.page > 1 && <a class="btn btn--outline" href={`/admin?${qs({ page: filters.page - 1 })}`}>← Précédent</a>}
+          <span>Page {filters.page} / {pages}</span>
+          {filters.page < pages && <a class="btn btn--outline" href={`/admin?${qs({ page: filters.page + 1 })}`}>Suivant →</a>}
+        </nav>
+      )}
+    </>
+  )}
+</AdminLayout>
+
+<style>
+  .kpis { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 16px; }
+  .kpi { padding: 16px; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; }
+  .kpi strong { font-size: 1.8rem; color: var(--navy-900); line-height: 1.1; }
+  .kpi span { color: var(--muted); font-size: .9rem; }
+  .filters { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); align-items: end; margin-bottom: 12px; padding: 16px; }
+  .filters > div:first-child { grid-column: 1 / -1; }
+  .filters label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 4px; }
+  .filters input, .filters select { width: 100%; min-height: 44px; padding: 8px 10px; font: inherit; font-size: 16px; border: 1.5px solid #b9bccb; border-radius: 8px; background: var(--white); }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; grid-column: 1 / -1; }
+  .actions .btn { min-height: 44px; padding: 8px 16px; }
+  .table-wrap { padding: 0; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .95rem; min-width: 760px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--navy-100); color: var(--navy-900); font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
+  tr.is-new td:first-child { box-shadow: inset 4px 0 0 var(--amber-500); }
+  .pager { display: flex; gap: 12px; align-items: center; justify-content: center; margin-top: 16px; }
+  :global(.status) { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .82rem; font-weight: 700; background: var(--navy-100); color: var(--navy-800); white-space: nowrap; }
+  :global(.status--nouveau) { background: var(--amber-100); color: #8a5300; }
+  :global(.status--confirme) { background: var(--green-100); color: var(--success); }
+  :global(.status--non_converti), :global(.status--archive) { background: #ececf0; color: #555; }
+</style>

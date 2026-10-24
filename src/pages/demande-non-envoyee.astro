@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+---
+<BaseLayout title="Demande non enregistrée | Géomètre Topo" description="Votre demande n’a pas pu être enregistrée." noindex>
+  <section class="section">
+    <div class="container narrow">
+      <h1>Votre demande n’a pas été enregistrée</h1>
+      <p class="lead">
+        Certaines informations sont manquantes ou incorrectes, ou un problème technique est survenu. Aucune donnée n’a été
+        conservée.
+      </p>
+      <ul class="warn-list">
+        <li>Vérifiez que le nom, le téléphone, l’adresse e-mail et la localité sont bien renseignés.</li>
+        <li>Cochez la case d’accord pour le traitement de votre demande.</li>
+        <li>Si le problème persiste, contactez-nous directement.</li>
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn--primary" href="/devis">Recommencer ma demande</a>
+      </div>
+      <h2>Nous joindre directement</h2>
+      <ContactLinks variant="list" location="erreur_formulaire" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .narrow { max-width: 720px; }
+  h2 { margin-top: 40px; }
+</style>

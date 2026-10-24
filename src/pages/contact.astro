@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import LeadForm from '../components/LeadForm.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+import { site } from '../config/site.ts';
+---
+<BaseLayout
+  title="Contacter un géomètre topographe à Yaoundé | Géomètre Topo"
+  description="Contactez Géomètre Topo par WhatsApp, téléphone, e-mail ou formulaire. Intervention à Yaoundé et dans ses environs."
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Contact', href: '/contact' }]} />
+      <h1>Contact</h1>
+      <p class="lead">Une question, un terrain à vérifier, un projet à préparer ? Choisissez le moyen qui vous convient.</p>
+      <ContactLinks location="contact_hero" light />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-col">
+      <div class="stack">
+        <div class="card">
+          <h2 class="h3">Coordonnées</h2>
+          <ContactLinks variant="list" location="contact_page" />
+        </div>
+        <div class="card">
+          <h2 class="h3">Zone d’intervention</h2>
+          <p class="mb-0">Yaoundé et ses environs (région du Centre, Cameroun). Pour un terrain plus éloigné, précisez sa localité dans votre message.</p>
+        </div>
+        <div class="card">
+          <h2 class="h3">Pour une réponse rapide, indiquez :</h2>
+          <ul class="check-list mb-0">
+            <li>la localité et le quartier du terrain ;</li>
+            <li>ce que vous souhaitez faire (achat, construction, limites, morcellement…) ;</li>
+            <li>la superficie approximative, si vous la connaissez ;</li>
+            <li>si vous disposez de plans ou de documents.</li>
+          </ul>
+        </div>
+        {!site.whatsapp && !site.phone && !site.email && (
+          <p class="notice">Nos coordonnées directes seront bientôt affichées ici. En attendant, le formulaire est le moyen le plus sûr de nous joindre.</p>
+        )}
+      </div>
+      <LeadForm id="formulaire" variant="compact" source="formulaire_contact" title="Envoyer un message" submitLabel="Envoyer mon message" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .card h2 { font-size: 1.15rem; }
+</style>

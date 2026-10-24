@@ -1,0 +1,99 @@
+---
+import Icon from './Icon.astro';
+import { nav, site } from '../config/site.ts';
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? current === '/' : current === href || current.startsWith(href + '/'));
+---
+<header class="site-header">
+  <div class="container bar">
+    <a href="/" class="brand" aria-label={`${site.name} – accueil`}>
+      <img src="/images/logo-96.webp" srcset="/images/logo-96.webp 1x, /images/logo-192.webp 2x" width="77" height="48" alt="" />
+      <span class="brand-text"><strong>Géomètre Topo</strong><small>Géomètre topographe · Yaoundé</small></span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Navigation principale">
+      <ul>
+        {nav.slice(1).map((item) => (
+          <li><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="actions">
+      {site.phoneHref && (
+        <a class="call" href={site.phoneHref} data-track="click_phone" data-track-location="header" aria-label={`Appeler ${site.phone}`}>
+          <Icon name="phone" size={20} />
+        </a>
+      )}
+      <a class="btn btn--primary cta" href="/devis" data-track="cta_devis" data-track-location="header">Demander un devis</a>
+
+      <details class="nav-mobile">
+        <summary aria-label="Ouvrir le menu"><Icon name="menu" size={26} /><span class="sr-only">Menu</span></summary>
+        <nav aria-label="Navigation mobile">
+          <ul>
+            {nav.map((item) => (
+              <li><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+            ))}
+            <li><a href="/devis" class="btn btn--primary btn--block" data-track="cta_devis" data-track-location="menu">Demander un devis</a></li>
+          </ul>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 50; background: var(--navy-900); color: var(--white);
+    box-shadow: 0 2px 10px rgb(0 0 0 / 18%);
+  }
+  .bar { display: flex; align-items: center; gap: 16px; min-height: var(--header-h); }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--white); text-decoration: none; flex: none; }
+  .brand img { height: 44px; width: auto; }
+  .brand-text { display: none; line-height: 1.15; }
+  .brand-text strong { display: block; font-size: 1rem; }
+  .brand-text small { font-size: .78rem; color: #c3c3e3; }
+  @media (min-width: 1200px) { .brand-text { display: block; } }
+
+  .nav-desktop { display: none; margin-left: auto; }
+  .nav-desktop ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .nav-desktop li { margin: 0; }
+  .nav-desktop a {
+    display: block; padding: 10px 12px; color: #e3e3f5; text-decoration: none; font-weight: 600; border-radius: 8px;
+  }
+  .nav-desktop a:hover { background: rgb(255 255 255 / 8%); color: var(--white); }
+  .nav-desktop a[aria-current='page'] { color: var(--white); box-shadow: inset 0 -3px 0 var(--green-500); border-radius: 0; }
+  @media (min-width: 1000px) { .nav-desktop { display: block; } }
+
+  .actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  @media (min-width: 1000px) { .actions { margin-left: 8px; } }
+  .call {
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: 10px;
+    color: var(--white); border: 1px solid rgb(255 255 255 / 30%);
+  }
+  .call:hover { background: rgb(255 255 255 / 10%); color: var(--white); }
+  .cta { min-height: 44px; padding: 8px 14px; font-size: .95rem; }
+  @media (max-width: 420px) { .cta { display: none; } }
+
+  .nav-mobile { position: relative; }
+  .nav-mobile summary {
+    list-style: none; cursor: pointer; display: grid; place-items: center; width: 44px; height: 44px;
+    border-radius: 10px; border: 1px solid rgb(255 255 255 / 30%);
+  }
+  .nav-mobile summary::-webkit-details-marker { display: none; }
+  .nav-mobile nav {
+    position: fixed; left: 0; right: 0; top: var(--header-h); background: var(--navy-900);
+    border-top: 1px solid rgb(255 255 255 / 12%); padding: 8px var(--gutter) 20px; box-shadow: var(--shadow-lg);
+    max-height: calc(100dvh - var(--header-h)); overflow-y: auto;
+  }
+  .nav-mobile ul { list-style: none; margin: 0; padding: 0; }
+  .nav-mobile li { margin: 0; }
+  .nav-mobile a:not(.btn) {
+    display: block; padding: 14px 4px; color: var(--white); text-decoration: none; font-weight: 600; font-size: 1.1rem;
+    border-bottom: 1px solid rgb(255 255 255 / 10%);
+  }
+  .nav-mobile a[aria-current='page'] { color: var(--green-500); }
+  .nav-mobile .btn { margin-top: 16px; }
+  @media (min-width: 1000px) { .nav-mobile { display: none; } }
+</style>

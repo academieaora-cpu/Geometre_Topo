@@ -1,0 +1,25 @@
+---
+import Icon from './Icon.astro';
+import { defaultWhatsappMessage, whatsappLink } from '../config/site.ts';
+
+interface Props { message?: string }
+const href = whatsappLink(Astro.props.message ?? defaultWhatsappMessage);
+---
+{href && (
+  <a class="wa-fab" href={href} aria-label="Écrire sur WhatsApp" target="_blank" rel="noopener" data-track="click_whatsapp" data-track-location="bouton_flottant">
+    <Icon name="whatsapp" size={28} />
+    <span>WhatsApp</span>
+  </a>
+)}
+
+<style>
+  .wa-fab {
+    position: fixed; right: 16px; bottom: 16px; z-index: 40;
+    display: inline-flex; align-items: center; gap: 8px; min-height: 56px; padding: 0 18px 0 14px;
+    background: var(--whatsapp); color: var(--white); border-radius: 999px; text-decoration: none; font-weight: 700;
+    box-shadow: 0 6px 20px rgb(0 0 0 / 25%);
+  }
+  .wa-fab:hover { background: var(--whatsapp-dark); color: var(--white); }
+  @media (max-width: 480px) { .wa-fab span { display: none; } .wa-fab { padding: 0; width: 56px; justify-content: center; } }
+  @media print { .wa-fab { display: none; } }
+</style>

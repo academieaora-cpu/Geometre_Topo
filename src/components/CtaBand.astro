@@ -1,0 +1,22 @@
+---
+import ContactLinks from './ContactLinks.astro';
+interface Props {
+  title?: string;
+  text?: string;
+  whatsappMessage?: string;
+  location: string;
+}
+const {
+  title = 'Un terrain à vérifier ou un projet à préparer ?',
+  text = 'Décrivez votre situation en quelques lignes : vous recevrez une réponse claire sur les travaux utiles et un devis adapté.',
+  whatsappMessage,
+  location,
+} = Astro.props;
+---
+<div class="cta-band">
+  <div>
+    <h2>{title}</h2>
+    <p>{text}</p>
+  </div>
+  <ContactLinks whatsappMessage={whatsappMessage} location={location} light />
+</div>

@@ -1,0 +1,57 @@
+---
+/**
+ * Photo responsive (WebP, srcset) à partir du manifeste généré par `npm run images`.
+ * Si la photo n'existe pas encore, un emplacement réservé clairement identifié est affiché.
+ */
+import images from '../data/images.json';
+import { gallery } from '../data/gallery.ts';
+
+interface Props {
+  slug: string;
+  alt?: string;
+  sizes?: string;
+  eager?: boolean;
+  caption?: string | boolean;
+  class?: string;
+  /** Ratio d'affichage ; par défaut celui de la photo. (Classe CSS : pas d'attribut style, compatible CSP.) */
+  ratio?: '3 / 4' | '4 / 5' | '16 / 10' | '1 / 1';
+}
+
+const { slug, alt, sizes = '(min-width: 900px) 50vw, 100vw', eager = false, caption, class: className, ratio } = Astro.props;
+const entry = (images as Record<string, { width: number; height: number; variants: { src: string; width: number; height: number }[] }>)[slug];
+const meta = gallery.find((g) => g.slug === slug);
+const altText = alt ?? meta?.alt ?? '';
+const captionText = caption === true ? meta?.caption : caption || undefined;
+const ratioClass = ratio ? `ratio-${ratio.replace(/\D+/g, '-')}` : undefined;
+const mid = entry?.variants[Math.min(1, entry.variants.length - 1)];
+---
+{entry ? (
+  <figure class:list={['photo', ratioClass, className]}>
+    <img
+      src={mid!.src}
+      srcset={entry.variants.map((v) => `${v.src} ${v.width}w`).join(', ')}
+      sizes={sizes}
+      width={mid!.width}
+      height={mid!.height}
+      alt={altText}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding={eager ? 'sync' : 'async'}
+      fetchpriority={eager ? 'high' : undefined}
+    />
+    {captionText && <figcaption>{captionText}</figcaption>}
+  </figure>
+) : (
+  <figure class:list={['photo photo--placeholder', ratioClass, className]}>
+    <div role="img" aria-label={`Emplacement photo à compléter : ${altText || slug}`}>
+      Photo à intégrer : {slug}
+    </div>
+  </figure>
+)}
+
+<style>
+  .photo--placeholder div {
+    display: grid; place-items: center; min-height: 220px; height: 100%; padding: 16px; text-align: center;
+    border: 2px dashed var(--line); border-radius: var(--radius-lg); color: var(--muted); background: var(--surface);
+    font-size: .9rem;
+  }
+</style>
