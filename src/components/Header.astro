@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { nav, site, whatsappLink, defaultWhatsappMessage } from '../config/site.ts';
+import { nav, site, socialProfiles, whatsappLink, defaultWhatsappMessage } from '../config/site.ts';
 
 const current = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => (href === '/' ? current === '/' : current === href || current.startsWith(href + '/'));
@@ -13,11 +13,16 @@ const wa = whatsappLink(defaultWhatsappMessage);
       {site.email && <li class="hide-sm"><Icon name="mail" size={15} /><a href={`mailto:${site.email}`} data-track="click_email" data-track-location="topbar">{site.email}</a></li>}
       <li><Icon name="pin" size={15} /><span>Yaoundé et environs</span></li>
     </ul>
+    <div class="topbar-right">
+    {socialProfiles.map((s) => (
+      <a class="topbar-social hide-sm" href={s.url} target="_blank" rel="noopener me" aria-label={`${site.name} sur ${s.label}`} data-track="click_social" data-track-location="topbar"><Icon name={s.icon} size={16} /></a>
+    ))}
     {wa && (
       <a class="topbar-wa" href={wa} target="_blank" rel="noopener" data-track="click_whatsapp" data-track-location="topbar">
         <Icon name="whatsapp" size={16} /> WhatsApp
       </a>
     )}
+    </div>
   </div>
 </div>
 <header class="site-header">
@@ -66,6 +71,9 @@ const wa = whatsappLink(defaultWhatsappMessage);
   .topbar :global(svg) { color: var(--green-500); }
   .topbar a { color: #e9edf7; text-decoration: none; }
   .topbar a:hover { color: var(--white); text-decoration: underline; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .topbar-social { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; }
+  .topbar-social:hover { background: rgb(255 255 255 / 12%); }
   .topbar-wa { display: inline-flex; align-items: center; gap: 6px; background: var(--whatsapp); color: var(--white) !important; padding: 4px 12px; border-radius: 999px; font-weight: 600; }
   .topbar-wa:hover { text-decoration: none !important; background: var(--whatsapp-dark); }
   @media (max-width: 640px) { .hide-sm { display: none !important; } .topbar-wa { display: none; } }

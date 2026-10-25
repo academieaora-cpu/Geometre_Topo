@@ -53,6 +53,14 @@ export const site = {
   googleSiteVerification: (env.PUBLIC_GOOGLE_SITE_VERIFICATION ?? '').trim(),
 } as const;
 
+/** Réseaux sociaux reconnus à partir de PUBLIC_SOCIAL_LINKS (icône et libellé). */
+export const socialProfiles = site.socials.map((url) => {
+  const host = (() => { try { return new URL(url).hostname; } catch { return ''; } })();
+  if (host.includes('facebook.')) return { url, icon: 'facebook', label: 'Facebook' };
+  if (host.includes('instagram.')) return { url, icon: 'instagram', label: 'Instagram' };
+  return { url, icon: 'arrow', label: host.replace(/^www\./, '') || 'Lien' };
+});
+
 export const nav = [
   { href: '/', label: 'Accueil' },
   { href: '/services', label: 'Services' },

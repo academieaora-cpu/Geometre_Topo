@@ -1,7 +1,7 @@
 ---
 /** Boutons de contact direct (téléphone, WhatsApp, e-mail). N'affiche que les canaux configurés. */
 import Icon from './Icon.astro';
-import { defaultWhatsappMessage, site, whatsappLink } from '../config/site.ts';
+import { defaultWhatsappMessage, site, socialProfiles, whatsappLink } from '../config/site.ts';
 
 interface Props {
   whatsappMessage?: string;
@@ -40,6 +40,9 @@ const hasAny = Boolean(wa || site.phoneHref || site.email);
     )}
     <li><Icon name="pin" /><span>Yaoundé et environs (Centre, Cameroun)</span></li>
     {site.hours && <li><Icon name="clock" /><span>{site.hours}</span></li>}
+    {socialProfiles.map((s) => (
+      <li><Icon name={s.icon} /><a href={s.url} target="_blank" rel="noopener me" data-track="click_social" data-track-location={location}>{s.label === 'Instagram' ? `Instagram : @${s.url.split('/').filter(Boolean).pop()}` : `${s.label} : ${site.name}`}</a></li>
+    ))}
     {!hasAny && <li class="muted">Coordonnées en cours de mise à jour : utilisez le formulaire de demande.</li>}
   </ul>
 )}

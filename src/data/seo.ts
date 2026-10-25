@@ -68,6 +68,11 @@ export function personJsonLd(base: URL): Record<string, unknown> {
     jobTitle: site.ownerTitle,
     image: `${url}/images/photos/portrait-alain-stephane-olouou-720.webp`,
     worksFor: { '@id': `${url}/#entreprise` },
+    alumniOf: {
+      '@type': 'CollegeOrUniversity',
+      name: 'École nationale supérieure des travaux publics de Yaoundé',
+      alternateName: 'ENSTP',
+    },
     workLocation: { '@type': 'City', name: site.city },
   };
 }

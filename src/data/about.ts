@@ -5,7 +5,7 @@
  */
 export const about = {
   /** Ex. « Diplôme de … – Établissement, année ». À compléter après validation. */
-  education: [] as string[],
+  education: ['Diplômé de l’École nationale supérieure des travaux publics (ENSTP) de Yaoundé'] as string[],
   /** Équipements visibles sur les photos de chantier fournies. */
   equipment: [
     'Récepteurs GNSS avec contrôleur de terrain, pour les relevés et implantations de précision',

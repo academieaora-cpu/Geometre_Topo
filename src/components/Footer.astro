@@ -1,6 +1,7 @@
 ---
 import ContactLinks from './ContactLinks.astro';
-import { site } from '../config/site.ts';
+import Icon from './Icon.astro';
+import { site, socialProfiles } from '../config/site.ts';
 import { activeServices } from '../data/services.ts';
 const year = new Date().getFullYear();
 ---
@@ -11,6 +12,13 @@ const year = new Date().getFullYear();
       <p class="about">
         {site.owner}, géomètre topographe. Levés, bornes, implantations et accompagnement de vos projets fonciers à Yaoundé et dans ses environs.
       </p>
+      {socialProfiles.length > 0 && (
+        <ul class="socials" aria-label="Réseaux sociaux">
+          {socialProfiles.map((s) => (
+            <li><a href={s.url} target="_blank" rel="noopener me" aria-label={`${site.name} sur ${s.label}`} data-track="click_social" data-track-location={s.label}><Icon name={s.icon} size={20} /></a></li>
+          ))}
+        </ul>
+      )}
     </div>
     <div>
       <h2>Services</h2>
@@ -58,6 +66,10 @@ const year = new Date().getFullYear();
     display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-block: 20px 96px;
     border-top: 1px solid rgb(255 255 255 / 12%); font-size: .88rem;
   }
+  .socials { display: flex; gap: 10px; margin-top: 18px; }
+  .socials li { margin: 0; }
+  .socials a { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgb(255 255 255 / 20%); color: var(--white); }
+  .socials a:hover { background: var(--green-700); border-color: var(--green-700); text-decoration: none; }
   .legal p { margin: 0; }
   .legal ul { display: flex; flex-wrap: wrap; gap: 16px; }
   .legal li { margin: 0; }
