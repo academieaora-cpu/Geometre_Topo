@@ -55,7 +55,7 @@ export const gallery: GalleryPhoto[] = [
     alt: 'Contrôleur de terrain fixé sur la canne d’un récepteur GNSS, à côté d’une borne en béton fraîchement posée',
     caption: 'Relevé d’une borne au récepteur GNSS, contrôleur de terrain en main.',
     category: 'mesures',
-    services: ['bornage-recherche-de-bornes', 'travaux-preparatoires-dossier-foncier', 'plan-topographique'],
+    services: ['bornage-recherche-de-bornes', 'dossier-technique-immatriculation', 'plan-topographique'],
   },
   {
     slug: 'gnss-vegetation-dense',
@@ -111,7 +111,7 @@ export const gallery: GalleryPhoto[] = [
     alt: 'Deux jalons rouges et blancs et une canne de mesure posés près d’une borne existante dans l’herbe',
     caption: 'Repérage d’une borne existante avec jalons et canne de mesure.',
     category: 'bornes',
-    services: ['bornage-recherche-de-bornes', 'conseil-terrain', 'travaux-preparatoires-dossier-foncier'],
+    services: ['bornage-recherche-de-bornes', 'conseil-terrain', 'dossier-technique-immatriculation'],
   },
   {
     slug: 'borne-peinte-limite',
@@ -167,7 +167,7 @@ export const gallery: GalleryPhoto[] = [
     alt: 'Extrait de plan de bornage montrant le contour d’une parcelle, ses bornes B1 à B6 et les distances entre elles',
     caption: 'Extrait de plan de bornage (informations du client masquées).',
     category: 'bureau',
-    services: ['plan-topographique', 'travaux-preparatoires-dossier-foncier', 'bornage-recherche-de-bornes', 'morcellement-de-terrain'],
+    services: ['plan-topographique', 'dossier-technique-immatriculation', 'bornage-recherche-de-bornes', 'morcellement-de-terrain'],
   },
   {
     slug: 'traitement-plans-ordinateur',
@@ -190,7 +190,7 @@ export const serviceCovers: Record<string, string> = {
   'leve-topographique': 'station-totale-mise-en-station',
   'bornage-recherche-de-bornes': 'bornes-beton-parcelle',
   'morcellement-de-terrain': 'geometre-gnss-piste',
-  'travaux-preparatoires-dossier-foncier': 'extrait-plan-parcelle',
+  'dossier-technique-immatriculation': 'extrait-plan-parcelle',
   'plan-topographique': 'traitement-plans-ordinateur',
   'implantation-batiment': 'implantation-prisme-mur',
   'nivellement-altimetrie': 'recepteur-gnss-trepied',

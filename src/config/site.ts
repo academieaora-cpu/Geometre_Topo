@@ -24,7 +24,7 @@ export const site = {
   ownerTitle: 'Géomètre Topographe',
   tagline: 'Travaux topographiques et fonciers à Yaoundé et environs',
   description:
-    'Géomètre topographe à Yaoundé : levés topographiques, recherche de bornes, bornage, morcellement, implantation de bâtiments et nivellement. Demandez votre devis.',
+    'Géomètre topographe à Yaoundé : levé topographique, bornage et recherche de bornes, morcellement, dossier technique d’immatriculation, implantation et nivellement. Demandez votre devis.',
   locale: 'fr_CM',
   city: 'Yaoundé',
   region: 'Centre',

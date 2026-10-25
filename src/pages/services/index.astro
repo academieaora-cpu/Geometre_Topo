@@ -8,7 +8,7 @@ import { activeServices } from '../../data/services.ts';
 
 const groups = [
   { title: 'Pour votre terrain', slugs: ['leve-topographique', 'bornage-recherche-de-bornes', 'plan-topographique', 'conseil-terrain'] },
-  { title: 'Pour vos démarches foncières', slugs: ['travaux-preparatoires-dossier-foncier', 'morcellement-de-terrain', 'lotissement'] },
+  { title: 'Pour vos démarches foncières', slugs: ['dossier-technique-immatriculation', 'morcellement-de-terrain', 'lotissement'] },
   { title: 'Pour vos constructions et chantiers', slugs: ['implantation-batiment', 'nivellement-altimetrie', 'topographie-btp'] },
 ]
   .map((g) => ({ ...g, services: activeServices.filter((s) => g.slugs.includes(s.slug)) }))

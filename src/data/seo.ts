@@ -3,7 +3,7 @@
  * aucune note, aucun avis, aucune adresse ni aucun prix n'est déclaré.
  */
 import { site } from '../config/site.ts';
-import type { Service } from './services.ts';
+import { activeServices, type Service } from './services.ts';
 
 export function organizationJsonLd(base: URL): Record<string, unknown> {
   const url = base.href.replace(/\/$/, '');
@@ -18,6 +18,18 @@ export function organizationJsonLd(base: URL): Record<string, unknown> {
     image: `${url}/images/og-geometre-topo.jpg`,
     areaServed: site.areaServed.map((name) => ({ '@type': 'City', name })),
     knowsLanguage: 'fr',
+    knowsAbout: [
+      'Topographie', 'Levé topographique', 'Bornage', 'Recherche de bornes', 'Morcellement de terrain',
+      'Immatriculation foncière', 'Dossier technique', 'Implantation de bâtiment', 'Nivellement', 'Lotissement',
+    ],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Prestations topographiques et foncières',
+      itemListElement: activeServices.map((s) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: s.name, url: `${url}/services/${s.slug}` },
+      })),
+    },
     founder: {
       '@type': 'Person',
       '@id': `${url}/a-propos#personne`,
