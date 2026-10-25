@@ -4,6 +4,7 @@ import { serviceOptions } from '../../data/services.ts';
 import { DatabaseNotConfiguredError } from '../../server/db.ts';
 import { leadsLast7Days, listLeads, PAGE_SIZE, statusCounts, type LeadRow } from '../../server/leads.ts';
 import { notificationsConfigured } from '../../server/notify.ts';
+import { activeSubscriberCount } from '../../server/subscribers.ts';
 import { LEAD_STATUSES, PREFERRED_CONTACTS } from '../../server/validation.ts';
 
 export const prerender = false;
@@ -22,12 +23,14 @@ let rows: LeadRow[] = [];
 let total = 0;
 let counts: Record<string, number> = {};
 let week = 0;
+let subscribers = 0;
 let dbError = '';
 try {
-  [{ rows, total }, counts, week] = await Promise.all([
+  [{ rows, total }, counts, week, subscribers] = await Promise.all([
     listLeads({ ...filters, status: filters.status || undefined, service: filters.service || undefined }),
     statusCounts(),
     leadsLast7Days(),
+    activeSubscriberCount(),
   ]);
 } catch (err) {
   dbError = err instanceof DatabaseNotConfiguredError
@@ -60,6 +63,7 @@ const msg = p.get('msg');
         <a class="kpi card" href="/admin?status=devis_a_preparer"><strong>{counts.devis_a_preparer ?? 0}</strong><span>Devis à préparer</span></a>
         <a class="kpi card" href="/admin?status=confirme"><strong>{counts.confirme ?? 0}</strong><span>Prestations confirmées</span></a>
         <div class="kpi card"><strong>{week}</strong><span>Demandes sur 7 jours</span></div>
+        <a class="kpi card" href="/admin/abonnes"><strong>{subscribers}</strong><span>Abonnés aux conseils</span></a>
       </div>
 
       <form class="filters card" method="get" action="/admin">
@@ -136,10 +140,10 @@ const msg = p.get('msg');
   table { width: 100%; border-collapse: collapse; font-size: .95rem; min-width: 760px; }
   th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
   th { background: var(--navy-100); color: var(--navy-900); font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
-  tr.is-new td:first-child { box-shadow: inset 4px 0 0 var(--amber-500); }
+  tr.is-new td:first-child { box-shadow: inset 4px 0 0 var(--green-500); }
   .pager { display: flex; gap: 12px; align-items: center; justify-content: center; margin-top: 16px; }
   :global(.status) { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .82rem; font-weight: 700; background: var(--navy-100); color: var(--navy-800); white-space: nowrap; }
-  :global(.status--nouveau) { background: var(--amber-100); color: #8a5300; }
+  :global(.status--nouveau) { background: #fff4d6; color: #7a5200; }
   :global(.status--confirme) { background: var(--green-100); color: var(--success); }
   :global(.status--non_converti), :global(.status--archive) { background: #ececf0; color: #555; }
 </style>

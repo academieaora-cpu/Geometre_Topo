@@ -1,0 +1,164 @@
+---
+/**
+ * Abonnement aux conseils de Géomètre Topo.
+ * - « S'abonner avec Google » (Google Identity Services) si PUBLIC_GOOGLE_CLIENT_ID est configuré ;
+ * - sinon, ou en complément, inscription par adresse e-mail avec consentement explicite.
+ * La bibliothèque Google n'est chargée qu'à l'approche du bloc (aucun traceur avant).
+ */
+import Icon from './Icon.astro';
+import { site } from '../config/site.ts';
+
+interface Props { id?: string }
+const { id = 'abonnement' } = Astro.props;
+---
+<section class="subscribe" id={id} aria-labelledby={`${id}-title`} data-subscribe data-client-id={site.googleClientId}>
+  <div class="subscribe-text">
+    <span class="icon-badge"><Icon name="mail" /></span>
+    <h2 id={`${id}-title`} class="h3">Recevez nos conseils fonciers</h2>
+    <p class="muted">
+      Achat de terrain, bornes, plans, construction : nos conseils pratiques et nos actualités, directement dans votre
+      boîte e-mail. Désabonnement en un clic à tout moment.
+    </p>
+  </div>
+
+  <div class="subscribe-actions" data-sub-form-wrap>
+    {site.googleClientId && (
+      <>
+        <div class="google-slot" data-google-slot aria-label="S’abonner avec Google"></div>
+        <p class="or"><span>ou avec votre e-mail</span></p>
+      </>
+    )}
+    <form class="sub-form" data-sub-form novalidate>
+      <label for={`${id}-email`} class="sr-only">Adresse e-mail</label>
+      <div class="row">
+        <input id={`${id}-email`} name="email" type="email" inputmode="email" autocomplete="email" placeholder="Votre adresse e-mail" required maxlength="254" />
+        <button type="submit" class="btn btn--primary">S’abonner</button>
+      </div>
+      <label class="consent">
+        <input type="checkbox" name="consent" value="true" required />
+        <span>J’accepte de recevoir les conseils et actualités de Géomètre Topo. <a href="/confidentialite#abonnement">En savoir plus</a></span>
+      </label>
+      <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
+    </form>
+    <p class="msg" role="status" aria-live="polite" data-sub-msg></p>
+  </div>
+</section>
+
+<script>
+  import { track } from '../scripts/analytics.ts';
+
+  type Gis = {
+    accounts: {
+      id: {
+        initialize: (cfg: Record<string, unknown>) => void;
+        renderButton: (el: HTMLElement, opts: Record<string, unknown>) => void;
+      };
+    };
+  };
+
+  async function send(box: HTMLElement, payload: Record<string, unknown>): Promise<void> {
+    const msg = box.querySelector<HTMLElement>('[data-sub-msg]')!;
+    msg.className = 'msg';
+    msg.textContent = 'Enregistrement…';
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(15000),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (res.ok && body.ok) {
+        msg.className = 'msg ok';
+        msg.textContent = body.created
+          ? `Merci${body.name ? ' ' + body.name.split(' ')[0] : ''} ! Votre abonnement est enregistré.`
+          : 'Vous êtes bien abonné(e) à nos conseils.';
+        box.querySelector<HTMLFormElement>('[data-sub-form]')?.reset();
+        track('subscribe', { method: payload.credential ? 'google' : 'email' });
+        return;
+      }
+      msg.className = 'msg err';
+      msg.textContent = body.error ?? 'L’abonnement n’a pas pu être enregistré. Réessayez.';
+    } catch {
+      msg.className = 'msg err';
+      msg.textContent = 'La connexion a été interrompue. Réessayez.';
+    }
+  }
+
+  function loadGoogle(box: HTMLElement, clientId: string): void {
+    const slot = box.querySelector<HTMLElement>('[data-google-slot]');
+    if (!slot) return;
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.async = true;
+    s.onload = () => {
+      const g = (window as unknown as { google?: Gis }).google;
+      if (!g) return;
+      g.accounts.id.initialize({
+        client_id: clientId,
+        callback: (r: { credential: string }) => send(box, { credential: r.credential }),
+        ux_mode: 'popup',
+        context: 'signup',
+      });
+      g.accounts.id.renderButton(slot, { theme: 'outline', size: 'large', text: 'signup_with', shape: 'rectangular', locale: 'fr', width: Math.min(360, slot.clientWidth || 320) });
+    };
+    document.head.appendChild(s);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-subscribe]').forEach((box) => {
+    const form = box.querySelector<HTMLFormElement>('[data-sub-form]')!;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const msg = box.querySelector<HTMLElement>('[data-sub-msg]')!;
+      const email = String(data.get('email') ?? '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) {
+        msg.className = 'msg err';
+        msg.textContent = 'Indiquez une adresse e-mail valide.';
+        return;
+      }
+      if (data.get('consent') !== 'true') {
+        msg.className = 'msg err';
+        msg.textContent = 'Cochez la case pour accepter de recevoir nos conseils.';
+        return;
+      }
+      send(box, { email, consent: true, website: data.get('website') ?? '' });
+    });
+
+    const clientId = box.dataset.clientId;
+    if (!clientId) return;
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((en) => en.isIntersecting)) {
+        io.disconnect();
+        loadGoogle(box, clientId);
+      }
+    }, { rootMargin: '300px' });
+    io.observe(box);
+  });
+</script>
+
+<style>
+  .subscribe {
+    display: grid; gap: 24px; align-items: center; background: var(--white);
+    border: 1px solid var(--line); border-radius: 20px; padding: clamp(24px, 4vw, 40px); box-shadow: var(--shadow);
+  }
+  @media (min-width: 900px) { .subscribe { grid-template-columns: 1fr 1.1fr; gap: 48px; } }
+  .subscribe-text h2 { margin-bottom: .4em; }
+  .subscribe-text p { margin: 0; }
+  .google-slot { min-height: 44px; display: flex; justify-content: flex-start; }
+  .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: .85rem; margin: 14px 0; }
+  .or::before, .or::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .row input {
+    flex: 1 1 220px; min-height: 48px; padding: 10px 14px; font: inherit; font-size: 16px; color: var(--ink);
+    border: 1.5px solid #c5ccd8; border-radius: var(--radius); background: var(--white);
+  }
+  .row input:focus { border-color: var(--green-700); outline: 3px solid rgb(74 208 111 / 35%); outline-offset: 0; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; color: var(--muted); margin-top: 12px; }
+  .consent input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--green-700); flex: none; }
+  .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .msg { margin: 10px 0 0; font-weight: 600; font-size: .95rem; min-height: 1.2em; }
+  .msg:empty { display: none; }
+  .msg.ok { color: var(--success); }
+  .msg.err { color: var(--danger); }
+</style>

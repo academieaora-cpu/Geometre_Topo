@@ -8,10 +8,10 @@ export const about = {
   education: [] as string[],
   /** Équipements visibles sur les photos de chantier fournies. */
   equipment: [
-    'Récepteur GNSS avec contrôleur de terrain, pour les relevés et implantations de précision',
-    'Station totale et prisme, pour les mesures d’angles et de distances',
-    'Jalons, cannes et accessoires de mesure',
+    'Récepteurs GNSS avec contrôleur de terrain, pour les relevés et implantations de précision',
+    'Station totale sur trépied et prisme, pour les mesures d’angles, de distances et de niveaux',
+    'Jalons, cannes, bipied et accessoires de mesure',
   ],
   /** Logiciels réellement utilisés (à compléter après validation). */
-  software: [] as string[],
+  software: ['AutoCAD avec Covadis (calculs topographiques et dessin des plans)'] as string[],
 };

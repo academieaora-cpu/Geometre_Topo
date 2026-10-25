@@ -6,6 +6,7 @@ import ServiceCard from '../components/ServiceCard.astro';
 import ContactLinks from '../components/ContactLinks.astro';
 import Faq from '../components/Faq.astro';
 import LeadForm from '../components/LeadForm.astro';
+import SubscribeBox from '../components/SubscribeBox.astro';
 import { activeServices } from '../data/services.ts';
 import { site } from '../config/site.ts';
 import { homeFaq } from '../data/faq.ts';
@@ -13,6 +14,13 @@ import { homeFaq } from '../data/faq.ts';
 const featured = activeServices.filter((s) =>
   ['leve-topographique', 'bornage-recherche-de-bornes', 'morcellement-de-terrain', 'implantation-batiment', 'plan-topographique', 'travaux-preparatoires-dossier-foncier'].includes(s.slug),
 );
+
+const strengths = [
+  { icon: 'target', title: 'Mesures précises', text: 'Récepteur GNSS et station totale, contrôlés avant chaque remise.' },
+  { icon: 'chat', title: 'Explications claires', text: 'Vous comprenez ce qui a été mesuré et ce qu’il reste à faire.' },
+  { icon: 'shield', title: 'Données confidentielles', text: 'Vos documents fonciers ne sont jamais publiés ni partagés.' },
+  { icon: 'file', title: 'Devis avant intervention', text: 'Un prix clair, adapté à votre terrain, avant tout déplacement.' },
+];
 
 const problems = [
   { icon: 'search', title: 'Des limites incertaines', text: 'Vous ne savez pas exactement où s’arrête votre terrain, ou une clôture voisine vous semble mal placée.', href: '/services/bornage-recherche-de-bornes' },
@@ -28,41 +36,82 @@ const steps = [
   { title: 'Remise des résultats', text: 'Plans, constats ou repères implantés, avec des explications compréhensibles.' },
 ];
 
-const homePhotos = ['pose-borne-beton', 'releve-gnss-borne', 'implantation-prisme-mur', 'jalons-borne-existante'];
+const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-totale-mise-en-station', 'extrait-plan-parcelle', 'pose-canalisation-tranchee'];
 ---
 <BaseLayout
   title="Géomètre topographe à Yaoundé – Levés, bornage, implantation | Géomètre Topo"
   description={site.description}
 >
-  <!-- 1. Message principal -->
+  <!-- Accueil -->
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-text">
         <p class="eyebrow">Géomètre topographe · Yaoundé et environs</p>
-        <h1>Votre terrain mesuré avec précision, votre projet sécurisé</h1>
+        <h1>Votre terrain mérite une <span class="hl-box">mesure précise.</span></h1>
         <p class="lead">
           Vous avez un terrain à sécuriser ou un projet de construction à préparer ? Géomètre Topo vous accompagne dans vos
           travaux topographiques et fonciers à Yaoundé et ses environs.
         </p>
-        <ContactLinks location="hero" light />
-        <ul class="trust">
-          <li><Icon name="target" size={20} />Récepteur GNSS et station totale</li>
-          <li><Icon name="pin" size={20} />Intervention à Yaoundé et environs</li>
-          <li><Icon name="shield" size={20} />Explications claires, données confidentielles</li>
+        <ContactLinks location="hero" />
+        <ul class="hero-facts">
+          <li><strong>GNSS</strong><span>et station totale</span></li>
+          <li><strong>Yaoundé</strong><span>et ses environs</span></li>
+          <li><strong>Devis</strong><span>avant intervention</span></li>
         </ul>
       </div>
-      <div class="hero-photo">
-        <Photo slug="releve-gnss-borne" eager sizes="(min-width: 900px) 40vw, 90vw" ratio="4 / 5" />
+      <div class="hero-media">
+        <div class="video-card">
+          <video
+            data-hero-video
+            muted
+            loop
+            playsinline
+            preload="none"
+            poster="/videos/releve-gnss-chantier-poster.webp"
+            width="540"
+            height="960"
+            aria-label="Vidéo : récepteur GNSS installé sur un chantier pour un relevé topographique"
+          >
+            <source src="/videos/releve-gnss-chantier.mp4" type="video/mp4" />
+          </video>
+          <span class="video-label"><Icon name="target" size={16} /> Relevé GNSS sur chantier</span>
+        </div>
+        <div class="person-card">
+          <Photo slug="portrait-alain-stephane-olouou" alt="" sizes="64px" ratio="1 / 1" eager />
+          <div><strong>{site.owner}</strong><span>Géomètre topographe</span></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 2. Prestations -->
-  <section class="section" aria-labelledby="services-title">
+  <!-- Points forts -->
+  <section class="strengths" aria-label="Nos engagements">
+    <div class="container strengths-grid">
+      {strengths.map((s) => (
+        <div class="strength">
+          <span class="s-icon"><Icon name={s.icon} size={22} /></span>
+          <div><h2 class="h3">{s.title}</h2><p>{s.text}</p></div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Message -->
+  <section class="section statement-wrap">
     <div class="container">
-      <div class="section-head">
+      <p class="statement">
+        Avant d’<span class="hl">acheter</span>, de <span class="hl">construire</span> ou de{' '}
+        <span class="hl">partager</span> un terrain, une mesure précise vous évite bien des litiges.
+      </p>
+    </div>
+  </section>
+
+  <!-- Prestations -->
+  <section class="section section--surface" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head section-head--center">
         <p class="eyebrow">Prestations</p>
-        <h2 id="services-title">Des travaux topographiques adaptés à votre situation</h2>
+        <h2 id="services-title">Des travaux topographiques <span class="hl">adaptés à votre terrain</span></h2>
         <p>Particuliers, familles, promoteurs ou entreprises du BTP : chaque intervention commence par la compréhension de votre besoin.</p>
       </div>
       <div class="grid grid--3">
@@ -72,67 +121,73 @@ const homePhotos = ['pose-borne-beton', 'releve-gnss-borne', 'implantation-prism
     </div>
   </section>
 
-  <!-- 3. Problèmes fréquents -->
-  <section class="section section--surface" aria-labelledby="problems-title">
-    <div class="container">
-      <div class="section-head">
+  <!-- Situations fréquentes -->
+  <section class="section" aria-labelledby="problems-title">
+    <div class="container two-col two-col--center">
+      <div>
         <p class="eyebrow">Situations fréquentes</p>
-        <h2 id="problems-title">Vous vous reconnaissez dans l’une de ces situations ?</h2>
+        <h2 id="problems-title">Vous vous reconnaissez <span class="hl">dans l’une de ces situations ?</span></h2>
+        <p class="lead">Ce sont les problèmes que nous rencontrons le plus souvent chez les propriétaires de Yaoundé et des environs.</p>
+        <div class="problem-list">
+          {problems.map((p) => (
+            <a class="problem" href={p.href}>
+              <span class="icon-badge"><Icon name={p.icon} /></span>
+              <span><strong>{p.title}</strong><span class="muted">{p.text}</span></span>
+              <Icon name="arrow" size={20} class="arrow" />
+            </a>
+          ))}
+        </div>
       </div>
-      <div class="grid grid--4">
-        {problems.map((p) => (
-          <article class="card card--link">
-            <span class="icon-badge"><Icon name={p.icon} /></span>
-            <h3><a href={p.href} class="plain">{p.title}</a></h3>
-            <p class="muted">{p.text}</p>
-            <span class="more" aria-hidden="true">Voir la solution →</span>
-          </article>
-        ))}
-      </div>
+      <Photo slug="geometre-gnss-piste" sizes="(min-width: 900px) 45vw, 90vw" ratio="4 / 5" class="tall-photo" />
     </div>
   </section>
 
-  <!-- 4. Réalisations -->
-  <section class="section" aria-labelledby="work-title">
+  <!-- Réalisations -->
+  <section class="section section--grid" aria-labelledby="work-title">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head section-head--center">
         <p class="eyebrow">Sur le terrain</p>
-        <h2 id="work-title">Nos interventions, en photos</h2>
-        <p>Des photos authentiques de nos descentes sur le terrain : pose et recherche de bornes, relevés GNSS, implantations.</p>
+        <h2 id="work-title">Nos interventions, <span class="hl">en photos</span></h2>
+        <p>Des photos authentiques de nos descentes : relevés GNSS, station totale, bornes, plans et chantiers.</p>
       </div>
-      <div class="photo-grid">
-        {homePhotos.map((slug) => <Photo slug={slug} caption sizes="(min-width: 900px) 25vw, 50vw" ratio="3 / 4" />)}
+      <div class="mosaic">
+        {mosaic.map((slug, i) => (
+          <Photo slug={slug} caption sizes={i === 0 ? '(min-width: 900px) 50vw, 100vw' : '(min-width: 900px) 25vw, 50vw'} class={`m m${i}`} />
+        ))}
       </div>
       <p class="center more-link"><a class="btn btn--outline" href="/realisations">Voir toutes les photos</a></p>
     </div>
   </section>
 
-  <!-- 5. Présentation -->
-  <section class="section section--navy" aria-labelledby="about-title">
-    <div class="container two-col about">
+  <!-- Présentation -->
+  <section class="section" aria-labelledby="about-title">
+    <div class="container two-col two-col--center about">
       <Photo slug="portrait-alain-stephane-olouou" sizes="(min-width: 900px) 40vw, 90vw" class="portrait" />
       <div>
         <p class="eyebrow">Votre interlocuteur</p>
-        <h2 id="about-title">{site.owner}, géomètre topographe</h2>
+        <h2 id="about-title">{site.owner}, <span class="hl">géomètre topographe</span></h2>
+        <blockquote class="quote">Des mesures fiables et des explications claires, pour décider en connaissance de cause.</blockquote>
         <p>
           Derrière Géomètre Topo, il y a un professionnel de terrain. Je me déplace sur votre parcelle, je prends le temps de
           comprendre votre situation et je vous explique les résultats en termes simples.
         </p>
-        <p>
-          Mon objectif : que vous connaissiez précisément votre terrain avant d’acheter, de construire ou d’engager une
-          démarche foncière.
-        </p>
-        <a class="btn btn--ghost-light" href="/a-propos">Découvrir mon approche</a>
+        <ul class="chips">
+          <li>Levés topographiques</li><li>Bornes et limites</li><li>Implantation</li><li>Nivellement</li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/devis" data-track="cta_devis" data-track-location="presentation">Prendre rendez-vous</a>
+          <a class="btn btn--outline" href="/a-propos">Découvrir mon approche</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 6. Processus -->
+  <!-- Processus -->
   <section class="section section--surface" aria-labelledby="process-title">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head section-head--center">
         <p class="eyebrow">Comment ça se passe</p>
-        <h2 id="process-title">Un déroulement simple, en 4 étapes</h2>
+        <h2 id="process-title">Nous vous accompagnons <span class="hl">à chaque étape</span></h2>
       </div>
       <ol class="steps steps--row">
         {steps.map((s) => <li><h3>{s.title}</h3><p>{s.text}</p></li>)}
@@ -140,78 +195,150 @@ const homePhotos = ['pose-borne-beton', 'releve-gnss-borne', 'implantation-prism
     </div>
   </section>
 
-  <!-- 7. FAQ + zone -->
+  <!-- FAQ + zone -->
   <section class="section" aria-labelledby="faq-title">
     <div class="container two-col two-col--wide-left">
       <div>
         <p class="eyebrow">Questions fréquentes</p>
-        <h2 id="faq-title">Vos questions, nos réponses</h2>
+        <h2 id="faq-title">Vos questions, <span class="hl">nos réponses</span></h2>
         <Faq items={homeFaq} />
       </div>
-      <aside class="card zone" aria-labelledby="zone-title">
-        <span class="icon-badge"><Icon name="map" /></span>
-        <h2 id="zone-title" class="h3">Zone d’intervention</h2>
-        <p>
-          Géomètre Topo intervient principalement à <strong>Yaoundé</strong> et dans ses environs (région du Centre).
-        </p>
-        <p class="muted small">
-          Votre terrain est plus éloigné ? Indiquez sa localité dans votre demande : nous vous dirons si une intervention
-          est possible et dans quelles conditions.
-        </p>
-        <a href="/contact" class="btn btn--outline btn--block">Nous contacter</a>
+      <aside class="zone">
+        <Photo slug="station-totale-mise-en-station" alt="" sizes="(min-width: 900px) 35vw, 90vw" ratio="16 / 10" />
+        <div class="zone-body">
+          <h2 class="h3">Zone d’intervention</h2>
+          <p>Géomètre Topo intervient principalement à <strong>Yaoundé</strong> et dans ses environs (région du Centre).</p>
+          <p class="muted small">Terrain plus éloigné ? Indiquez sa localité dans votre demande : nous vous dirons si une intervention est possible.</p>
+          <a href="/contact" class="link-arrow">Nous contacter <Icon name="arrow" size={18} /></a>
+        </div>
       </aside>
     </div>
   </section>
 
-  <!-- 8. Formulaire -->
-  <section class="section section--surface" aria-labelledby="formulaire-title">
+  <!-- Abonnement -->
+  <section class="section section--grid">
+    <div class="container"><SubscribeBox /></div>
+  </section>
+
+  <!-- Formulaire -->
+  <section class="section" aria-labelledby="formulaire-title">
     <div class="container two-col">
       <div>
         <p class="eyebrow">Demande de devis</p>
-        <h2 id="formulaire-title">Faites étudier votre projet</h2>
+        <h2 id="formulaire-title">Faites <span class="hl">étudier votre projet</span></h2>
         <p class="lead">Décrivez votre terrain et votre besoin. Vous serez recontacté par le moyen de votre choix.</p>
         <ul class="check-list">
           <li>Une réponse adaptée à votre situation réelle</li>
           <li>Un devis clair avant toute intervention</li>
           <li>Aucun document sensible demandé au premier contact</li>
         </ul>
+        <Photo slug="materiel-gnss-terrain" alt="" sizes="(min-width: 900px) 40vw, 90vw" ratio="16 / 10" class="form-photo" />
       </div>
       <LeadForm id="formulaire" />
     </div>
   </section>
 </BaseLayout>
 
+<script>
+  // La vidéo d'accueil ne démarre que si le visiteur n'a pas demandé à limiter les animations
+  // ni activé l'économie de données.
+  const video = document.querySelector<HTMLVideoElement>('[data-hero-video]');
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (video && !reduce && !conn?.saveData) {
+    video.preload = 'auto';
+    video.play().catch(() => { /* lecture automatique refusée : l'affiche reste visible */ });
+  }
+</script>
+
 <style>
   .hero {
-    background: var(--navy-900); color: #e3e3f5; padding-block: clamp(32px, 6vw, 72px);
-    background-image:
-      linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px);
-    background-size: 40px 40px;
+    padding-block: clamp(32px, 6vw, 80px) clamp(40px, 6vw, 72px);
+    background:
+      radial-gradient(1200px 500px at 85% 10%, rgb(74 208 111 / 10%), transparent 60%),
+      linear-gradient(rgb(10 28 74 / 3.5%) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(90deg, rgb(10 28 74 / 3.5%) 1px, transparent 1px) 0 0 / 48px 48px,
+      var(--white);
   }
-  .hero-grid { display: grid; gap: 32px; align-items: center; }
-  @media (min-width: 900px) { .hero-grid { grid-template-columns: 1.25fr 1fr; } }
-  .hero h1 { color: var(--white); }
-  .hero .lead { color: #d3d4ee; margin-bottom: 24px; }
-  .hero .eyebrow { color: var(--green-500); }
-  .trust { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 10px; font-size: .95rem; color: #d3d4ee; }
-  .trust li { display: flex; gap: 10px; align-items: center; margin: 0; }
-  .trust :global(svg) { color: var(--green-500); flex: none; }
-  .hero-photo { max-width: 460px; justify-self: center; width: 100%; }
-  .hero-photo :global(img) { aspect-ratio: 4 / 5; box-shadow: 0 20px 50px rgb(0 0 0 / 35%); border: 4px solid rgb(255 255 255 / 10%); }
-  @media (max-width: 899px) { .hero-photo { max-width: 360px; } }
+  .hero-grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 960px) { .hero-grid { grid-template-columns: 1.15fr 1fr; gap: 56px; } }
+  .hero .lead { margin-bottom: 28px; max-width: 56ch; }
+  .hero-facts { list-style: none; padding: 24px 0 0; margin: 32px 0 0; display: flex; flex-wrap: wrap; gap: 16px 40px; border-top: 1px solid var(--line); }
+  .hero-facts li { margin: 0; display: flex; flex-direction: column; }
+  .hero-facts strong { font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; color: var(--green-700); line-height: 1.1; }
+  .hero-facts span { color: var(--muted); font-size: .92rem; }
 
-  .more-link { margin-top: 32px; }
-  .plain { color: inherit; text-decoration: none; }
-  .card--link .plain::after { content: ''; position: absolute; inset: 0; }
+  .hero-media { position: relative; max-width: 440px; width: 100%; justify-self: center; }
+  .video-card { position: relative; border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-lg); aspect-ratio: 9 / 14; background: var(--surface); }
+  .video-card video { width: 100%; height: 100%; object-fit: cover; }
+  .video-label {
+    position: absolute; left: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 8px;
+    background: rgb(255 255 255 / 92%); color: var(--navy-800); padding: 8px 14px; border-radius: 999px;
+    font-family: var(--font-head); font-weight: 700; font-size: .88rem;
+  }
+  .video-label :global(svg) { color: var(--green-700); }
+  .person-card {
+    position: absolute; left: -28px; top: 32px; display: flex; align-items: center; gap: 12px;
+    background: var(--white); padding: 10px 16px 10px 10px; border-radius: 14px; box-shadow: var(--shadow-lg);
+    border: 1px solid var(--line);
+  }
+  .person-card :global(.photo) { width: 52px; flex: none; }
+  .person-card :global(img) { border-radius: 50%; object-position: center 20%; }
+  .person-card strong { display: block; font-family: var(--font-head); color: var(--navy-800); font-size: .95rem; line-height: 1.2; }
+  .person-card span { font-size: .82rem; color: var(--muted); }
+  @media (max-width: 600px) { .person-card { left: 8px; top: 12px; } .hero-media { max-width: 360px; } }
 
-  .photo-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
-  @media (min-width: 900px) { .photo-grid { grid-template-columns: repeat(4, 1fr); } }
-  .photo-grid :global(img) { aspect-ratio: 3 / 4; }
+  .strengths { border-block: 1px solid var(--line); background: var(--white); }
+  .strengths-grid { display: grid; gap: 4px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); padding-block: 28px; }
+  .strength { display: flex; gap: 14px; padding: 12px 8px; }
+  .s-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 10px; background: var(--green-100); color: var(--green-700); flex: none; }
+  .strength h2 { font-size: 1rem; margin: 2px 0 4px; }
+  .strength p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.5; }
 
-  .about { align-items: center; }
-  .about :global(.portrait img) { aspect-ratio: 1 / 1; object-position: center 25%; max-width: 440px; margin-inline: auto; }
-  .about p { color: #d3d4ee; }
+  .statement-wrap { padding-block: clamp(48px, 7vw, 88px); }
+  .statement {
+    font-family: var(--font-head); font-weight: 800; color: var(--navy-800); text-align: center;
+    font-size: clamp(1.5rem, 3.6vw, 2.6rem); line-height: 1.2; letter-spacing: -0.02em; max-width: 26ch; margin: 0 auto;
+  }
 
+  .more-link { margin-top: 36px; }
+
+  .problem-list { display: grid; gap: 12px; margin-top: 24px; }
+  .problem {
+    display: flex; align-items: center; gap: 16px; padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--radius-lg);
+    background: var(--white); text-decoration: none; color: var(--ink); transition: border-color .15s, box-shadow .15s;
+  }
+  .problem:hover { border-color: var(--green-500); box-shadow: var(--shadow); color: var(--ink); }
+  .problem :global(.icon-badge) { margin: 0; flex: none; }
+  .problem strong { display: block; font-family: var(--font-head); color: var(--navy-800); }
+  .problem .muted { font-size: .92rem; line-height: 1.5; display: block; }
+  .problem :global(.arrow) { margin-left: auto; color: var(--green-700); flex: none; }
+  .tall-photo { max-width: 520px; width: 100%; justify-self: center; }
+
+  .mosaic { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
+  .mosaic :global(.m) { position: relative; border-radius: var(--radius-lg); overflow: hidden; }
+  .mosaic :global(.m img) { aspect-ratio: 4 / 3; border-radius: 0; }
+  .mosaic :global(.m0) { grid-column: span 2; }
+  .mosaic :global(.m figcaption) {
+    position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 28px 14px 12px; color: var(--white);
+    background: linear-gradient(transparent, rgb(10 28 74 / 80%)); font-size: .86rem; line-height: 1.35;
+  }
+  @media (min-width: 900px) {
+    .mosaic { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 230px); }
+    .mosaic :global(.m0) { grid-row: span 2; }
+    .mosaic :global(.m img) { aspect-ratio: auto; height: 100%; }
+  }
+  @media (max-width: 600px) { .hero :global(.btn-row .btn) { flex: 1 1 100%; } }
+
+  .about :global(.portrait img) { aspect-ratio: 1 / 1; object-position: center 22%; max-width: 480px; margin-inline: auto; }
+  .quote { margin: 0 0 18px; padding: 4px 0 4px 18px; border-left: 3px solid var(--green-500); font-size: 1.1rem; color: var(--navy-800); }
+  .chips { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 24px; }
+  .chips li { margin: 0; background: var(--surface); border: 1px solid var(--line); padding: 8px 14px; border-radius: 8px; font-family: var(--font-head); font-weight: 600; font-size: .9rem; color: var(--navy-800); }
+
+  .zone { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  .zone :global(img) { border-radius: 0; }
+  .zone-body { padding: 22px 24px 26px; }
   .zone h2 { font-size: 1.3rem; }
+
+  .form-photo { margin-top: 28px; }
 </style>

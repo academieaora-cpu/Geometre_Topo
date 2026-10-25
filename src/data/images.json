@@ -41,6 +41,153 @@
       }
     ]
   },
+  "bornes-beton-avant-pose": {
+    "width": 1800,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/bornes-beton-avant-pose-400.webp",
+        "width": 400,
+        "height": 533
+      },
+      {
+        "src": "/images/photos/bornes-beton-avant-pose-720.webp",
+        "width": 720,
+        "height": 960
+      },
+      {
+        "src": "/images/photos/bornes-beton-avant-pose-1080.webp",
+        "width": 1080,
+        "height": 1440
+      }
+    ]
+  },
+  "bornes-beton-parcelle": {
+    "width": 1350,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/bornes-beton-parcelle-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/bornes-beton-parcelle-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/bornes-beton-parcelle-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
+  "descente-terrain-parcelle": {
+    "width": 1800,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/descente-terrain-parcelle-400.webp",
+        "width": 400,
+        "height": 533
+      },
+      {
+        "src": "/images/photos/descente-terrain-parcelle-720.webp",
+        "width": 720,
+        "height": 960
+      },
+      {
+        "src": "/images/photos/descente-terrain-parcelle-1080.webp",
+        "width": 1080,
+        "height": 1440
+      }
+    ]
+  },
+  "extrait-plan-parcelle": {
+    "width": 2400,
+    "height": 1642,
+    "variants": [
+      {
+        "src": "/images/photos/extrait-plan-parcelle-400.webp",
+        "width": 400,
+        "height": 274
+      },
+      {
+        "src": "/images/photos/extrait-plan-parcelle-720.webp",
+        "width": 720,
+        "height": 493
+      },
+      {
+        "src": "/images/photos/extrait-plan-parcelle-1080.webp",
+        "width": 1080,
+        "height": 739
+      }
+    ]
+  },
+  "geometre-gnss-piste": {
+    "width": 2400,
+    "height": 1350,
+    "variants": [
+      {
+        "src": "/images/photos/geometre-gnss-piste-400.webp",
+        "width": 400,
+        "height": 225
+      },
+      {
+        "src": "/images/photos/geometre-gnss-piste-720.webp",
+        "width": 720,
+        "height": 405
+      },
+      {
+        "src": "/images/photos/geometre-gnss-piste-1080.webp",
+        "width": 1080,
+        "height": 608
+      }
+    ]
+  },
+  "geometre-releve-gnss-route": {
+    "width": 2400,
+    "height": 1350,
+    "variants": [
+      {
+        "src": "/images/photos/geometre-releve-gnss-route-400.webp",
+        "width": 400,
+        "height": 225
+      },
+      {
+        "src": "/images/photos/geometre-releve-gnss-route-720.webp",
+        "width": 720,
+        "height": 405
+      },
+      {
+        "src": "/images/photos/geometre-releve-gnss-route-1080.webp",
+        "width": 1080,
+        "height": 608
+      }
+    ]
+  },
+  "gnss-vegetation-dense": {
+    "width": 2400,
+    "height": 1350,
+    "variants": [
+      {
+        "src": "/images/photos/gnss-vegetation-dense-400.webp",
+        "width": 400,
+        "height": 225
+      },
+      {
+        "src": "/images/photos/gnss-vegetation-dense-720.webp",
+        "width": 720,
+        "height": 405
+      },
+      {
+        "src": "/images/photos/gnss-vegetation-dense-1080.webp",
+        "width": 1080,
+        "height": 608
+      }
+    ]
+  },
   "implantation-prisme-mur": {
     "width": 1380,
     "height": 2400,
@@ -80,6 +227,27 @@
         "src": "/images/photos/jalons-borne-existante-1080.webp",
         "width": 1080,
         "height": 1876
+      }
+    ]
+  },
+  "materiel-gnss-terrain": {
+    "width": 2400,
+    "height": 1350,
+    "variants": [
+      {
+        "src": "/images/photos/materiel-gnss-terrain-400.webp",
+        "width": 400,
+        "height": 225
+      },
+      {
+        "src": "/images/photos/materiel-gnss-terrain-720.webp",
+        "width": 720,
+        "height": 405
+      },
+      {
+        "src": "/images/photos/materiel-gnss-terrain-1080.webp",
+        "width": 1080,
+        "height": 608
       }
     ]
   },
@@ -125,6 +293,48 @@
       }
     ]
   },
+  "pose-canalisation-tranchee": {
+    "width": 2400,
+    "height": 1350,
+    "variants": [
+      {
+        "src": "/images/photos/pose-canalisation-tranchee-400.webp",
+        "width": 400,
+        "height": 225
+      },
+      {
+        "src": "/images/photos/pose-canalisation-tranchee-720.webp",
+        "width": 720,
+        "height": 405
+      },
+      {
+        "src": "/images/photos/pose-canalisation-tranchee-1080.webp",
+        "width": 1080,
+        "height": 608
+      }
+    ]
+  },
+  "recepteur-gnss-mallette": {
+    "width": 2400,
+    "height": 1350,
+    "variants": [
+      {
+        "src": "/images/photos/recepteur-gnss-mallette-400.webp",
+        "width": 400,
+        "height": 225
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-mallette-720.webp",
+        "width": 720,
+        "height": 405
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-mallette-1080.webp",
+        "width": 1080,
+        "height": 608
+      }
+    ]
+  },
   "recepteur-gnss-trepied": {
     "width": 1350,
     "height": 2400,
@@ -164,6 +374,90 @@
         "src": "/images/photos/releve-gnss-borne-1080.webp",
         "width": 1080,
         "height": 1882
+      }
+    ]
+  },
+  "station-totale-mise-en-station": {
+    "width": 1800,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/station-totale-mise-en-station-400.webp",
+        "width": 400,
+        "height": 533
+      },
+      {
+        "src": "/images/photos/station-totale-mise-en-station-720.webp",
+        "width": 720,
+        "height": 960
+      },
+      {
+        "src": "/images/photos/station-totale-mise-en-station-1080.webp",
+        "width": 1080,
+        "height": 1440
+      }
+    ]
+  },
+  "traitement-plans-ordinateur": {
+    "width": 1800,
+    "height": 2400,
+    "variants": [
+      {
+        "src": "/images/photos/traitement-plans-ordinateur-400.webp",
+        "width": 400,
+        "height": 533
+      },
+      {
+        "src": "/images/photos/traitement-plans-ordinateur-720.webp",
+        "width": 720,
+        "height": 960
+      },
+      {
+        "src": "/images/photos/traitement-plans-ordinateur-1080.webp",
+        "width": 1080,
+        "height": 1440
+      }
+    ]
+  },
+  "tranchee-buses-beton": {
+    "width": 2400,
+    "height": 1350,
+    "variants": [
+      {
+        "src": "/images/photos/tranchee-buses-beton-400.webp",
+        "width": 400,
+        "height": 225
+      },
+      {
+        "src": "/images/photos/tranchee-buses-beton-720.webp",
+        "width": 720,
+        "height": 405
+      },
+      {
+        "src": "/images/photos/tranchee-buses-beton-1080.webp",
+        "width": 1080,
+        "height": 608
+      }
+    ]
+  },
+  "tranchee-chantier-assainissement": {
+    "width": 2400,
+    "height": 1350,
+    "variants": [
+      {
+        "src": "/images/photos/tranchee-chantier-assainissement-400.webp",
+        "width": 400,
+        "height": 225
+      },
+      {
+        "src": "/images/photos/tranchee-chantier-assainissement-720.webp",
+        "width": 720,
+        "height": 405
+      },
+      {
+        "src": "/images/photos/tranchee-chantier-assainissement-1080.webp",
+        "width": 1080,
+        "height": 608
       }
     ]
   },

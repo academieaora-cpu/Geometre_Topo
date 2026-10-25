@@ -19,6 +19,7 @@ Toutes les valeurs se règlent **sans modifier le code** :
 | `PUBLIC_HOURS` | Non | Horaires, texte libre (« Lun–Sam, 8h–18h »). Vide = non affichés. |
 | `PUBLIC_SOCIAL_LINKS` | Non | URL des profils publics séparées par des virgules (ajoutées aux données structurées `sameAs`). |
 | `PUBLIC_GA_ID` | Non | Identifiant Google Analytics 4 (`G-XXXX`). Vide = aucun outil de mesure, aucun bandeau cookies. |
+| `PUBLIC_GOOGLE_CLIENT_ID` | Non | Identifiant client OAuth Google pour le bouton « S’abonner avec Google » (voir ci-dessous). Vide = abonnement par e-mail uniquement. |
 | `PUBLIC_GOOGLE_SITE_VERIFICATION` | Non | Jeton « balise HTML » de Google Search Console (si la vérification DNS n’est pas utilisée). |
 
 ## Secrets serveur
@@ -44,3 +45,15 @@ Copier la ligne `ADMIN_PASSWORD_HASH=…` dans Vercel, puis redéployer.
 ## Vérification
 
 `npm run build` affiche la liste des variables manquantes avant chaque compilation.
+
+## Activer « S’abonner avec Google »
+
+1. https://console.cloud.google.com › créer un projet (ex. « Geometre Topo »).
+2. *API et services › Écran de consentement OAuth* : type **Externe**, nom « Géomètre Topo », e-mail d’assistance,
+   lien vers `https://geometre-topo.vercel.app/confidentialite`. Publier l’application.
+3. *API et services › Identifiants › Créer des identifiants › ID client OAuth* : type **Application Web**,
+   origines JavaScript autorisées : `https://geometre-topo.vercel.app` (et le futur domaine personnalisé).
+4. Copier l’**ID client** (se termine par `.apps.googleusercontent.com`) dans `PUBLIC_GOOGLE_CLIENT_ID`, puis redéployer.
+
+Le serveur vérifie chaque connexion auprès de Google avant d’enregistrer l’abonné. Les abonnés sont consultables
+dans l’administration (`/admin/abonnes`) et exportables avec leur lien de désabonnement personnel.

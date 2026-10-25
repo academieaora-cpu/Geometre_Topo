@@ -17,25 +17,29 @@ export default defineConfig({
   security: {
     checkOrigin: true,
     // Politique de sécurité du contenu : Astro calcule les empreintes des scripts et styles du site.
-    // Seul Google Tag Manager est autorisé en plus (chargé uniquement après consentement).
+    // Seuls Google Tag Manager (après consentement) et Google Identity Services (abonnement) sont autorisés en plus.
     csp: {
       directives: [
         "default-src 'self'",
         "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com",
-        "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
+        "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://accounts.google.com/gsi/",
+        // Bouton « S'abonner avec Google » (Google Identity Services)
+        "frame-src https://accounts.google.com/gsi/",
+        "media-src 'self'",
         "font-src 'self'",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self'",
       ],
-      scriptDirective: { resources: ["'self'", 'https://www.googletagmanager.com'] },
+      scriptDirective: { resources: ["'self'", 'https://www.googletagmanager.com', 'https://accounts.google.com/gsi/client'] },
+      styleDirective: { resources: ["'self'", 'https://accounts.google.com/gsi/style'] },
     },
   },
   markdown: { syntaxHighlight: false },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   integrations: [
     sitemap({
-      filter: (page) => !/\/(admin|api|404|demande-envoyee|demande-non-envoyee)(\/|$)/.test(new URL(page).pathname),
+      filter: (page) => !/\/(admin|api|404|demande-envoyee|demande-non-envoyee|desabonnement)(\/|$)/.test(new URL(page).pathname),
     }),
   ],
   env: {

@@ -1,17 +1,30 @@
 ---
 import Icon from './Icon.astro';
+import Photo from './Photo.astro';
 import type { Service } from '../data/services.ts';
-interface Props { service: Service; headingLevel?: 'h2' | 'h3' }
-const { service, headingLevel = 'h3' } = Astro.props;
+import { photosForService } from '../data/gallery.ts';
+
+interface Props { service: Service; headingLevel?: 'h2' | 'h3'; withPhoto?: boolean }
+const { service, headingLevel = 'h3', withPhoto = true } = Astro.props;
 const Heading = headingLevel;
+const cover = withPhoto ? photosForService(service.slug, 1)[0] : undefined;
 ---
-<article class="card card--link">
-  <span class="icon-badge"><Icon name={service.icon} /></span>
-  <Heading><a href={`/services/${service.slug}`} class="stretched">{service.name}</a></Heading>
-  <p class="muted">{service.summary}</p>
-  <span class="more" aria-hidden="true">En savoir plus →</span>
+<article class:list={['card card--link service-card', cover && 'has-photo']}>
+  {cover && <Photo slug={cover.slug} alt="" sizes="(min-width: 900px) 33vw, 90vw" ratio="16 / 10" class="cover" />}
+  <div class="body">
+    {!cover && <span class="icon-badge"><Icon name={service.icon} /></span>}
+    <Heading><a href={`/services/${service.slug}`} class="stretched">{service.name}</a></Heading>
+    <p class="muted">{service.summary}</p>
+    <span class="more" aria-hidden="true">En savoir plus →</span>
+  </div>
 </article>
 
 <style>
+  .service-card.has-photo { padding: 0; overflow: hidden; }
+  .service-card.has-photo .body { padding: 20px 22px 22px; display: flex; flex-direction: column; flex: 1; }
+  .service-card :global(.cover img) { border-radius: 0; aspect-ratio: 16 / 10; transition: transform .3s; }
+  .service-card:hover :global(.cover img) { transform: scale(1.03); }
+  .service-card :global(.cover) { overflow: hidden; }
   .stretched { color: inherit; text-decoration: none; }
+  .service-card .body :global(.muted) { font-size: .97rem; }
 </style>

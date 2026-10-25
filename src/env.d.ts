@@ -15,6 +15,7 @@ interface ImportMetaEnv {
   readonly PUBLIC_SOCIAL_LINKS?: string;
   readonly PUBLIC_GA_ID?: string;
   readonly PUBLIC_GOOGLE_SITE_VERIFICATION?: string;
+  readonly PUBLIC_GOOGLE_CLIENT_ID?: string;
 }
 
 declare module '*.sql?raw' {

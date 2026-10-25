@@ -1,0 +1,61 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { DatabaseNotConfiguredError } from '../../server/db.ts';
+import { listSubscribers, type SubscriberRow } from '../../server/subscribers.ts';
+
+export const prerender = false;
+
+let rows: SubscriberRow[] = [];
+let dbError = '';
+try {
+  rows = await listSubscribers();
+} catch (err) {
+  dbError = err instanceof DatabaseNotConfiguredError ? 'La base de données n’est pas configurée.' : 'La base de données est inaccessible pour le moment.';
+}
+const active = rows.filter((r) => !r.unsubscribed_at).length;
+const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Africa/Douala' });
+---
+<AdminLayout title="Abonnés">
+  <p><a href="/admin">← Prospects</a></p>
+  <h1 class="h2">Abonnés aux conseils</h1>
+  {dbError ? <p class="notice">{dbError}</p> : (
+    <>
+      <p class="muted">{active} abonné{active > 1 ? 's' : ''} actif{active > 1 ? 's' : ''} · {rows.length - active} désabonné{rows.length - active > 1 ? 's' : ''}</p>
+      <p><a class="btn btn--outline" href="/api/admin/subscribers-export">Exporter en CSV (avec liens de désabonnement)</a></p>
+      {rows.length === 0 ? <p class="card">Aucun abonné pour le moment.</p> : (
+        <div class="card table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>E-mail</th><th>Nom</th><th>Inscription</th><th>État</th><th></th></tr></thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr>
+                  <td>{fmt.format(r.created_at)}</td>
+                  <td>{r.email}</td>
+                  <td>{r.name ?? '—'}</td>
+                  <td>{r.source === 'google' ? 'Google' : 'E-mail'}</td>
+                  <td>{r.unsubscribed_at ? `Désabonné le ${fmt.format(r.unsubscribed_at)}` : 'Actif'}</td>
+                  <td>
+                    <form method="post" action={`/api/admin/subscribers/${r.id}`}>
+                      <label class="sr-only" for={`c-${r.id}`}>Confirmer</label>
+                      <input id={`c-${r.id}`} type="checkbox" name="confirm" value="oui" required title="Cocher pour confirmer" />
+                      <button class="del" type="submit">Supprimer</button>
+                    </form>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  )}
+</AdminLayout>
+
+<style>
+  .table-wrap { padding: 0; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .95rem; min-width: 720px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  th { background: var(--navy-100); font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; }
+  form { display: flex; gap: 6px; align-items: center; }
+  .del { background: none; border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; color: var(--danger); cursor: pointer; font: inherit; font-size: .85rem; }
+</style>

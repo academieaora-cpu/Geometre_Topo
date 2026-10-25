@@ -34,7 +34,7 @@ const articles = (await getCollection('conseils', ({ data }) => !data.draft && d
       <Breadcrumbs items={[{ name: 'Services', href: '/services' }, { name: service.name, href: `/services/${service.slug}` }]} />
       <h1>{service.title}</h1>
       <p class="lead">{service.summary}</p>
-      <ContactLinks whatsappMessage={service.whatsapp} location={`service_${service.slug}`} light />
+      <ContactLinks whatsappMessage={service.whatsapp} location={`service_${service.slug}`} />
     </div>
   </section>
 

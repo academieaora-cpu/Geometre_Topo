@@ -62,9 +62,24 @@ create table if not exists login_attempts (
 );
 create index if not exists login_attempts_ip_idx on login_attempts (ip_hash, created_at);
 
+-- Abonnés aux conseils et actualités (inscription par Google ou par e-mail, avec consentement).
+create table if not exists subscribers (
+  id                uuid primary key default gen_random_uuid(),
+  email             text not null unique,
+  name              text,
+  source            text not null check (source in ('google', 'email')),
+  consent_at        timestamptz not null default now(),
+  unsubscribe_token text not null unique,
+  unsubscribed_at   timestamptz,
+  ip_hash           text,
+  created_at        timestamptz not null default now()
+);
+create index if not exists subscribers_ip_created_idx on subscribers (ip_hash, created_at);
+
 -- Sur Supabase, l'API publique (PostgREST) ne doit jamais exposer ces tables :
 -- RLS activé sans aucune politique = aucun accès via les clés anon/authenticated.
 -- Le site se connecte avec la chaîne de connexion serveur, qui n'est pas soumise au RLS.
 alter table leads enable row level security;
 alter table lead_events enable row level security;
 alter table login_attempts enable row level security;
+alter table subscribers enable row level security;

@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Désabonnement | Géomètre Topo" description="Gestion de votre abonnement aux conseils de Géomètre Topo." noindex>
+  <section class="section">
+    <div class="container narrow">
+      <h1 class="h2">Désabonnement</h1>
+      <p class="lead" data-unsub-msg>Votre demande de désabonnement a été prise en compte.</p>
+      <p>Vous ne recevrez plus nos conseils par e-mail. Vous pouvez vous réabonner à tout moment depuis le site.</p>
+      <p><a class="btn btn--outline" href="/">Retour à l’accueil</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const msg = document.querySelector('[data-unsub-msg]');
+  if (msg && new URLSearchParams(location.search).has('erreur')) {
+    msg.textContent = 'Ce lien de désabonnement n’est plus valide ou a déjà été utilisé. Écrivez-nous si vous recevez encore nos e-mails.';
+  }
+</script>
+
+<style>.narrow { max-width: 720px; }</style>

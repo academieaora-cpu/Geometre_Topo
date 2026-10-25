@@ -47,6 +47,8 @@ export const site = {
 
   /** Identifiant Google Analytics 4 (G-XXXX). Vide = aucun outil de mesure chargé. */
   gaId: (env.PUBLIC_GA_ID ?? '').trim(),
+  /** Identifiant client OAuth Google (bouton « S'abonner avec Google »). Vide = abonnement par e-mail uniquement. */
+  googleClientId: (env.PUBLIC_GOOGLE_CLIENT_ID ?? '').trim(),
   /** Jeton de vérification Google Search Console (méthode balise meta), facultatif. */
   googleSiteVerification: (env.PUBLIC_GOOGLE_SITE_VERIFICATION ?? '').trim(),
 } as const;

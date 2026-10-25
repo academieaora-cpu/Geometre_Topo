@@ -1,14 +1,29 @@
 ---
 import Icon from './Icon.astro';
-import { nav, site } from '../config/site.ts';
+import { nav, site, whatsappLink, defaultWhatsappMessage } from '../config/site.ts';
 
 const current = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => (href === '/' ? current === '/' : current === href || current.startsWith(href + '/'));
+const wa = whatsappLink(defaultWhatsappMessage);
 ---
+<div class="topbar">
+  <div class="container topbar-inner">
+    <ul>
+      {site.phoneHref && <li><Icon name="phone" size={15} /><a href={site.phoneHref} data-track="click_phone" data-track-location="topbar">{site.phone}</a></li>}
+      {site.email && <li class="hide-sm"><Icon name="mail" size={15} /><a href={`mailto:${site.email}`} data-track="click_email" data-track-location="topbar">{site.email}</a></li>}
+      <li><Icon name="pin" size={15} /><span>Yaoundé et environs</span></li>
+    </ul>
+    {wa && (
+      <a class="topbar-wa" href={wa} target="_blank" rel="noopener" data-track="click_whatsapp" data-track-location="topbar">
+        <Icon name="whatsapp" size={16} /> WhatsApp
+      </a>
+    )}
+  </div>
+</div>
 <header class="site-header">
   <div class="container bar">
     <a href="/" class="brand" aria-label={`${site.name} – accueil`}>
-      <img src="/images/logo-96.webp" srcset="/images/logo-96.webp 1x, /images/logo-192.webp 2x" width="77" height="48" alt="" />
+      <span class="logo-badge"><img src="/images/logo-96.webp" srcset="/images/logo-96.webp 1x, /images/logo-192.webp 2x" width="77" height="48" alt="" /></span>
       <span class="brand-text"><strong>Géomètre Topo</strong><small>Géomètre topographe · Yaoundé</small></span>
     </a>
 
@@ -44,56 +59,69 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current ===
 </header>
 
 <style>
+  .topbar { background: var(--navy-800); color: #d5dbeb; font-size: .82rem; }
+  .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 38px; }
+  .topbar ul { display: flex; flex-wrap: wrap; gap: 6px 22px; list-style: none; margin: 0; padding: 0; }
+  .topbar li { display: flex; align-items: center; gap: 7px; margin: 0; }
+  .topbar :global(svg) { color: var(--green-500); }
+  .topbar a { color: #e9edf7; text-decoration: none; }
+  .topbar a:hover { color: var(--white); text-decoration: underline; }
+  .topbar-wa { display: inline-flex; align-items: center; gap: 6px; background: var(--whatsapp); color: var(--white) !important; padding: 4px 12px; border-radius: 999px; font-weight: 600; }
+  .topbar-wa:hover { text-decoration: none !important; background: var(--whatsapp-dark); }
+  @media (max-width: 640px) { .hide-sm { display: none !important; } .topbar-wa { display: none; } }
+
   .site-header {
-    position: sticky; top: 0; z-index: 50; background: var(--navy-900); color: var(--white);
-    box-shadow: 0 2px 10px rgb(0 0 0 / 18%);
+    position: sticky; top: 0; z-index: 50; background: rgb(255 255 255 / 96%);
+    backdrop-filter: saturate(160%) blur(8px); border-bottom: 1px solid var(--line);
   }
   .bar { display: flex; align-items: center; gap: 16px; min-height: var(--header-h); }
-  .brand { display: flex; align-items: center; gap: 10px; color: var(--white); text-decoration: none; flex: none; }
-  .brand img { height: 44px; width: auto; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex: none; }
+  .logo-badge { display: grid; place-items: center; background: var(--navy-900); border-radius: 8px; padding: 4px 8px; }
+  .logo-badge img { height: 40px; width: auto; }
   .brand-text { display: none; line-height: 1.15; }
-  .brand-text strong { display: block; font-size: 1rem; }
-  .brand-text small { font-size: .78rem; color: #c3c3e3; }
-  @media (min-width: 1200px) { .brand-text { display: block; } }
+  .brand-text strong { display: block; font-family: var(--font-head); font-size: 1.05rem; color: var(--navy-800); font-weight: 800; }
+  .brand-text small { font-size: .78rem; color: var(--muted); }
+  @media (min-width: 1240px) { .brand-text { display: block; } }
 
   .nav-desktop { display: none; margin-left: auto; }
-  .nav-desktop ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .nav-desktop ul { display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; }
   .nav-desktop li { margin: 0; }
   .nav-desktop a {
-    display: block; padding: 10px 12px; color: #e3e3f5; text-decoration: none; font-weight: 600; border-radius: 8px;
+    display: block; padding: 10px 13px; color: var(--navy-800); text-decoration: none;
+    font-family: var(--font-head); font-weight: 600; font-size: .95rem; border-radius: 6px;
   }
-  .nav-desktop a:hover { background: rgb(255 255 255 / 8%); color: var(--white); }
-  .nav-desktop a[aria-current='page'] { color: var(--white); box-shadow: inset 0 -3px 0 var(--green-500); border-radius: 0; }
+  .nav-desktop a:hover { color: var(--green-700); background: var(--green-100); }
+  .nav-desktop a[aria-current='page'] { color: var(--green-700); box-shadow: inset 0 -2px 0 var(--green-500); border-radius: 0; }
   @media (min-width: 1000px) { .nav-desktop { display: block; } }
 
   .actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
   @media (min-width: 1000px) { .actions { margin-left: 8px; } }
   .call {
-    display: grid; place-items: center; width: 44px; height: 44px; border-radius: 10px;
-    color: var(--white); border: 1px solid rgb(255 255 255 / 30%);
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: 8px;
+    color: var(--navy-800); border: 1px solid var(--line);
   }
-  .call:hover { background: rgb(255 255 255 / 10%); color: var(--white); }
-  .cta { min-height: 44px; padding: 8px 14px; font-size: .95rem; }
+  .call:hover { border-color: var(--green-500); color: var(--green-700); }
+  .cta { min-height: 44px; padding: 8px 16px; font-size: .93rem; }
   @media (max-width: 420px) { .cta { display: none; } }
 
-  .nav-mobile { position: relative; }
+  .nav-mobile { position: static; }
   .nav-mobile summary {
     list-style: none; cursor: pointer; display: grid; place-items: center; width: 44px; height: 44px;
-    border-radius: 10px; border: 1px solid rgb(255 255 255 / 30%);
+    border-radius: 8px; border: 1px solid var(--line); color: var(--navy-800);
   }
   .nav-mobile summary::-webkit-details-marker { display: none; }
   .nav-mobile nav {
-    position: fixed; left: 0; right: 0; top: var(--header-h); background: var(--navy-900);
-    border-top: 1px solid rgb(255 255 255 / 12%); padding: 8px var(--gutter) 20px; box-shadow: var(--shadow-lg);
+    position: absolute; left: 0; right: 0; top: 100%; background: var(--white);
+    border-top: 1px solid var(--line); padding: 8px var(--gutter) 20px; box-shadow: var(--shadow-lg);
     max-height: calc(100dvh - var(--header-h)); overflow-y: auto;
   }
   .nav-mobile ul { list-style: none; margin: 0; padding: 0; }
   .nav-mobile li { margin: 0; }
   .nav-mobile a:not(.btn) {
-    display: block; padding: 14px 4px; color: var(--white); text-decoration: none; font-weight: 600; font-size: 1.1rem;
-    border-bottom: 1px solid rgb(255 255 255 / 10%);
+    display: block; padding: 14px 4px; color: var(--navy-800); text-decoration: none;
+    font-family: var(--font-head); font-weight: 600; font-size: 1.1rem; border-bottom: 1px solid var(--line);
   }
-  .nav-mobile a[aria-current='page'] { color: var(--green-500); }
+  .nav-mobile a[aria-current='page'] { color: var(--green-700); }
   .nav-mobile .btn { margin-top: 16px; }
   @media (min-width: 1000px) { .nav-mobile { display: none; } }
 </style>
