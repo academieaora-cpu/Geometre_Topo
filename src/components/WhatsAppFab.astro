@@ -1,7 +1,8 @@
 ---
 /**
- * Contact rapide toujours visible : bouton WhatsApp flottant sur ordinateur,
- * barre « Appeler / WhatsApp / Devis » fixée en bas de l'écran sur mobile.
+ * Contact rapide toujours visible : boutons ronds flottants en bas à droite.
+ * Mobile : Devis, Appeler et WhatsApp ; ordinateur : WhatsApp seul (l'en-tête porte déjà l'appel et le devis).
+ * Seul le bouton WhatsApp bat légèrement pour attirer l'attention (désactivé si le visiteur limite les animations).
  */
 import Icon from './Icon.astro';
 import { defaultWhatsappMessage, site, whatsappLink } from '../config/site.ts';
@@ -9,50 +10,53 @@ import { defaultWhatsappMessage, site, whatsappLink } from '../config/site.ts';
 interface Props { message?: string }
 const href = whatsappLink(Astro.props.message ?? defaultWhatsappMessage);
 ---
-{href && (
-  <a class="wa-fab" href={href} aria-label="Écrire sur WhatsApp" target="_blank" rel="noopener" data-track="click_whatsapp" data-track-location="bouton_flottant">
-    <Icon name="whatsapp" size={28} />
-    <span>WhatsApp</span>
-  </a>
-)}
 {(href || site.phoneHref) && (
-  <nav class="mobile-bar" aria-label="Contact rapide">
+  <nav class="fab-stack" aria-label="Contact rapide">
+    <a class="fab fab--devis" href="/devis" aria-label="Demander un devis" title="Demander un devis" data-track="cta_devis" data-track-location="bouton_flottant">
+      <Icon name="file" size={24} />
+    </a>
     {site.phoneHref && (
-      <a class="mb-call" href={site.phoneHref} data-track="click_phone" data-track-location="barre_mobile"><Icon name="phone" size={20} />Appeler</a>
+      <a class="fab fab--call" href={site.phoneHref} aria-label={`Appeler le ${site.phone}`} title="Appeler" data-track="click_phone" data-track-location="bouton_flottant">
+        <Icon name="phone" size={24} />
+      </a>
     )}
     {href && (
-      <a class="mb-wa" href={href} target="_blank" rel="noopener" data-track="click_whatsapp" data-track-location="barre_mobile"><Icon name="whatsapp" size={20} />WhatsApp</a>
+      <a class="fab fab--wa" href={href} target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp" title="WhatsApp" data-track="click_whatsapp" data-track-location="bouton_flottant">
+        <Icon name="whatsapp" size={32} />
+      </a>
     )}
-    <a class="mb-devis" href="/devis" data-track="cta_devis" data-track-location="barre_mobile"><Icon name="file" size={20} />Devis</a>
   </nav>
 )}
 
 <style>
-  .wa-fab {
-    position: fixed; right: 16px; bottom: 16px; z-index: 40;
-    display: inline-flex; align-items: center; gap: 8px; min-height: 56px; padding: 0 18px 0 14px;
-    background: var(--whatsapp); color: var(--white); border-radius: 999px; text-decoration: none; font-weight: 700;
-    box-shadow: 0 6px 20px rgb(0 0 0 / 25%);
+  .fab-stack {
+    position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 40;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
   }
-  .wa-fab:hover { background: var(--whatsapp-dark); color: var(--white); }
-  .mobile-bar { display: none; }
-  @media (max-width: 760px) {
-    .wa-fab { display: none; }
-    .mobile-bar {
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
-      display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px;
-      padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
-      background: rgb(255 255 255 / 97%); border-top: 1px solid var(--line); box-shadow: 0 -6px 20px rgb(10 28 74 / 10%);
-    }
-    .mobile-bar a {
-      display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 48px;
-      border-radius: var(--radius); font-weight: 700; text-decoration: none; font-size: .95rem;
-    }
-    .mb-call { border: 1.5px solid var(--navy-800); color: var(--navy-800); background: var(--white); }
-    .mb-wa { background: var(--whatsapp); color: var(--white); }
-    .mb-devis { background: var(--navy-800); color: var(--white); }
-    .mobile-bar a:hover { color: inherit; }
-    .mb-wa:hover, .mb-devis:hover { color: var(--white); }
+  .fab {
+    display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%;
+    text-decoration: none; box-shadow: 0 6px 18px rgb(10 28 74 / 25%); transition: transform .15s ease;
   }
-  @media print { .wa-fab, .mobile-bar { display: none; } }
+  .fab:hover { transform: scale(1.06); }
+  .fab--devis, .fab--devis:hover { background: var(--navy-800); color: var(--white); }
+  .fab--call, .fab--call:hover { background: var(--white); color: var(--navy-800); border: 2px solid var(--navy-800); }
+  .fab--wa, .fab--wa:hover { background: var(--whatsapp); color: var(--white); }
+  .fab--wa { position: relative; isolation: isolate; width: 60px; height: 60px; animation: wa-beat 2.6s ease-in-out infinite; }
+  /* Onde qui s'élargit autour du bouton, au rythme du battement. */
+  .fab--wa::before {
+    content: ''; position: absolute; inset: 0; z-index: -1; border-radius: 50%;
+    background: var(--whatsapp); animation: wa-ring 2.6s ease-out infinite;
+  }
+  @keyframes wa-beat {
+    0%, 40%, 100% { transform: scale(1); }
+    10% { transform: scale(1.08); }
+    20% { transform: scale(1); }
+    30% { transform: scale(1.05); }
+  }
+  @keyframes wa-ring {
+    0% { transform: scale(1); opacity: .5; }
+    60%, 100% { transform: scale(1.65); opacity: 0; }
+  }
+  @media (min-width: 761px) { .fab--devis, .fab--call { display: none; } }
+  @media print { .fab-stack { display: none; } }
 </style>
