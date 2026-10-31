@@ -43,6 +43,21 @@ export function organizationJsonLd(base: URL): Record<string, unknown> {
   return data;
 }
 
+/** Nom du site présenté par Google au-dessus du lien (sinon il affiche le nom de l'hébergeur). */
+export function websiteJsonLd(base: URL): Record<string, unknown> {
+  const url = base.href.replace(/\/$/, '');
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${url}/#site`,
+    name: site.name,
+    alternateName: ['Geometre Topo', 'Géomètre Topo Yaoundé'],
+    url: `${url}/`,
+    inLanguage: 'fr',
+    publisher: { '@id': `${url}/#entreprise` },
+  };
+}
+
 export function breadcrumbJsonLd(base: URL, items: { name: string; href: string }[]): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',

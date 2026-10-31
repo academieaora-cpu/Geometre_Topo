@@ -3,11 +3,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Photo from '../components/Photo.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { gallery, galleryCategories, type GalleryCategory } from '../data/gallery.ts';
+import { galleryCategories, workPhotos, type GalleryCategory } from '../data/gallery.ts';
 import { projects } from '../data/projects.ts';
 import { getService } from '../data/services.ts';
 
-const photos = gallery.filter((p) => p.category !== 'portrait');
+const photos = workPhotos;
 const categories = (Object.keys(galleryCategories) as GalleryCategory[]).filter((c) => photos.some((p) => p.category === c));
 ---
 <BaseLayout

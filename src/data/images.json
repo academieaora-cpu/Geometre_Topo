@@ -83,6 +83,27 @@
       }
     ]
   },
+  "canne-gnss-bipied-controleur": {
+    "width": 1125,
+    "height": 2000,
+    "variants": [
+      {
+        "src": "/images/photos/canne-gnss-bipied-controleur-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/canne-gnss-bipied-controleur-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/canne-gnss-bipied-controleur-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
   "descente-terrain-parcelle": {
     "width": 1800,
     "height": 2400,
@@ -209,6 +230,27 @@
       }
     ]
   },
+  "jalons-bipied-chantier": {
+    "width": 1125,
+    "height": 2000,
+    "variants": [
+      {
+        "src": "/images/photos/jalons-bipied-chantier-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/jalons-bipied-chantier-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/jalons-bipied-chantier-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
   "jalons-borne-existante": {
     "width": 1382,
     "height": 2400,
@@ -314,6 +356,27 @@
       }
     ]
   },
+  "recepteur-gnss-cour-terre-rouge": {
+    "width": 1125,
+    "height": 2000,
+    "variants": [
+      {
+        "src": "/images/photos/recepteur-gnss-cour-terre-rouge-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-cour-terre-rouge-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-cour-terre-rouge-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
   "recepteur-gnss-mallette": {
     "width": 2400,
     "height": 1350,
@@ -332,6 +395,48 @@
         "src": "/images/photos/recepteur-gnss-mallette-1080.webp",
         "width": 1080,
         "height": 608
+      }
+    ]
+  },
+  "recepteur-gnss-mur-enduit": {
+    "width": 1125,
+    "height": 2000,
+    "variants": [
+      {
+        "src": "/images/photos/recepteur-gnss-mur-enduit-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-mur-enduit-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-mur-enduit-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
+  "recepteur-gnss-mur-parpaings": {
+    "width": 1125,
+    "height": 2000,
+    "variants": [
+      {
+        "src": "/images/photos/recepteur-gnss-mur-parpaings-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-mur-parpaings-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-mur-parpaings-1080.webp",
+        "width": 1080,
+        "height": 1920
       }
     ]
   },
@@ -374,6 +479,48 @@
         "src": "/images/photos/releve-gnss-borne-1080.webp",
         "width": 1080,
         "height": 1882
+      }
+    ]
+  },
+  "releve-gnss-regard-assainissement": {
+    "width": 1125,
+    "height": 2000,
+    "variants": [
+      {
+        "src": "/images/photos/releve-gnss-regard-assainissement-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/releve-gnss-regard-assainissement-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/releve-gnss-regard-assainissement-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
+  "station-gnss-angle-parcelle": {
+    "width": 1125,
+    "height": 2000,
+    "variants": [
+      {
+        "src": "/images/photos/station-gnss-angle-parcelle-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/station-gnss-angle-parcelle-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/station-gnss-angle-parcelle-1080.webp",
+        "width": 1080,
+        "height": 1920
       }
     ]
   },

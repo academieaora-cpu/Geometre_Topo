@@ -1,0 +1,40 @@
+---
+/**
+ * Bande de photos qui défile en continu (CSS uniquement). Le défilement s'arrête au survol ;
+ * si le visiteur limite les animations, la bande se parcourt à la main.
+ */
+import Photo from './Photo.astro';
+
+interface Props {
+  slugs: string[];
+  label: string;
+}
+const { slugs, label } = Astro.props;
+---
+<div class="marquee" role="region" aria-label={label} tabindex="0">
+  <ul class="track">
+    {slugs.map((slug) => <li><Photo slug={slug} sizes="260px" /></li>)}
+    {slugs.map((slug) => <li class="dup" aria-hidden="true"><Photo slug={slug} alt="" sizes="260px" /></li>)}
+  </ul>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden; padding-block: 4px;
+    mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+  }
+  .marquee:focus-visible { outline: 3px solid var(--green-500); outline-offset: 4px; }
+  .track { display: flex; gap: 14px; width: max-content; list-style: none; padding: 0; margin: 0; animation: marquee 80s linear infinite; }
+  .marquee:hover .track, .marquee:focus-within .track { animation-play-state: paused; }
+  /* -50 % ramène exactement au début de la seconde copie (moins un demi-espacement). */
+  @keyframes marquee { to { transform: translateX(calc(-50% - 7px)); } }
+  .track li { margin: 0; flex: none; }
+  .track :global(.photo img) { width: auto; height: 240px; border-radius: var(--radius-lg); }
+  @media (max-width: 600px) { .track :global(.photo img) { height: 180px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee { overflow-x: auto; scroll-snap-type: x mandatory; mask-image: none; }
+    .track { animation: none; }
+    .track li { scroll-snap-align: start; }
+    .track .dup { display: none; }
+  }
+</style>

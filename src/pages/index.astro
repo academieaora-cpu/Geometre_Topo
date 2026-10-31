@@ -7,9 +7,12 @@ import ContactLinks from '../components/ContactLinks.astro';
 import Faq from '../components/Faq.astro';
 import LeadForm from '../components/LeadForm.astro';
 import SubscribeBox from '../components/SubscribeBox.astro';
+import HeroSlideshow from '../components/HeroSlideshow.astro';
+import PhotoMarquee from '../components/PhotoMarquee.astro';
 import { activeServices } from '../data/services.ts';
-import { site } from '../config/site.ts';
+import { site, socialProfiles } from '../config/site.ts';
 import { homeFaq } from '../data/faq.ts';
+import { websiteJsonLd } from '../data/seo.ts';
 
 const featured = activeServices.filter((s) =>
   ['leve-topographique', 'bornage-recherche-de-bornes', 'morcellement-de-terrain', 'implantation-batiment', 'plan-topographique', 'dossier-technique-immatriculation'].includes(s.slug),
@@ -36,11 +39,22 @@ const steps = [
   { title: 'Remise des résultats', text: 'Plans, constats ou repères implantés, avec des explications compréhensibles.' },
 ];
 
-const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-totale-mise-en-station', 'extrait-plan-parcelle', 'pose-canalisation-tranchee'];
+// Photos de terrain sans le visage du géomètre (son portrait n'apparaît que dans la présentation).
+const heroSlides: [string, string, string, string, string, string] = [
+  'recepteur-gnss-mur-enduit', 'station-gnss-angle-parcelle', 'pose-borne-beton',
+  'releve-gnss-regard-assainissement', 'recepteur-gnss-cour-terre-rouge', 'recepteur-gnss-mur-parpaings',
+];
+const marquee = [
+  'bornes-beton-parcelle', 'implantation-prisme-mur', 'canne-gnss-bipied-controleur', 'jalons-borne-existante',
+  'pose-canalisation-tranchee', 'borne-peinte-limite', 'extrait-plan-parcelle', 'jalons-bipied-chantier',
+  'gnss-vegetation-dense', 'bornes-beton-avant-pose', 'traitement-plans-ordinateur', 'borne-terrain-humide',
+  'recepteur-gnss-trepied', 'tranchee-chantier-assainissement',
+];
 ---
 <BaseLayout
   title="Géomètre topographe à Yaoundé – Levés, bornage, implantation | Géomètre Topo"
   description={site.description}
+  jsonLd={[websiteJsonLd(Astro.site!)]}
 >
   <!-- Accueil -->
   <section class="hero">
@@ -56,31 +70,16 @@ const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-total
         </p>
         <ContactLinks location="hero" />
         <ul class="hero-facts">
+          <li><strong>ENSTP</strong><span>géomètre diplômé</span></li>
           <li><strong>GNSS</strong><span>et station totale</span></li>
-          <li><strong>Yaoundé</strong><span>et ses environs</span></li>
           <li><strong>Devis</strong><span>avant intervention</span></li>
         </ul>
       </div>
       <div class="hero-media">
-        <div class="video-card">
-          <video
-            data-hero-video
-            muted
-            loop
-            playsinline
-            preload="none"
-            poster="/videos/releve-gnss-chantier-poster.webp"
-            width="540"
-            height="960"
-            aria-label="Vidéo : récepteur GNSS installé sur un chantier pour un relevé topographique"
-          >
-            <source src="/videos/releve-gnss-chantier.mp4" type="video/mp4" />
-          </video>
-          <span class="video-label"><Icon name="target" size={16} /> Relevé GNSS sur chantier</span>
-        </div>
-        <div class="person-card">
-          <Photo slug="portrait-alain-stephane-olouou" alt="" sizes="64px" ratio="1 / 1" eager />
-          <div><strong>{site.owner}</strong><span>Géomètre topographe</span></div>
+        <HeroSlideshow slugs={heroSlides} />
+        <div class="trust-card">
+          <span class="s-icon"><Icon name="shield" size={20} /></span>
+          <div><strong>Géomètre diplômé de l’ENSTP</strong><span>Yaoundé et ses environs</span></div>
         </div>
       </div>
     </div>
@@ -140,25 +139,50 @@ const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-total
           ))}
         </div>
       </div>
-      <Photo slug="geometre-gnss-piste" sizes="(min-width: 900px) 45vw, 90vw" ratio="4 / 5" class="tall-photo" />
+      <Photo slug="releve-gnss-borne" sizes="(min-width: 900px) 45vw, 90vw" ratio="4 / 5" class="tall-photo" />
     </div>
   </section>
 
   <!-- Réalisations -->
   <section class="section section--grid" aria-labelledby="work-title">
-    <div class="container">
-      <div class="section-head section-head--center">
+    <div class="container work-head">
+      <div class="video-card">
+        <video
+          data-work-video
+          muted
+          loop
+          playsinline
+          preload="none"
+          poster="/videos/releve-gnss-chantier-poster.webp"
+          width="540"
+          height="960"
+          aria-label="Vidéo : récepteur GNSS installé sur un chantier pour un relevé topographique"
+        >
+          <source src="/videos/releve-gnss-chantier.mp4" type="video/mp4" />
+        </video>
+        <span class="video-label"><Icon name="target" size={16} /> Relevé GNSS sur chantier</span>
+      </div>
+      <div>
         <p class="eyebrow">Sur le terrain</p>
-        <h2 id="work-title">Nos interventions, <span class="hl">en photos</span></h2>
-        <p>Des photos authentiques de nos descentes : relevés GNSS, station totale, bornes, plans et chantiers.</p>
+        <h2 id="work-title">Nos interventions, <span class="hl">en photos et en vidéo</span></h2>
+        <p class="lead">
+          Des images authentiques de nos descentes : relevés GNSS, station totale, pose et recherche de bornes, plans et
+          chantiers. Par respect pour nos clients, aucune localisation ni donnée foncière n’est publiée.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--outline" href="/realisations">Voir toutes les photos</a>
+        </div>
+        {socialProfiles.length > 0 && (
+          <p class="follow">
+            Suivez nos chantiers :
+            {socialProfiles.map((s) => (
+              <a href={s.url} target="_blank" rel="noopener me" data-track="click_social" data-track-location="accueil_terrain"><Icon name={s.icon} size={18} />{s.label}</a>
+            ))}
+          </p>
+        )}
       </div>
-      <div class="mosaic">
-        {mosaic.map((slug, i) => (
-          <Photo slug={slug} caption sizes={i === 0 ? '(min-width: 900px) 50vw, 100vw' : '(min-width: 900px) 25vw, 50vw'} class={`m m${i}`} />
-        ))}
-      </div>
-      <p class="center more-link"><a class="btn btn--outline" href="/realisations">Voir toutes les photos</a></p>
     </div>
+    <PhotoMarquee slugs={marquee} label="Photos de nos interventions (défilement automatique, s’arrête au survol)" />
   </section>
 
   <!-- Présentation -->
@@ -218,11 +242,6 @@ const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-total
     </div>
   </section>
 
-  <!-- Abonnement -->
-  <section class="section section--grid">
-    <div class="container"><SubscribeBox /></div>
-  </section>
-
   <!-- Formulaire -->
   <section class="section" aria-labelledby="formulaire-title">
     <div class="container two-col">
@@ -240,17 +259,28 @@ const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-total
       <LeadForm id="formulaire" />
     </div>
   </section>
+
+  <!-- Abonnement (après le formulaire : il ne lui fait pas concurrence) -->
+  <section class="section section--grid">
+    <div class="container"><SubscribeBox /></div>
+  </section>
 </BaseLayout>
 
 <script>
-  // La vidéo d'accueil ne démarre que si le visiteur n'a pas demandé à limiter les animations
-  // ni activé l'économie de données.
-  const video = document.querySelector<HTMLVideoElement>('[data-hero-video]');
+  // La vidéo ne se charge et ne joue que lorsqu'elle est à l'écran, et jamais si le visiteur
+  // a demandé à limiter les animations ou activé l'économie de données.
+  const video = document.querySelector<HTMLVideoElement>('[data-work-video]');
   const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (video && !reduce && !conn?.saveData) {
-    video.preload = 'auto';
-    video.play().catch(() => { /* lecture automatique refusée : l'affiche reste visible */ });
+  if (video && !reduce && !conn?.saveData && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        video.preload = 'auto';
+        video.play().catch(() => { /* lecture automatique refusée : l'affiche reste visible */ });
+      } else {
+        video.pause();
+      }
+    }, { threshold: 0.3 }).observe(video);
   }
 </script>
 
@@ -273,7 +303,18 @@ const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-total
   .hero-facts span { color: var(--muted); font-size: .92rem; }
 
   .hero-media { position: relative; max-width: 440px; width: 100%; justify-self: center; }
-  .video-card { position: relative; border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-lg); aspect-ratio: 9 / 14; background: var(--surface); }
+  .trust-card {
+    position: absolute; left: -28px; top: 28px; display: flex; align-items: center; gap: 12px; max-width: 270px;
+    background: var(--white); padding: 10px 16px 10px 10px; border-radius: 14px; box-shadow: var(--shadow-lg);
+    border: 1px solid var(--line);
+  }
+  .trust-card strong { display: block; font-family: var(--font-head); color: var(--navy-800); font-size: .92rem; line-height: 1.25; }
+  .trust-card span:not(.s-icon) { font-size: .82rem; color: var(--muted); }
+  @media (max-width: 600px) { .trust-card { left: 8px; top: 10px; } .hero-media { max-width: 360px; } }
+
+  .work-head { display: grid; gap: 32px; align-items: center; margin-bottom: 40px; }
+  @media (min-width: 860px) { .work-head { grid-template-columns: minmax(0, 340px) 1fr; gap: 56px; } }
+  .video-card { position: relative; border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-lg); aspect-ratio: 9 / 14; background: var(--surface); max-width: 340px; width: 100%; justify-self: center; }
   .video-card video { width: 100%; height: 100%; object-fit: cover; }
   .video-label {
     position: absolute; left: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 8px;
@@ -281,16 +322,8 @@ const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-total
     font-family: var(--font-head); font-weight: 700; font-size: .88rem;
   }
   .video-label :global(svg) { color: var(--green-700); }
-  .person-card {
-    position: absolute; left: -28px; top: 32px; display: flex; align-items: center; gap: 12px;
-    background: var(--white); padding: 10px 16px 10px 10px; border-radius: 14px; box-shadow: var(--shadow-lg);
-    border: 1px solid var(--line);
-  }
-  .person-card :global(.photo) { width: 52px; flex: none; }
-  .person-card :global(img) { border-radius: 50%; object-position: center 20%; }
-  .person-card strong { display: block; font-family: var(--font-head); color: var(--navy-800); font-size: .95rem; line-height: 1.2; }
-  .person-card span { font-size: .82rem; color: var(--muted); }
-  @media (max-width: 600px) { .person-card { left: 8px; top: 12px; } .hero-media { max-width: 360px; } }
+  .follow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: 20px; color: var(--muted); font-size: .95rem; }
+  .follow a { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
 
   .strengths { border-block: 1px solid var(--line); background: var(--white); }
   .strengths-grid { display: grid; gap: 4px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); padding-block: 28px; }
@@ -319,19 +352,6 @@ const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-total
   .problem :global(.arrow) { margin-left: auto; color: var(--green-700); flex: none; }
   .tall-photo { max-width: 520px; width: 100%; justify-self: center; }
 
-  .mosaic { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
-  .mosaic :global(.m) { position: relative; border-radius: var(--radius-lg); overflow: hidden; }
-  .mosaic :global(.m img) { aspect-ratio: 4 / 3; border-radius: 0; }
-  .mosaic :global(.m0) { grid-column: span 2; }
-  .mosaic :global(.m figcaption) {
-    position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 28px 14px 12px; color: var(--white);
-    background: linear-gradient(transparent, rgb(10 28 74 / 80%)); font-size: .86rem; line-height: 1.35;
-  }
-  @media (min-width: 900px) {
-    .mosaic { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 230px); }
-    .mosaic :global(.m0) { grid-row: span 2; }
-    .mosaic :global(.m img) { aspect-ratio: auto; height: 100%; }
-  }
   @media (max-width: 600px) { .hero :global(.btn-row .btn) { flex: 1 1 100%; } }
 
   .about :global(.portrait img) { aspect-ratio: 1 / 1; object-position: center 22%; max-width: 480px; margin-inline: auto; }
@@ -345,4 +365,6 @@ const mosaic = ['geometre-releve-gnss-route', 'pose-borne-beton', 'station-total
   .zone h2 { font-size: 1.3rem; }
 
   .form-photo { margin-top: 28px; }
+  /* Sur mobile, le formulaire remonte : la photo d'illustration est masquée. */
+  @media (max-width: 860px) { .form-photo { display: none; } }
 </style>

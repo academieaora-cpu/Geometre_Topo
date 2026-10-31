@@ -26,6 +26,11 @@ export interface GalleryPhoto {
   category: GalleryCategory;
   /** Services que la photo peut illustrer (slugs de src/data/services.ts). */
   services: string[];
+  /**
+   * Le géomètre est reconnaissable sur la photo. Son visage n'apparaît que deux fois sur le site
+   * (présentation de l'accueil et page « À propos ») : ces photos ne sont pas réutilisées ailleurs.
+   */
+  showsFace?: boolean;
 }
 
 export const gallery: GalleryPhoto[] = [
@@ -42,6 +47,7 @@ export const gallery: GalleryPhoto[] = [
     caption: 'Relevé au récepteur GNSS le long d’une piste.',
     category: 'mesures',
     services: ['leve-topographique', 'plan-topographique', 'bornage-recherche-de-bornes', 'lotissement'],
+    showsFace: true,
   },
   {
     slug: 'geometre-gnss-piste',
@@ -49,6 +55,7 @@ export const gallery: GalleryPhoto[] = [
     caption: 'Descente de terrain en zone rurale, récepteur GNSS en main.',
     category: 'mesures',
     services: ['leve-topographique', 'lotissement', 'morcellement-de-terrain'],
+    showsFace: true,
   },
   {
     slug: 'releve-gnss-borne',
@@ -163,6 +170,55 @@ export const gallery: GalleryPhoto[] = [
     services: ['topographie-btp', 'nivellement-altimetrie', 'implantation-batiment'],
   },
   {
+    slug: 'recepteur-gnss-mur-enduit',
+    alt: 'Récepteur GNSS sur sa canne maintenue par un bipied, devant un mur de clôture enduit en milieu urbain',
+    caption: 'Mesure GNSS en milieu urbain, le long d’une clôture.',
+    category: 'mesures',
+    services: ['leve-topographique', 'plan-topographique', 'topographie-btp'],
+  },
+  {
+    slug: 'recepteur-gnss-mur-parpaings',
+    alt: 'Récepteur GNSS sur canne et bipied rouge et blanc, au pied d’un mur en parpaings sur un sol en terre rouge',
+    caption: 'Récepteur GNSS en station au pied d’un mur en parpaings.',
+    category: 'mesures',
+    services: ['leve-topographique', 'bornage-recherche-de-bornes', 'plan-topographique'],
+  },
+  {
+    slug: 'recepteur-gnss-cour-terre-rouge',
+    alt: 'Récepteur GNSS sur canne et bipied dans l’angle d’une cour clôturée en terre rouge',
+    caption: 'Relevé GNSS dans l’angle d’une cour clôturée.',
+    category: 'mesures',
+    services: ['leve-topographique', 'implantation-batiment', 'nivellement-altimetrie'],
+  },
+  {
+    slug: 'canne-gnss-bipied-controleur',
+    alt: 'Canne GNSS maintenue par un bipied rouge et blanc, contrôleur de terrain posé sur un bloc de pierre',
+    caption: 'Canne GNSS sur bipied et contrôleur de terrain prêts pour la mesure.',
+    category: 'mesures',
+    services: ['leve-topographique', 'implantation-batiment'],
+  },
+  {
+    slug: 'station-gnss-angle-parcelle',
+    alt: 'Récepteur GNSS en station à l’angle d’une parcelle clôturée, contrôleur de terrain posé sur une pierre',
+    caption: 'Mesure d’un angle de parcelle au récepteur GNSS.',
+    category: 'bornes',
+    services: ['bornage-recherche-de-bornes', 'dossier-technique-immatriculation', 'morcellement-de-terrain'],
+  },
+  {
+    slug: 'releve-gnss-regard-assainissement',
+    alt: 'Récepteur GNSS installé près d’un regard d’assainissement en béton rempli d’eau, au pied d’un mur',
+    caption: 'Relevé d’un regard d’assainissement au récepteur GNSS.',
+    category: 'chantier',
+    services: ['topographie-btp', 'nivellement-altimetrie', 'leve-topographique'],
+  },
+  {
+    slug: 'jalons-bipied-chantier',
+    alt: 'Bipied rouge et blanc et canne de mesure posés contre des parpaings sur un chantier',
+    caption: 'Matériel de mesure sur un chantier en cours.',
+    category: 'chantier',
+    services: ['implantation-batiment', 'topographie-btp'],
+  },
+  {
     slug: 'extrait-plan-parcelle',
     alt: 'Extrait de plan de bornage montrant le contour d’une parcelle, ses bornes B1 à B6 et les distances entre elles',
     caption: 'Extrait de plan de bornage (informations du client masquées).',
@@ -182,27 +238,31 @@ export const gallery: GalleryPhoto[] = [
     caption: 'Olou’ou Alain Stéphane, géomètre topographe.',
     category: 'portrait',
     services: [],
+    showsFace: true,
   },
 ];
+
+/** Photos de terrain publiables partout (sans le visage du géomètre). */
+export const workPhotos: GalleryPhoto[] = gallery.filter((p) => !p.showsFace);
 
 /** Photo principale de chaque service (cartes et pages), choisie pour éviter les répétitions. */
 export const serviceCovers: Record<string, string> = {
   'leve-topographique': 'station-totale-mise-en-station',
   'bornage-recherche-de-bornes': 'bornes-beton-parcelle',
-  'morcellement-de-terrain': 'geometre-gnss-piste',
+  'morcellement-de-terrain': 'pose-borne-beton',
   'dossier-technique-immatriculation': 'extrait-plan-parcelle',
   'plan-topographique': 'traitement-plans-ordinateur',
   'implantation-batiment': 'implantation-prisme-mur',
   'nivellement-altimetrie': 'recepteur-gnss-trepied',
   'topographie-btp': 'pose-canalisation-tranchee',
-  lotissement: 'geometre-releve-gnss-route',
+  lotissement: 'gnss-vegetation-dense',
   'conseil-terrain': 'descente-terrain-parcelle',
 };
 
 /** Photos d'un service : la photo principale d'abord, puis les autres photos liées. */
 export function photosForService(serviceSlug: string, max = 3): GalleryPhoto[] {
-  const cover = gallery.find((p) => p.slug === serviceCovers[serviceSlug]);
-  const others = gallery.filter((p) => p.services.includes(serviceSlug) && p !== cover);
+  const cover = workPhotos.find((p) => p.slug === serviceCovers[serviceSlug]);
+  const others = workPhotos.filter((p) => p.services.includes(serviceSlug) && p !== cover);
   return (cover ? [cover, ...others] : others).slice(0, max);
 }
 

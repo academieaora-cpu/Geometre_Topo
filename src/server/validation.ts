@@ -166,11 +166,14 @@ export function validateLead(
   const phone = normalizePhone(input.phone);
   if (!isValidPhone(phone)) errors.phone = 'Indiquez un numéro de téléphone valide (8 à 15 chiffres).';
 
-  const email = clean(input.email, 254).toLowerCase();
-  if (!isValidEmail(email)) errors.email = 'Indiquez une adresse e-mail valide (ex. nom@exemple.com).';
-
   const preferredContact = oneOf(input.preferredContact, PREFERRED_CONTACTS);
   if (!preferredContact) errors.preferredContact = 'Choisissez un moyen de contact.';
+
+  // L'e-mail est facultatif (la plupart des clients échangent par WhatsApp ou téléphone),
+  // sauf si le visiteur demande à être recontacté par e-mail.
+  const email = clean(input.email, 254).toLowerCase();
+  if (email && !isValidEmail(email)) errors.email = 'Indiquez une adresse e-mail valide (ex. nom@exemple.com).';
+  else if (!email && preferredContact === 'email') errors.email = 'Indiquez votre adresse e-mail pour être recontacté par e-mail.';
 
   const serviceRaw = clean(input.service, 80) || 'autre';
   const service = serviceRaw === 'autre' || opts.services.includes(serviceRaw) ? serviceRaw : null;

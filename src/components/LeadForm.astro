@@ -45,6 +45,12 @@ const uid = id;
     <p class="small muted req-note">Les champs marqués <span aria-hidden="true">*</span><span class="sr-only">d’un astérisque</span> sont obligatoires.</p>
 
     <div class="form-error" role="alert" tabindex="-1" hidden data-form-error></div>
+    <div class="form-fallback" hidden data-form-fallback>
+      <p>Vous pouvez aussi nous transmettre votre demande tout de suite sur WhatsApp : le message est prérempli avec votre saisie, vous le vérifiez avant de l’envoyer.</p>
+      <a class="btn btn--whatsapp" href="#" target="_blank" rel="noopener" data-wa-fallback data-track="click_whatsapp" data-track-location="formulaire_echec">
+        <Icon name="whatsapp" />Envoyer ma demande par WhatsApp
+      </a>
+    </div>
 
     <fieldset>
       <legend>Vos coordonnées</legend>
@@ -60,8 +66,8 @@ const uid = id;
           <p class="err" id={`${uid}-phone-err`} data-err="phone"></p>
         </div>
         <div class="field">
-          <label for={`${uid}-email`}>Adresse e-mail <span class="req" aria-hidden="true">*</span></label>
-          <input id={`${uid}-email`} name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" aria-describedby={`${uid}-email-err`} />
+          <label for={`${uid}-email`}>Adresse e-mail <span class="opt">(facultatif)</span></label>
+          <input id={`${uid}-email`} name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" aria-describedby={`${uid}-email-err`} />
           <p class="err" id={`${uid}-email-err`} data-err="email"></p>
         </div>
       </div>
@@ -206,7 +212,9 @@ const uid = id;
     if ((data.fullName ?? '').trim().length < 2) e.fullName = 'Indiquez votre nom et prénom.';
     const digits = (data.phone ?? '').replace(/\D/g, '');
     if (digits.length < 8 || digits.length > 15) e.phone = 'Indiquez un numéro de téléphone valide (8 à 15 chiffres).';
-    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test((data.email ?? '').trim())) e.email = 'Indiquez une adresse e-mail valide (ex. nom@exemple.com).';
+    const email = (data.email ?? '').trim();
+    if (email && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) e.email = 'Indiquez une adresse e-mail valide (ex. nom@exemple.com).';
+    else if (!email && data.preferredContact === 'email') e.email = 'Indiquez votre adresse e-mail pour être recontacté par e-mail.';
     if (!data.preferredContact) e.preferredContact = 'Choisissez un moyen de contact.';
     if (!data.service) e.service = 'Choisissez un service dans la liste.';
     if ((data.locality ?? '').trim().length < 2) e.locality = 'Indiquez la localité du terrain.';
@@ -260,6 +268,7 @@ const uid = id;
   function setup(form: HTMLFormElement): void {
     const wrap = form.closest<HTMLElement>('.lead-form-wrap')!;
     const formError = form.querySelector<HTMLElement>('[data-form-error]')!;
+    const fallback = form.querySelector<HTMLElement>('[data-form-fallback]')!;
     const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
     const label = form.querySelector<HTMLElement>('[data-submit-label]')!;
     const defaultLabel = label.textContent ?? 'Envoyer';
@@ -292,6 +301,7 @@ const uid = id;
     form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
       formError.hidden = true;
+      fallback.hidden = true;
       const data = serialize(form);
       const errors = validate(data);
       showErrors(form, errors);
@@ -324,11 +334,13 @@ const uid = id;
           formError.textContent = 'Certains champs sont à corriger.';
         } else {
           formError.textContent = body.error ?? 'Votre demande n’a pas pu être enregistrée. Votre saisie est conservée : réessayez.';
+          showFallback(form, fallback, data);
         }
         formError.hidden = false;
       } catch {
         formError.textContent = 'La connexion a été interrompue et votre demande n’a pas été enregistrée. Votre saisie est conservée : réessayez.';
         formError.hidden = false;
+        showFallback(form, fallback, data);
       } finally {
         submit.disabled = false;
         label.textContent = defaultLabel;
@@ -339,6 +351,25 @@ const uid = id;
         formError.scrollIntoView({ block: 'center' });
       }
     });
+  }
+
+  /** En cas d'échec d'enregistrement : proposer d'envoyer la même demande par WhatsApp (rien n'est envoyé sans validation du visiteur). */
+  function showFallback(form: HTMLFormElement, fallback: HTMLElement, data: Record<string, string>): void {
+    const waNumber = form.dataset.waNumber;
+    if (!waNumber) return;
+    const service = form.querySelector<HTMLSelectElement>('select[name="service"]');
+    const serviceLabel = data.service && data.service !== 'autre' ? service?.selectedOptions[0]?.textContent?.trim() ?? '' : '';
+    const terrain = [data.locality, data.neighborhood].map((v) => (v ?? '').trim()).filter(Boolean).join(', ');
+    const lines = [
+      'Bonjour Géomètre Topo, je souhaite un devis.',
+      data.fullName ? `Nom : ${data.fullName.trim()}` : '',
+      serviceLabel ? `Service : ${serviceLabel}` : '',
+      terrain ? `Terrain : ${terrain}` : '',
+      data.area ? `Superficie : ${data.area.trim()}` : '',
+      data.description ? `Besoin : ${data.description.trim().slice(0, 700)}` : '',
+    ].filter(Boolean);
+    fallback.querySelector<HTMLAnchorElement>('[data-wa-fallback]')!.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(lines.join('\n'))}`;
+    fallback.hidden = false;
   }
 
   function showSuccess(wrap: HTMLElement, form: HTMLFormElement, reference: string, data: Record<string, string>): void {
@@ -393,6 +424,8 @@ const uid = id;
   .choice--top input { margin-top: 3px; }
   .consents { margin: 8px 0 16px; padding-top: 12px; border-top: 1px solid var(--line); }
   .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .form-fallback { background: var(--surface); border: 1px solid var(--line); padding: 14px; border-radius: var(--radius); margin: -6px 0 16px; }
+  .form-fallback p { margin: 0 0 10px; font-size: .95rem; }
   .form-error { background: var(--danger-100); color: var(--danger); border: 1px solid #f3b8b2; padding: 12px 14px; border-radius: var(--radius); font-weight: 600; margin-bottom: 16px; }
   .req-note { margin-bottom: 14px; }
   .submit { font-size: 1.05rem; min-height: 54px; }

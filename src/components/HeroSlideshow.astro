@@ -1,0 +1,55 @@
+---
+/**
+ * Diaporama d'accueil : six photos de terrain en fondu enchaîné, en CSS uniquement
+ * (aucun script, compatible CSP). Une seule photo, fixe, si le visiteur limite les animations.
+ */
+import Photo from './Photo.astro';
+import { photo } from '../data/gallery.ts';
+
+interface Props {
+  /** Exactement six photos : la durée et les décalages de l'animation sont calculés pour six. */
+  slugs: [string, string, string, string, string, string];
+}
+const { slugs } = Astro.props;
+---
+<div class="slideshow">
+  {slugs.map((slug, i) => (
+    <div class="slide" aria-hidden={i > 0 ? 'true' : undefined}>
+      <Photo slug={slug} sizes="(min-width: 960px) 440px, 90vw" eager={i === 0} />
+      <span class="slide-label">{photo(slug).caption}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+  .slideshow {
+    position: relative; aspect-ratio: 4 / 5; border-radius: 22px; overflow: hidden;
+    box-shadow: var(--shadow-lg); background: var(--surface);
+  }
+  /* 6 photos × 5 s ; chaque photo apparaît en 1 s pendant que la précédente s'efface. */
+  .slide { position: absolute; inset: 0; opacity: 0; animation: slide-fade 30s linear infinite; }
+  .slide:nth-child(1) { animation-delay: -1s; }
+  .slide:nth-child(2) { animation-delay: 4s; }
+  .slide:nth-child(3) { animation-delay: 9s; }
+  .slide:nth-child(4) { animation-delay: 14s; }
+  .slide:nth-child(5) { animation-delay: 19s; }
+  .slide:nth-child(6) { animation-delay: 24s; }
+  @keyframes slide-fade {
+    0% { opacity: 0; }
+    3.333% { opacity: 1; }
+    16.667% { opacity: 1; }
+    20% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+  .slide :global(.photo), .slide :global(img) { width: 100%; height: 100%; }
+  .slide :global(img) { object-fit: cover; border-radius: 0; }
+  .slide-label {
+    position: absolute; left: 14px; right: 14px; bottom: 14px; width: fit-content; max-width: calc(100% - 28px);
+    background: rgb(255 255 255 / 92%); color: var(--navy-800); padding: 8px 14px; border-radius: 12px;
+    font-family: var(--font-head); font-weight: 700; font-size: .86rem; line-height: 1.3;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .slide { animation: none; }
+    .slide:first-child { opacity: 1; }
+  }
+</style>

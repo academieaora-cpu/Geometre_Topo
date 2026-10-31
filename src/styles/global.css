@@ -66,6 +66,10 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
+/* Place réservée sous la barre de contact fixée en bas de l'écran (mobile). */
+@media (max-width: 760px) {
+  body:has(.mobile-bar) { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
+}
 
 img, video { max-width: 100%; height: auto; display: block; }
 a { color: var(--green-700); text-underline-offset: 3px; }

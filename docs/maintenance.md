@@ -108,3 +108,12 @@ Elles ne sont pas exposées aux visiteurs ; surveiller les nouvelles versions de
 | Plus de notifications e-mail | Fiche prospect › historique « Notification e-mail : failed » → vérifier la clé et le domaine Resend. Les demandes restent dans `/admin`. |
 | Mot de passe admin perdu | `npm run admin:hash`, remplacer `ADMIN_PASSWORD_HASH`, redéployer. |
 | Suspicion de fuite de session | Changer `SESSION_SECRET` et redéployer (toutes les sessions sont invalidées). |
+
+## Photos et visage du géomètre
+
+Le visage d’Olou’ou Alain Stéphane n’apparaît que **deux fois** sur le site : la présentation « Votre interlocuteur »
+de l’accueil et la page « À propos ». Toute photo où il est reconnaissable porte `showsFace: true` dans
+`src/data/gallery.ts` : elle est alors exclue de la galerie, des pages services et des diaporamas.
+Avant d’ajouter une photo, retirer les métadonnées (position GPS) : `npm run images` les supprime des versions
+publiées, mais le fichier déposé dans `photos/originals/` doit lui aussi en être débarrassé.
+

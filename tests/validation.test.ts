@@ -32,9 +32,18 @@ test('signale chaque champ obligatoire manquant', () => {
   const r = validateLead({}, { services, now: NOW });
   assert.equal(r.ok, false);
   if (r.ok) return;
-  for (const k of ['fullName', 'phone', 'email', 'preferredContact', 'locality', 'consentProcessing']) {
+  for (const k of ['fullName', 'phone', 'preferredContact', 'locality', 'consentProcessing']) {
     assert.ok(r.errors[k], `erreur attendue pour ${k}`);
   }
+});
+
+test('e-mail facultatif, sauf pour être recontacté par e-mail', () => {
+  const sansEmail = validateLead({ ...valid, email: '' }, { services, now: NOW });
+  assert.equal(sansEmail.ok && sansEmail.data.email, '');
+  const r = validateLead({ ...valid, email: '', preferredContact: 'email' }, { services, now: NOW });
+  assert.equal(r.ok, false);
+  if (r.ok) return;
+  assert.ok(r.errors.email);
 });
 
 test('refuse un service inconnu mais accepte « autre » et l’absence de service', () => {

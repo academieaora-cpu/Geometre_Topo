@@ -33,12 +33,12 @@ Tests effectués en local avec une vraie base PostgreSQL 16, le serveur Astro et
 | Téléphone / WhatsApp / e-mail | Non fournis | Boutons WhatsApp et Appeler **masqués** ; seul le formulaire est proposé |
 | Plateforme « VSL » | Hypothèse Vercel, à confirmer | — |
 | Déploiement en production | **Non effectué** | Site non accessible publiquement |
-| Base de données de production | **Non créée** | Le formulaire afficherait « problème technique » |
+| Base de données de production | Créée : Supabase (offre gratuite, projet `geometre-topo`, us-east-1), reliée par `DATABASE_URL` | Offre gratuite : mise en veille après 7 jours sans requête, évitée par le bipeur qui interroge `/api/health` |
 | Notifications e-mail (Resend) | Non configurées | Demandes visibles uniquement dans `/admin` |
 | Compte administrateur | Non créé | `/admin` affiche « non configurée » |
 | Domaine personnalisé + HTTPS | Non acheté | URL provisoire `*.vercel.app` |
 | UptimeRobot | Non créé (procédure prête) | Pas d’alerte en cas de panne |
-| Google Search Console / Business Profile | Non créés (procédure prête) | Indexation plus lente, pas de suivi |
+| Google Search Console / Business Profile | Propriété Search Console validée (balise HTML via `PUBLIC_GOOGLE_SITE_VERIFICATION`) ; fiche Business Profile créée par le client | Ne pas supprimer la variable de vérification |
 | Google Analytics | Non activé (facultatif) | Aucune mesure d’audience (pas de bandeau cookies) |
 | Formation, logiciels, RCCM, NIU, statut | Non fournis | Rubriques masquées / « en cours de mise à jour » |
 | Portfolio de projets, témoignages | Aucun projet validé | Seule la galerie photo est affichée ; **aucun témoignage inventé** |
