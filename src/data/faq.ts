@@ -1,4 +1,5 @@
 import type { Faq } from './services.ts';
+import { communesVoisines, yaoundeQuartiers } from '../config/site.ts';
 
 export const homeFaq: Faq[] = [
   {
@@ -22,7 +23,11 @@ export const homeFaq: Faq[] = [
     a: 'Nous réalisons les travaux topographiques qui contribuent à un dossier foncier. La délivrance d’un titre foncier relève de l’administration ; aucun géomètre ne peut en garantir l’issue ni le délai.',
   },
   {
+    q: 'Dans quels quartiers de Yaoundé intervenez-vous ?',
+    a: `Dans tous les arrondissements de Yaoundé (Yaoundé I à VII) : ${yaoundeQuartiers.join(', ')} et les autres quartiers de la ville.`,
+  },
+  {
     q: 'Intervenez-vous en dehors de Yaoundé ?',
-    a: 'Notre zone principale est Yaoundé et ses environs. Pour un terrain plus éloigné, indiquez sa localité : nous vous dirons si une intervention est possible.',
+    a: `Notre zone principale est Yaoundé et ses environs. Dans les communes voisines (${communesVoisines.join(', ')}…) ou pour un terrain plus éloigné, indiquez sa localité : nous vous confirmons la possibilité d’intervention avant tout déplacement.`,
   },
 ];

@@ -11,13 +11,13 @@ const photos = workPhotos;
 const categories = (Object.keys(galleryCategories) as GalleryCategory[]).filter((c) => photos.some((p) => p.category === c));
 ---
 <BaseLayout
-  title="Réalisations et chantiers – photos de terrain | Géomètre Topo"
+  title="Réalisations d’un géomètre topographe à Yaoundé – photos de terrain | Géomètre Topo"
   description="Photos authentiques des interventions de Géomètre Topo à Yaoundé et environs : pose et recherche de bornes, relevés GNSS, implantations au prisme."
 >
   <section class="page-hero">
     <div class="container">
       <Breadcrumbs items={[{ name: 'Réalisations', href: '/realisations' }]} />
-      <h1>Réalisations et chantiers</h1>
+      <h1>Réalisations et chantiers à Yaoundé</h1>
       <p class="lead">
         Des photos prises lors de nos interventions réelles. Par respect pour nos clients, aucune localisation précise,
         aucun nom ni aucune donnée foncière n’est publié.

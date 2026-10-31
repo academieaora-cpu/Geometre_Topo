@@ -80,7 +80,7 @@ export const services: Service[] = [
     slug: 'bornage-recherche-de-bornes',
     active: true,
     name: 'Bornage et recherche de bornes',
-    title: 'Bornage et recherche de bornes de terrain',
+    title: 'Bornage et recherche de bornes de terrain à Yaoundé',
     metaTitle: 'Bornage et recherche de bornes de terrain à Yaoundé | Géomètre Topo',
     metaDescription:
       'Bornes de terrain introuvables ou limites incertaines à Yaoundé ? Recherche de bornes existantes, vérification des limites et accompagnement aux opérations de bornage.',
@@ -159,7 +159,7 @@ export const services: Service[] = [
     slug: 'dossier-technique-immatriculation',
     active: true,
     name: 'Dossier technique et immatriculation',
-    title: 'Dossier technique pour l’immatriculation de votre terrain',
+    title: 'Dossier technique pour l’immatriculation de votre terrain à Yaoundé',
     metaTitle: 'Dossier technique et immatriculation de terrain à Yaoundé | Géomètre Topo',
     metaDescription:
       'Dossier technique pour l’immatriculation d’un terrain à Yaoundé : levé, plan, bornes et coordonnées établis par un géomètre topographe. Demandez votre devis.',
@@ -200,7 +200,7 @@ export const services: Service[] = [
     slug: 'plan-topographique',
     active: true,
     name: 'Plan topographique et plan de terrain',
-    title: 'Plan topographique et plan de terrain',
+    title: 'Plan topographique et plan de terrain à Yaoundé',
     metaTitle: 'Plan topographique de terrain à Yaoundé | Géomètre Topo',
     metaDescription:
       'Plan topographique et plan de terrain à Yaoundé : superficie, limites, courbes de niveau et éléments existants, pour comprendre et préparer votre projet.',
@@ -237,7 +237,7 @@ export const services: Service[] = [
     slug: 'implantation-batiment',
     active: true,
     name: 'Implantation de bâtiments',
-    title: 'Implantation de bâtiments et d’ouvrages',
+    title: 'Implantation de bâtiments et d’ouvrages à Yaoundé',
     metaTitle: 'Implantation de bâtiment à Yaoundé : implanter votre maison | Géomètre Topo',
     metaDescription:
       'Implantation topographique de bâtiments et d’ouvrages à Yaoundé : report sur le terrain des axes, angles et niveaux de votre plan avant le démarrage du chantier.',
@@ -275,8 +275,8 @@ export const services: Service[] = [
     slug: 'nivellement-altimetrie',
     active: true,
     name: 'Nivellement et altimétrie',
-    title: 'Nivellement, pentes et altimétrie',
-    metaTitle: 'Nivellement de terrain et calcul de pente | Géomètre Topo',
+    title: 'Nivellement, pentes et altimétrie à Yaoundé',
+    metaTitle: 'Nivellement de terrain et calcul de pente à Yaoundé | Géomètre Topo',
     metaDescription:
       'Nivellement et mesures altimétriques à Yaoundé : altitudes, profils, dénivelés et pentes de terrain pour vos travaux de construction et d’assainissement.',
     summary: 'Connaître les altitudes, pentes et dénivelés pour éviter les mauvaises surprises.',
@@ -310,7 +310,7 @@ export const services: Service[] = [
     slug: 'topographie-btp',
     active: true,
     name: 'Topographie pour le BTP',
-    title: 'Travaux topographiques pour le BTP',
+    title: 'Travaux topographiques pour le BTP à Yaoundé',
     metaTitle: 'Topographie de chantier BTP à Yaoundé | Géomètre Topo',
     metaDescription:
       'Levés, implantations et contrôles topographiques pour les entreprises du BTP, architectes et maîtres d’ouvrage à Yaoundé et environs.',
@@ -344,8 +344,8 @@ export const services: Service[] = [
     slug: 'lotissement',
     active: true,
     name: 'Lotissement',
-    title: 'Travaux topographiques pour lotissement',
-    metaTitle: 'Topographie pour projet de lotissement | Géomètre Topo',
+    title: 'Travaux topographiques pour lotissement à Yaoundé',
+    metaTitle: 'Topographie pour projet de lotissement à Yaoundé | Géomètre Topo',
     metaDescription:
       'Accompagnement topographique des projets de lotissement à Yaoundé : levé, plan de découpage des lots et des voies, implantation sur le terrain.',
     summary: 'Levés, découpage des lots et implantation pour les projets de lotissement.',
@@ -378,7 +378,7 @@ export const services: Service[] = [
     slug: 'conseil-terrain',
     active: true,
     name: 'Conseil technique sur un terrain',
-    title: 'Conseil technique avant d’acheter ou de construire',
+    title: 'Conseil technique avant d’acheter ou de construire à Yaoundé',
     metaTitle: 'Vérifier un terrain avant achat à Yaoundé | Géomètre Topo',
     metaDescription:
       'Vous hésitez avant d’acheter un terrain ou de lancer des travaux à Yaoundé ? Expliquez votre situation à un géomètre topographe et recevez une orientation claire.',

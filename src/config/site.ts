@@ -29,7 +29,6 @@ export const site = {
   city: 'Yaoundé',
   region: 'Centre',
   country: 'CM',
-  areaServed: ['Yaoundé', 'Environs de Yaoundé'],
 
   /** Numéro affiché et utilisé pour les liens tel: (ex. « +237 6XX XX XX XX »). */
   phone: phoneRaw,
@@ -60,6 +59,14 @@ export const socialProfiles = site.socials.map((url) => {
   if (host.includes('instagram.')) return { url, icon: 'instagram', label: 'Instagram' };
   return { url, icon: 'arrow', label: host.replace(/^www\./, '') || 'Lien' };
 });
+
+/** Quartiers de Yaoundé cités comme zone d'intervention (tous les arrondissements, Yaoundé I à VII). */
+export const yaoundeQuartiers = [
+  'Odza', 'Ekounou', 'Mimboman', 'Nkolbisson', 'Mendong', 'Biyem-Assi', 'Simbock', 'Nsimeyong',
+  'Ahala', 'Mvan', 'Emana', 'Olembé', 'Etoudi', 'Messassi', 'Bastos', 'Essos',
+];
+/** Communes voisines : l'intervention y est confirmée au cas par cas, avant tout déplacement. */
+export const communesVoisines = ['Soa', 'Mfou', 'Mbankomo', 'Nkolafamba', 'Obala'];
 
 export const nav = [
   { href: '/', label: 'Accueil' },

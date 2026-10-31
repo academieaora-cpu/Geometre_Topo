@@ -9,6 +9,7 @@ import ServiceCard from '../../components/ServiceCard.astro';
 import { activeServices, type Service } from '../../data/services.ts';
 import { photosForService } from '../../data/gallery.ts';
 import { serviceJsonLd } from '../../data/seo.ts';
+import { communesVoisines, yaoundeQuartiers } from '../../config/site.ts';
 import { getCollection } from 'astro:content';
 
 export function getStaticPaths() {
@@ -72,6 +73,17 @@ const articles = (await getCollection('conseils', ({ data }) => !data.draft && d
     </div>
   </section>
 
+  <section class="section zone-section" aria-labelledby="zone-title">
+    <div class="container zone-local">
+      <h2 id="zone-title">{service.name} à Yaoundé et dans les environs</h2>
+      <p>
+        Nous intervenons dans tous les arrondissements de Yaoundé (Yaoundé I à VII), notamment à
+        {' '}{yaoundeQuartiers.join(', ')}. Dans les communes voisines ({communesVoisines.join(', ')}…), indiquez la
+        localité du terrain : nous vous confirmons la possibilité d’intervention avant tout déplacement.
+      </p>
+    </div>
+  </section>
+
   {photos.length > 1 && (
     <section class="section section--surface">
       <div class="container">
@@ -116,4 +128,8 @@ const articles = (await getCollection('conseils', ({ data }) => !data.draft && d
 <style>
   .side-photo { max-width: 420px; justify-self: center; width: 100%; }
   .read-more { margin-top: 32px; }
+  .zone-section { padding-block: 0 clamp(40px, 6vw, 72px); }
+  .zone-local { max-width: 860px; border-left: 3px solid var(--green-500); padding-left: 20px; }
+  .zone-local h2 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); }
+  .zone-local p { margin: 0; color: var(--muted); }
 </style>

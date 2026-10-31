@@ -1,9 +1,17 @@
 /**
  * Données structurées (JSON-LD). Uniquement des informations réelles et validées :
- * aucune note, aucun avis, aucune adresse ni aucun prix n'est déclaré.
+ * aucune note, aucun avis, aucune adresse précise (seulement la ville) ni aucun prix n'est déclaré.
  */
 import { site } from '../config/site.ts';
 import { activeServices, type Service } from './services.ts';
+
+/** Zone desservie : Yaoundé et ses environs. */
+function areaServed(): Record<string, unknown>[] {
+  return [
+    { '@type': 'City', name: site.city, sameAs: 'https://fr.wikipedia.org/wiki/Yaound%C3%A9' },
+    { '@type': 'AdministrativeArea', name: 'Région du Centre, Cameroun' },
+  ];
+}
 
 export function organizationJsonLd(base: URL): Record<string, unknown> {
   const url = base.href.replace(/\/$/, '');
@@ -16,7 +24,8 @@ export function organizationJsonLd(base: URL): Record<string, unknown> {
     url,
     logo: `${url}/images/logo-192.webp`,
     image: `${url}/images/og-geometre-topo.jpg`,
-    areaServed: site.areaServed.map((name) => ({ '@type': 'City', name })),
+    areaServed: areaServed(),
+    address: { '@type': 'PostalAddress', addressLocality: site.city, addressRegion: site.region, addressCountry: site.country },
     knowsLanguage: 'fr',
     knowsAbout: [
       'Topographie', 'Levé topographique', 'Bornage', 'Recherche de bornes', 'Morcellement de terrain',
@@ -81,7 +90,7 @@ export function serviceJsonLd(base: URL, service: Service): Record<string, unkno
     description: service.metaDescription,
     url: `${url}/services/${service.slug}`,
     provider: { '@id': `${url}/#entreprise` },
-    areaServed: site.areaServed.map((name) => ({ '@type': 'City', name })),
+    areaServed: areaServed(),
   };
 }
 

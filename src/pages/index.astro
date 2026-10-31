@@ -10,7 +10,7 @@ import SubscribeBox from '../components/SubscribeBox.astro';
 import HeroSlideshow from '../components/HeroSlideshow.astro';
 import PhotoMarquee from '../components/PhotoMarquee.astro';
 import { activeServices } from '../data/services.ts';
-import { site, socialProfiles } from '../config/site.ts';
+import { communesVoisines, site, socialProfiles, yaoundeQuartiers } from '../config/site.ts';
 import { homeFaq } from '../data/faq.ts';
 import { websiteJsonLd } from '../data/seo.ts';
 
@@ -65,8 +65,9 @@ const marquee = [
           Votre terrain mérite une <span class="hl-box">mesure précise.</span>
         </h1>
         <p class="lead">
-          Vous avez un terrain à sécuriser ou un projet de construction à préparer ? Géomètre Topo vous accompagne à Yaoundé
-          et ses environs : levé topographique, bornes, morcellement, dossier technique d’immatriculation et implantation.
+          Vous avez un terrain à sécuriser ou un projet de construction à préparer ? Géomètre Topo, votre géomètre à
+          Yaoundé et dans ses environs, s’occupe du levé topographique, des bornes, du morcellement, du dossier technique
+          d’immatriculation et de l’implantation.
         </p>
         <ContactLinks location="hero" />
         <ul class="hero-facts">
@@ -233,9 +234,9 @@ const marquee = [
       <aside class="zone">
         <Photo slug="station-totale-mise-en-station" alt="" sizes="(min-width: 900px) 35vw, 90vw" ratio="16 / 10" />
         <div class="zone-body">
-          <h2 class="h3">Zone d’intervention</h2>
-          <p>Géomètre Topo intervient principalement à <strong>Yaoundé</strong> et dans ses environs (région du Centre).</p>
-          <p class="muted small">Terrain plus éloigné ? Indiquez sa localité dans votre demande : nous vous dirons si une intervention est possible.</p>
+          <h2 class="h3">Votre géomètre à Yaoundé</h2>
+          <p>Nous intervenons dans tous les arrondissements de <strong>Yaoundé</strong> (Yaoundé I à VII) : {yaoundeQuartiers.join(', ')}…</p>
+          <p class="muted small">Communes voisines ({communesVoisines.join(', ')}…) ou terrain plus éloigné ? Indiquez sa localité dans votre demande : nous vous confirmons la possibilité d’intervention.</p>
           <a href="/contact" class="link-arrow">Nous contacter <Icon name="arrow" size={18} /></a>
         </div>
       </aside>
