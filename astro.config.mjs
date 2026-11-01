@@ -41,7 +41,8 @@ export default defineConfig({
     sitemap({
       // Date de mise en ligne : signale à Google les pages à relire après chaque mise à jour.
       lastmod: new Date(),
-      filter: (page) => !/\/(admin|api|404|demande-envoyee|demande-non-envoyee|desabonnement)(\/|$)/.test(new URL(page).pathname),
+      // Pages légales exclues : elles nomment l'hébergeur, que Google ne doit pas prendre pour le nom du site.
+      filter: (page) => !/\/(admin|api|404|demande-envoyee|demande-non-envoyee|desabonnement|mentions-legales|confidentialite)(\/|$)/.test(new URL(page).pathname),
     }),
   ],
   env: {
