@@ -76,6 +76,18 @@ create table if not exists subscribers (
 );
 create index if not exists subscribers_ip_created_idx on subscribers (ip_hash, created_at);
 
+-- Clics sur les boutons de contact (WhatsApp, appel, e-mail, devis…) : comptage anonyme,
+-- sans IP ni cookie, pour savoir quels canaux et quelles sources amènent des contacts.
+create table if not exists contact_clicks (
+  id         bigserial primary key,
+  channel    text not null check (channel in ('whatsapp', 'telephone', 'email', 'devis', 'maps', 'avis', 'reseau')),
+  location   text,
+  page       text,
+  source     text,
+  created_at timestamptz not null default now()
+);
+create index if not exists contact_clicks_created_idx on contact_clicks (created_at desc);
+
 -- Sur Supabase, l'API publique (PostgREST) ne doit jamais exposer ces tables :
 -- RLS activé sans aucune politique = aucun accès via les clés anon/authenticated.
 -- Le site se connecte avec la chaîne de connexion serveur, qui n'est pas soumise au RLS.
@@ -83,3 +95,4 @@ alter table leads enable row level security;
 alter table lead_events enable row level security;
 alter table login_attempts enable row level security;
 alter table subscribers enable row level security;
+alter table contact_clicks enable row level security;

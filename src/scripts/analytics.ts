@@ -1,8 +1,11 @@
 /**
  * Mesure d'audience respectueuse :
  * - aucun outil n'est chargé tant que le visiteur n'a pas accepté (et seulement si PUBLIC_GA_ID est défini) ;
- * - les événements ne contiennent JAMAIS de nom, téléphone, e-mail ou texte saisi.
+ * - les événements ne contiennent JAMAIS de nom, téléphone, e-mail ou texte saisi ;
+ * - les clics sur les boutons de contact sont aussi comptés par le site lui-même, sans cookie ni donnée
+ *   personnelle (canal, emplacement, page, source de la visite), pour l'administration.
  */
+import { TRACK_EVENTS } from '../data/tracking.ts';
 
 type Params = Record<string, string | number | undefined>;
 declare global {
@@ -13,6 +16,38 @@ declare global {
 }
 
 const CONSENT_KEY = 'gt_consent_mesure';
+const SOURCE_KEY = 'gt_source';
+
+/** Source de la visite (utm, publicité, site d'origine), retenue pour la durée de l'onglet. */
+function visitSource(): string {
+  try {
+    const saved = sessionStorage.getItem(SOURCE_KEY);
+    if (saved) return saved;
+  } catch { /* stockage indisponible */ }
+  const params = new URLSearchParams(location.search);
+  let source = 'direct';
+  const utm = params.get('utm_source');
+  if (utm) source = [utm, params.get('utm_medium')].filter(Boolean).join('/');
+  else if (params.has('gclid')) source = 'google/cpc';
+  else if (document.referrer) {
+    try {
+      const host = new URL(document.referrer).hostname.replace(/^www\./, '');
+      if (host !== location.hostname) source = host;
+    } catch { /* référent illisible */ }
+  }
+  try { sessionStorage.setItem(SOURCE_KEY, source); } catch { /* stockage indisponible */ }
+  return source;
+}
+
+/** Comptage anonyme d'un clic de contact par le site (sans attendre la réponse). */
+function countClick(event: string, where: string, source: string): void {
+  if (!TRACK_EVENTS[event]) return;
+  const body = JSON.stringify({ event, location: where, page: location.pathname, source });
+  try {
+    if (navigator.sendBeacon?.('/api/track', body)) return;
+  } catch { /* repli ci-dessous */ }
+  fetch('/api/track', { method: 'POST', body, keepalive: true, headers: { 'Content-Type': 'text/plain' } }).catch(() => {});
+}
 
 function readConsent(): string | null {
   try {
@@ -53,12 +88,14 @@ function loadGa(id: string): void {
 function init(): void {
   const root = document.getElementById('gt-analytics');
   const gaId = root?.dataset.ga ?? '';
+  const source = visitSource();
 
   // Suivi des clics de contact et d'appel à l'action (délégation globale).
   document.addEventListener('click', (e) => {
     const el = (e.target as Element | null)?.closest<HTMLElement>('[data-track]');
     if (!el) return;
     track(el.dataset.track!, { location: el.dataset.trackLocation });
+    countClick(el.dataset.track!, el.dataset.trackLocation ?? '', source);
   });
 
   if (!gaId || !root) return;

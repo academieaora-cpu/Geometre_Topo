@@ -5,6 +5,8 @@ import { DatabaseNotConfiguredError } from '../../server/db.ts';
 import { leadsLast7Days, listLeads, PAGE_SIZE, statusCounts, type LeadRow } from '../../server/leads.ts';
 import { notificationsConfigured } from '../../server/notify.ts';
 import { activeSubscriberCount } from '../../server/subscribers.ts';
+import { clickStats, type ClickStats } from '../../server/clicks.ts';
+import { CLICK_CHANNELS } from '../../data/tracking.ts';
 import { LEAD_STATUSES, PREFERRED_CONTACTS } from '../../server/validation.ts';
 
 export const prerender = false;
@@ -24,13 +26,15 @@ let total = 0;
 let counts: Record<string, number> = {};
 let week = 0;
 let subscribers = 0;
+let clicks: ClickStats | null = null;
 let dbError = '';
 try {
-  [{ rows, total }, counts, week, subscribers] = await Promise.all([
+  [{ rows, total }, counts, week, subscribers, clicks] = await Promise.all([
     listLeads({ ...filters, status: filters.status || undefined, service: filters.service || undefined }),
     statusCounts(),
     leadsLast7Days(),
     activeSubscriberCount(),
+    clickStats(),
   ]);
 } catch (err) {
   dbError = err instanceof DatabaseNotConfiguredError
@@ -65,6 +69,27 @@ const msg = p.get('msg');
         <div class="kpi card"><strong>{week}</strong><span>Demandes sur 7 jours</span></div>
         <a class="kpi card" href="/admin/abonnes"><strong>{subscribers}</strong><span>Abonnés aux conseils</span></a>
       </div>
+
+      {clicks && (
+        <section class="card clicks" aria-labelledby="clicks-title">
+          <h2 id="clicks-title" class="h3">Clics sur les boutons de contact</h2>
+          <p class="small muted">Comptage anonyme. Un clic n’est pas un prospect : il indique qu’un visiteur a ouvert WhatsApp, l’appel ou l’e-mail.</p>
+          <div class="clicks-grid">
+            <table>
+              <thead><tr><th>Canal</th><th>7 jours</th><th>30 jours</th></tr></thead>
+              <tbody>
+                {clicks.byChannel.map((c) => <tr><td>{CLICK_CHANNELS[c.channel]}</td><td class="num">{c.week}</td><td class="num">{c.month}</td></tr>)}
+              </tbody>
+            </table>
+            <div>
+              <h3 class="small">Sources des contacts (30 jours)</h3>
+              {clicks.bySource.length === 0 ? <p class="small muted">Aucun clic pour l’instant.</p> : (
+                <ul class="sources">{clicks.bySource.map((s) => <li><span>{s.source}</span><strong>{s.month}</strong></li>)}</ul>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       <form class="filters card" method="get" action="/admin">
         <div>
@@ -130,6 +155,13 @@ const msg = p.get('msg');
   .kpi { padding: 16px; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; }
   .kpi strong { font-size: 1.8rem; color: var(--navy-900); line-height: 1.1; }
   .kpi span { color: var(--muted); font-size: .9rem; }
+  .clicks { padding: 16px; margin-bottom: 16px; display: grid; gap: 8px; }
+  .clicks h2 { margin: 0; }
+  .clicks-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .clicks table { min-width: 0; }
+  .clicks td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .sources { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+  .sources li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding: 4px 0; }
   .filters { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); align-items: end; margin-bottom: 12px; padding: 16px; }
   .filters > div:first-child { grid-column: 1 / -1; }
   .filters label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 4px; }
