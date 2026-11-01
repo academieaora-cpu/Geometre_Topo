@@ -5,6 +5,9 @@
 import { site } from '../config/site.ts';
 import { activeServices, type Service } from './services.ts';
 
+/** Autres écritures du nom, proposées à Google pour l'affichage du site (au lieu de « Vercel »). */
+const SITE_ALTERNATE_NAMES = ['GEOMETRE TOPO', 'geometre-topo', 'Geometre Topo', 'Géomètre Topo Yaoundé'];
+
 /** Zone desservie : Yaoundé et ses environs. */
 function areaServed(): Record<string, unknown>[] {
   return [
@@ -20,6 +23,7 @@ export function organizationJsonLd(base: URL): Record<string, unknown> {
     '@type': 'ProfessionalService',
     '@id': `${url}/#entreprise`,
     name: site.name,
+    alternateName: SITE_ALTERNATE_NAMES,
     description: site.description,
     url,
     logo: `${url}/images/logo-192.webp`,
@@ -65,7 +69,7 @@ export function websiteJsonLd(base: URL): Record<string, unknown> {
     '@type': 'WebSite',
     '@id': `${url}/#site`,
     name: site.name,
-    alternateName: ['Geometre Topo', 'Géomètre Topo Yaoundé'],
+    alternateName: SITE_ALTERNATE_NAMES,
     url: `${url}/`,
     inLanguage: 'fr',
     publisher: { '@id': `${url}/#entreprise` },
