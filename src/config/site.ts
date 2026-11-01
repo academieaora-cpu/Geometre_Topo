@@ -27,6 +27,8 @@ export const site = {
     'Géomètre topographe à Yaoundé : levé topographique, bornage et recherche de bornes, morcellement, dossier technique d’immatriculation, implantation et nivellement. Demandez votre devis.',
   locale: 'fr_CM',
   city: 'Yaoundé',
+  /** Quartier du bureau, comme sur la fiche Google. */
+  district: 'Cradat',
   region: 'Centre',
   country: 'CM',
 
@@ -50,6 +52,11 @@ export const site = {
   googleClientId: (env.PUBLIC_GOOGLE_CLIENT_ID ?? '').trim(),
   /** Jeton de vérification Google Search Console (méthode balise meta), facultatif. */
   googleSiteVerification: (env.PUBLIC_GOOGLE_SITE_VERIFICATION ?? '').trim(),
+
+  /** Fiche Google (validée) : lien Maps, lien pour laisser un avis et position publiée sur la fiche. */
+  googleMapsUrl: 'https://maps.google.com/?cid=13538703696190723169',
+  googleReviewUrl: 'https://search.google.com/local/writereview?placeid=ChIJxyQ8DQDPixARYVS30kcj47s',
+  geo: { latitude: 3.8518374, longitude: 11.4980805 },
 } as const;
 
 /** Réseaux sociaux reconnus à partir de PUBLIC_SOCIAL_LINKS (icône et libellé). */

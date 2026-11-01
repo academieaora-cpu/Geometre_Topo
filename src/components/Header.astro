@@ -11,7 +11,7 @@ const wa = whatsappLink(defaultWhatsappMessage);
     <ul>
       {site.phoneHref && <li><Icon name="phone" size={15} /><a href={site.phoneHref} data-track="click_phone" data-track-location="topbar">{site.phone}</a></li>}
       {site.email && <li class="hide-sm"><Icon name="mail" size={15} /><a href={`mailto:${site.email}`} data-track="click_email" data-track-location="topbar">{site.email}</a></li>}
-      <li><Icon name="pin" size={15} /><span>Yaoundé et environs</span></li>
+      <li><Icon name="pin" size={15} /><span>{site.district}, {site.city}</span></li>
     </ul>
     <div class="topbar-right">
     {socialProfiles.map((s) => (

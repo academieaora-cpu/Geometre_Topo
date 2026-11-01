@@ -1,6 +1,6 @@
 /**
  * Données structurées (JSON-LD). Uniquement des informations réelles et validées :
- * aucune note, aucun avis, aucune adresse précise (seulement la ville) ni aucun prix n'est déclaré.
+ * aucune note, aucun avis ni aucun prix n'est déclaré ; l'adresse se limite au quartier publié sur la fiche Google.
  */
 import { site } from '../config/site.ts';
 import { activeServices, type Service } from './services.ts';
@@ -25,7 +25,12 @@ export function organizationJsonLd(base: URL): Record<string, unknown> {
     logo: `${url}/images/logo-192.webp`,
     image: `${url}/images/og-geometre-topo.jpg`,
     areaServed: areaServed(),
-    address: { '@type': 'PostalAddress', addressLocality: site.city, addressRegion: site.region, addressCountry: site.country },
+    address: {
+      '@type': 'PostalAddress', streetAddress: site.district, addressLocality: site.city,
+      addressRegion: site.region, addressCountry: site.country,
+    },
+    geo: { '@type': 'GeoCoordinates', latitude: site.geo.latitude, longitude: site.geo.longitude },
+    hasMap: site.googleMapsUrl,
     knowsLanguage: 'fr',
     knowsAbout: [
       'Topographie', 'Levé topographique', 'Bornage', 'Recherche de bornes', 'Morcellement de terrain',
@@ -48,7 +53,7 @@ export function organizationJsonLd(base: URL): Record<string, unknown> {
   };
   if (site.phone) data.telephone = site.phone;
   if (site.email) data.email = site.email;
-  if (site.socials.length) data.sameAs = site.socials;
+  data.sameAs = [...site.socials, site.googleMapsUrl];
   return data;
 }
 

@@ -38,7 +38,7 @@ const hasAny = Boolean(wa || site.phoneHref || site.email);
     {site.email && (
       <li><Icon name="mail" /><a href={`mailto:${site.email}`} data-track="click_email" data-track-location={location}>{site.email}</a></li>
     )}
-    <li><Icon name="pin" /><span>Yaoundé et environs (Centre, Cameroun)</span></li>
+    <li><Icon name="pin" /><span>{site.district}, {site.city} (Centre, Cameroun) · <a href={site.googleMapsUrl} target="_blank" rel="noopener" data-track="click_maps" data-track-location={location}>Voir sur Google Maps</a></span></li>
     {site.hours && <li><Icon name="clock" /><span>{site.hours}</span></li>}
     {socialProfiles.map((s) => (
       <li><Icon name={s.icon} /><a href={s.url} target="_blank" rel="noopener me" data-track="click_social" data-track-location={location}>{s.label === 'Instagram' ? `Instagram : @${s.url.split('/').filter(Boolean).pop()}` : `${s.label} : ${site.name}`}</a></li>
