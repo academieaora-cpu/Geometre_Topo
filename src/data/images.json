@@ -356,6 +356,27 @@
       }
     ]
   },
+  "recepteur-gnss-bipied-quartier": {
+    "width": 2268,
+    "height": 4032,
+    "variants": [
+      {
+        "src": "/images/photos/recepteur-gnss-bipied-quartier-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-bipied-quartier-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/recepteur-gnss-bipied-quartier-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
   "recepteur-gnss-cour-terre-rouge": {
     "width": 1125,
     "height": 2000,

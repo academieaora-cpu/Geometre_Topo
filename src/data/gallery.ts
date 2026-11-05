@@ -198,6 +198,13 @@ export const gallery: GalleryPhoto[] = [
     services: ['leve-topographique', 'implantation-batiment'],
   },
   {
+    slug: 'recepteur-gnss-bipied-quartier',
+    alt: 'Récepteur GNSS sur sa canne et son bipied rouge et blanc, planté dans la terre devant un mur en parpaings, dans un quartier résidentiel',
+    caption: 'Relevé GNSS sur une parcelle en quartier résidentiel, à Yaoundé.',
+    category: 'mesures',
+    services: ['leve-topographique', 'plan-topographique', 'implantation-batiment'],
+  },
+  {
     slug: 'station-gnss-angle-parcelle',
     alt: 'Récepteur GNSS en station à l’angle d’une parcelle clôturée, contrôleur de terrain posé sur une pierre',
     caption: 'Mesure d’un angle de parcelle au récepteur GNSS.',
