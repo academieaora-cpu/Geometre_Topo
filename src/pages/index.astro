@@ -354,6 +354,8 @@ const marquee = [
   .tall-photo { max-width: 520px; width: 100%; justify-self: center; }
 
   @media (max-width: 600px) { .hero :global(.btn-row .btn) { flex: 1 1 100%; } }
+  /* Téléphone : laisser la place aux boutons ronds flottants (WhatsApp, appel, devis) pour qu'ils ne cachent pas ceux de l'accueil. */
+  @media (max-width: 760px) { .hero :global(.btn-row) { padding-right: 68px; } }
 
   .about :global(.portrait img) { aspect-ratio: 1 / 1; object-position: center 22%; max-width: 480px; margin-inline: auto; }
   .quote { margin: 0 0 18px; padding: 4px 0 4px 18px; border-left: 3px solid var(--green-500); font-size: 1.1rem; color: var(--navy-800); }

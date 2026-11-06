@@ -2,10 +2,10 @@
  * Mesure d'audience respectueuse :
  * - aucun outil n'est chargé tant que le visiteur n'a pas accepté (et seulement si PUBLIC_GA_ID est défini) ;
  * - les événements ne contiennent JAMAIS de nom, téléphone, e-mail ou texte saisi ;
- * - les clics sur les boutons de contact sont aussi comptés par le site lui-même, sans cookie ni donnée
- *   personnelle (canal, emplacement, page, source de la visite), pour l'administration.
+ * - les visites (une par onglet : page d'arrivée et source) et les clics sur les boutons de contact sont aussi
+ *   comptés par le site lui-même, sans cookie ni donnée personnelle, pour l'administration.
  */
-import { TRACK_EVENTS } from '../data/tracking.ts';
+import { TRACK_EVENTS, VISIT_EVENT } from '../data/tracking.ts';
 
 type Params = Record<string, string | number | undefined>;
 declare global {
@@ -17,6 +17,7 @@ declare global {
 
 const CONSENT_KEY = 'gt_consent_mesure';
 const SOURCE_KEY = 'gt_source';
+const VISIT_KEY = 'gt_visite';
 
 /** Source de la visite (utm, publicité, site d'origine), retenue pour la durée de l'onglet. */
 function visitSource(): string {
@@ -39,14 +40,31 @@ function visitSource(): string {
   return source;
 }
 
-/** Comptage anonyme d'un clic de contact par le site (sans attendre la réponse). */
-function countClick(event: string, where: string, source: string): void {
-  if (!TRACK_EVENTS[event]) return;
-  const body = JSON.stringify({ event, location: where, page: location.pathname, source });
+/** Envoi anonyme au site (sans attendre la réponse). */
+function send(payload: Record<string, string>): void {
+  const body = JSON.stringify(payload);
   try {
     if (navigator.sendBeacon?.('/api/track', body)) return;
   } catch { /* repli ci-dessous */ }
   fetch('/api/track', { method: 'POST', body, keepalive: true, headers: { 'Content-Type': 'text/plain' } }).catch(() => {});
+}
+
+/** Comptage anonyme d'un clic de contact par le site. */
+function countClick(event: string, where: string, source: string): void {
+  if (!TRACK_EVENTS[event]) return;
+  send({ event, location: where, page: location.pathname, source });
+}
+
+/** Compte une visite par onglet, à la première page vue, avec sa source. */
+function countVisit(source: string): void {
+  if (location.pathname.startsWith('/admin')) return;
+  try {
+    if (sessionStorage.getItem(VISIT_KEY)) return;
+    sessionStorage.setItem(VISIT_KEY, '1');
+  } catch {
+    return; // stockage indisponible : impossible d'éviter les doublons, la visite n'est pas comptée
+  }
+  send({ event: VISIT_EVENT, page: location.pathname, source });
 }
 
 function readConsent(): string | null {
@@ -89,6 +107,7 @@ function init(): void {
   const root = document.getElementById('gt-analytics');
   const gaId = root?.dataset.ga ?? '';
   const source = visitSource();
+  countVisit(source);
 
   // Suivi des clics de contact et d'appel à l'action (délégation globale).
   document.addEventListener('click', (e) => {

@@ -5,8 +5,8 @@ import { DatabaseNotConfiguredError } from '../../server/db.ts';
 import { leadsLast7Days, listLeads, PAGE_SIZE, statusCounts, type LeadRow } from '../../server/leads.ts';
 import { notificationsConfigured } from '../../server/notify.ts';
 import { activeSubscriberCount } from '../../server/subscribers.ts';
-import { clickStats, type ClickStats } from '../../server/clicks.ts';
-import { CLICK_CHANNELS } from '../../data/tracking.ts';
+import { clickStats, funnelBySource, type ClickStats, type SourceFunnel } from '../../server/clicks.ts';
+import { CLICK_CHANNELS, FICHE_GOOGLE_SOURCE, sourceLabel } from '../../data/tracking.ts';
 import { LEAD_STATUSES, PREFERRED_CONTACTS } from '../../server/validation.ts';
 
 export const prerender = false;
@@ -27,14 +27,16 @@ let counts: Record<string, number> = {};
 let week = 0;
 let subscribers = 0;
 let clicks: ClickStats | null = null;
+let funnel: SourceFunnel[] = [];
 let dbError = '';
 try {
-  [{ rows, total }, counts, week, subscribers, clicks] = await Promise.all([
+  [{ rows, total }, counts, week, subscribers, clicks, funnel] = await Promise.all([
     listLeads({ ...filters, status: filters.status || undefined, service: filters.service || undefined }),
     statusCounts(),
     leadsLast7Days(),
     activeSubscriberCount(),
     clickStats(),
+    funnelBySource(),
   ]);
 } catch (err) {
   dbError = err instanceof DatabaseNotConfiguredError
@@ -88,6 +90,46 @@ const msg = p.get('msg');
               )}
             </div>
           </div>
+        </section>
+      )}
+
+      {clicks && (
+        <section class="card clicks" aria-labelledby="funnel-title">
+          <h2 id="funnel-title" class="h3">Visites et contacts par provenance (30 jours)</h2>
+          <p class="small muted">
+            Une visite = un onglet ouvert sur le site. Contacts = clics sur WhatsApp, l’appel ou l’e-mail par ces visiteurs.
+            Les appels passés directement depuis la fiche Google, sans passer par le site, n’apparaissent pas ici : ils sont
+            dans « Performances » de la fiche.
+          </p>
+          {funnel.length === 0 ? <p class="small muted">Aucune visite comptée pour l’instant.</p> : (
+            <table>
+              <thead><tr><th>Provenance</th><th>Visites</th><th>Contacts</th><th>Devis</th><th>Part des visiteurs qui vous contactent</th></tr></thead>
+              <tbody>
+                {funnel.map((f) => (
+                  <tr>
+                    <td>{sourceLabel(f.source)}</td>
+                    <td class="num">{f.visits}</td>
+                    <td class="num">{f.contacts}</td>
+                    <td class="num">{f.devis}</td>
+                    <td>
+                      {f.visits > 0 ? (
+                        <span class="rate">
+                          <progress max={f.visits} value={Math.min(f.contacts, f.visits)}>{Math.round((100 * f.contacts) / f.visits)} %</progress>
+                          <span class="num">{Math.round((100 * f.contacts) / f.visits)} %</span>
+                        </span>
+                      ) : <span class="muted small">visites non comptées</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {!funnel.some((f) => f.source === FICHE_GOOGLE_SOURCE) && (
+            <p class="small muted">
+              Pour distinguer la fiche Google de la recherche Google, le lien « Site Web » de la fiche doit être :
+              <code>https://geometre-topo.vercel.app/?utm_source=google&amp;utm_medium=fiche</code>
+            </p>
+          )}
         </section>
       )}
 
@@ -162,6 +204,9 @@ const msg = p.get('msg');
   .clicks td.num { text-align: right; font-variant-numeric: tabular-nums; }
   .sources { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
   .sources li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding: 4px 0; }
+  .rate { display: flex; align-items: center; gap: 8px; }
+  .rate progress { width: 120px; height: 10px; accent-color: var(--green-700); }
+  .clicks code { word-break: break-all; }
   .filters { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); align-items: end; margin-bottom: 12px; padding: 16px; }
   .filters > div:first-child { grid-column: 1 / -1; }
   .filters label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 4px; }

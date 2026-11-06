@@ -88,6 +88,16 @@ create table if not exists contact_clicks (
 );
 create index if not exists contact_clicks_created_idx on contact_clicks (created_at desc);
 
+-- Visites : une par onglet (première page vue), avec la source et la page d'arrivée.
+-- Comptage anonyme, sans IP ni cookie, pour rapporter les contacts au nombre de visiteurs de chaque source.
+create table if not exists site_visits (
+  id         bigserial primary key,
+  source     text not null,
+  page       text,
+  created_at timestamptz not null default now()
+);
+create index if not exists site_visits_created_idx on site_visits (created_at desc);
+
 -- Sur Supabase, l'API publique (PostgREST) ne doit jamais exposer ces tables :
 -- RLS activé sans aucune politique = aucun accès via les clés anon/authenticated.
 -- Le site se connecte avec la chaîne de connexion serveur, qui n'est pas soumise au RLS.
@@ -96,3 +106,4 @@ alter table lead_events enable row level security;
 alter table login_attempts enable row level security;
 alter table subscribers enable row level security;
 alter table contact_clicks enable row level security;
+alter table site_visits enable row level security;
