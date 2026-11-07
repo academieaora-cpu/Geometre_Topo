@@ -124,8 +124,8 @@ Le **nom** du géomètre ne figure sur aucune page indexée (demande du client) 
 la politique de confidentialité, dans un `<span data-nosnippet>` pour que Google ne l'affiche jamais dans ses résultats.
 Ne pas le réintroduire dans un titre, une description, un texte alternatif, un nom de fichier ou les données structurées.
 
-Le visage d’Olou’ou Alain Stéphane n’apparaît qu’à **trois** endroits : la présentation « Votre interlocuteur » de
-l’accueil, la page « À propos » et une photo de terrain dans les actualités, sans son nom. Toute photo où il est
+Le visage du géomètre n’apparaît que dans la présentation « Votre interlocuteur » de l’accueil, la page « À propos »
+et l’actualité où il figure (dont les photos choisies dans `homePhotos` s’affichent aussi sur l’accueil), sans son nom. Toute photo où il est
 reconnaissable porte `showsFace: true` dans `src/data/gallery.ts` : elle est alors exclue de la galerie, des pages
 services et des diaporamas, et ne sert jamais de couverture d’actualité (un test le vérifie).
 Avant d’ajouter une photo, retirer les métadonnées (position GPS) : `npm run images` les supprime des versions

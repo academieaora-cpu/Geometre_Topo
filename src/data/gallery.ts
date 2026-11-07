@@ -27,9 +27,9 @@ export interface GalleryPhoto {
   /** Services que la photo peut illustrer (slugs de src/data/services.ts). */
   services: string[];
   /**
-   * Le géomètre est reconnaissable sur la photo. Son visage n'apparaît qu'à trois endroits, et jamais avec son nom
-   * hors de la page « À propos » : présentation de l'accueil, page « À propos » et une photo de terrain dans les
-   * actualités. Ces photos ne sont pas réutilisées automatiquement ailleurs (réalisations, services, défilé).
+   * Le géomètre est reconnaissable sur la photo, jamais accompagnée de son nom. Son visage apparaît dans la
+   * présentation de l'accueil, la page « À propos » et l'actualité où il figure (aussi montrée sur l'accueil, à la
+   * demande du client). Ces photos ne sont pas réutilisées automatiquement ailleurs (réalisations, services, défilé).
    */
   showsFace?: boolean;
 }

@@ -10,7 +10,7 @@ import SubscribeBox from '../components/SubscribeBox.astro';
 import HeroSlideshow from '../components/HeroSlideshow.astro';
 import PhotoMarquee from '../components/PhotoMarquee.astro';
 import FacebookBand from '../components/FacebookBand.astro';
-import { actualitesRecentes, dateLisible } from '../data/actualites.ts';
+import LatestNews from '../components/LatestNews.astro';
 import { activeServices } from '../data/services.ts';
 import { communesVoisines, site, socialProfiles, yaoundeQuartiers } from '../config/site.ts';
 import { homeFaq } from '../data/faq.ts';
@@ -46,7 +46,6 @@ const heroSlides: [string, string, string, string, string, string] = [
   'recepteur-gnss-mur-enduit', 'station-gnss-angle-parcelle', 'pose-borne-beton',
   'releve-gnss-regard-assainissement', 'recepteur-gnss-cour-terre-rouge', 'recepteur-gnss-mur-parpaings',
 ];
-const derniereActu = actualitesRecentes[0];
 const marquee = [
   'leve-detail-gnss-angle-rue', 'recepteur-gnss-bipied-quartier', 'bornes-beton-parcelle', 'implantation-prisme-mur', 'canne-gnss-bipied-controleur', 'jalons-borne-existante',
   'pose-canalisation-tranchee', 'borne-peinte-limite', 'extrait-plan-parcelle', 'jalons-bipied-chantier',
@@ -173,12 +172,6 @@ const marquee = [
           Des images authentiques de nos descentes : relevés GNSS, station totale, pose et recherche de bornes, plans et
           chantiers. Par respect pour nos clients, aucune localisation ni donnée foncière n’est publiée.
         </p>
-        {derniereActu && (
-          <a class="news-teaser" href={`/actualites#${derniereActu.slug}`}>
-            <span class="news-badge">Actualité</span>
-            <span><strong>{derniereActu.title}</strong> <span class="muted">· {dateLisible(derniereActu.date)}</span></span>
-          </a>
-        )}
         <div class="btn-row">
           <a class="btn btn--outline" href="/realisations">Voir toutes les photos</a>
           <a class="btn btn--outline" href="/actualites">Nos actualités</a>
@@ -192,6 +185,9 @@ const marquee = [
           </p>
         )}
       </div>
+    </div>
+    <div class="container">
+      <LatestNews />
     </div>
     <PhotoMarquee slugs={marquee} label="Photos de nos interventions (défilement automatique, s’arrête au survol)" />
     <div class="container fb-wrap">
@@ -338,12 +334,6 @@ const marquee = [
   .video-label :global(svg) { color: var(--green-700); }
   .follow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: 20px; color: var(--muted); font-size: .95rem; }
   .follow a { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
-  .news-teaser {
-    display: flex; align-items: center; gap: 12px; margin: 18px 0 4px; padding: 12px 14px; border-radius: 12px;
-    border: 1px solid var(--line); background: var(--white); color: var(--navy-800); text-decoration: none;
-  }
-  .news-teaser:hover { border-color: var(--green-700); text-decoration: none; }
-  .news-badge { flex: none; padding: 4px 10px; border-radius: 999px; background: var(--green-100); color: var(--green-800); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
   .fb-wrap { margin-top: 28px; }
 
   .strengths { border-block: 1px solid var(--line); background: var(--white); }

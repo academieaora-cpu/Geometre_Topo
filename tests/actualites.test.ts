@@ -13,7 +13,8 @@ test('chaque actualité est complète et ses photos existent', () => {
     assert.ok(!slugs.has(a.slug), `slug en double : ${a.slug}`);
     slugs.add(a.slug);
     assert.ok(a.photos.length > 0, a.slug);
-    for (const p of a.photos) {
+    assert.ok((a.homePhotos ?? []).length <= 4, `4 photos au plus sur l’accueil : ${a.slug}`);
+    for (const p of [...a.photos, ...(a.homePhotos ?? [])]) {
       assert.ok(gallery.some((g) => g.slug === p), `photo absente de la galerie : ${p}`);
       assert.ok(images[p], `photo non générée (npm run images) : ${p}`);
     }

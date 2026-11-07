@@ -17,6 +17,8 @@ export interface Actualite {
   paragraphs: string[];
   /** Photos de la galerie (slugs de src/data/gallery.ts), la première sert de couverture. */
   photos: string[];
+  /** Photos montrées sur l'accueil pour la dernière actualité (4 au plus) ; par défaut les premières de `photos`. */
+  homePhotos?: string[];
   video?: { src: string; poster: string; label: string };
   /** Service concerné (slug de src/data/services.ts). */
   service?: string;
@@ -38,6 +40,12 @@ export const actualites: Actualite[] = [
       'leve-detail-geometre-gnss',
       'leve-detail-gnss-mur-parpaings',
       'recepteur-gnss-bipied-quartier',
+      'extrait-plan-parcelle-leve-detail',
+    ],
+    homePhotos: [
+      'leve-detail-geometre-gnss',
+      'leve-detail-gnss-angle-rue',
+      'leve-detail-gnss-mur-parpaings',
       'extrait-plan-parcelle-leve-detail',
     ],
     video: {

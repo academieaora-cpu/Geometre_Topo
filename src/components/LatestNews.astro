@@ -1,0 +1,62 @@
+---
+/**
+ * Dernière actualité sur l'accueil : titre, date, résumé et quelques photos de l'intervention,
+ * chacune menant à l'actualité complète.
+ */
+import Photo from './Photo.astro';
+import { actualitesRecentes, dateLisible } from '../data/actualites.ts';
+import { photo } from '../data/gallery.ts';
+import { getService } from '../data/services.ts';
+
+const a = actualitesRecentes[0];
+const slugs = a ? (a.homePhotos ?? a.photos).slice(0, 4) : [];
+const service = a?.service ? getService(a.service) : undefined;
+const href = a ? `/actualites#${a.slug}` : '/actualites';
+---
+{a && (
+  <article class="latest" aria-labelledby="latest-title">
+    <div class="latest-head">
+      <p class="latest-meta">
+        <span class="latest-badge">Dernière actualité</span>
+        <time datetime={a.date}>{dateLisible(a.date)}</time>
+        {service && <span class="tag">{service.name}</span>}
+      </p>
+      <h3 id="latest-title"><a href={href}>{a.title}</a></h3>
+      <p class="latest-summary">{a.summary}</p>
+    </div>
+    <ul class="latest-photos">
+      {slugs.map((slug) => (
+        <li>
+          <a href={href} aria-label={`${photo(slug).caption} – voir l’actualité`}>
+            <Photo slug={slug} sizes="(min-width: 900px) 22vw, 45vw" ratio="3 / 4" />
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a class="btn btn--outline" href={href}>Voir l’actualité complète</a>
+  </article>
+)}
+
+<style>
+  .latest {
+    display: grid; gap: 18px; margin-bottom: 40px; padding: clamp(16px, 3vw, 28px);
+    background: var(--white); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow-lg);
+  }
+  .latest-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 6px; color: var(--muted); font-weight: 600; font-size: .95rem; }
+  .latest-badge {
+    padding: 4px 10px; border-radius: 999px; background: var(--green-100); color: var(--green-800);
+    font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  }
+  .latest h3 { margin: 0 0 6px; font-size: clamp(1.25rem, 2.4vw, 1.6rem); }
+  .latest h3 a { color: var(--navy-800); text-decoration: none; }
+  .latest h3 a:hover { color: var(--green-700); }
+  .latest-summary { margin: 0; color: var(--muted); }
+  .latest-photos { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 760px) { .latest-photos { grid-template-columns: repeat(4, 1fr); } }
+  .latest-photos li { margin: 0; }
+  .latest-photos a { display: block; border-radius: 14px; overflow: hidden; }
+  .latest-photos :global(img) { aspect-ratio: 3 / 4; transition: transform .3s ease; }
+  .latest-photos a:hover :global(img) { transform: scale(1.03); }
+  @media (prefers-reduced-motion: reduce) { .latest-photos :global(img) { transition: none; } }
+  .latest > .btn { justify-self: start; }
+</style>
