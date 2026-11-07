@@ -270,9 +270,9 @@ export const gallery: GalleryPhoto[] = [
     services: ['plan-topographique', 'lotissement', 'morcellement-de-terrain'],
   },
   {
-    slug: 'portrait-alain-stephane-olouou',
-    alt: 'Portrait d’Olou’ou Alain Stéphane, géomètre topographe, en chemise, cravate et gilet de sécurité',
-    caption: 'Olou’ou Alain Stéphane, géomètre topographe.',
+    slug: 'portrait-geometre-topographe',
+    alt: 'Portrait du géomètre topographe de Géomètre Topo, en chemise, cravate et gilet de sécurité',
+    caption: 'Le géomètre topographe de Géomètre Topo.',
     category: 'portrait',
     services: [],
     showsFace: true,

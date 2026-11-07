@@ -377,22 +377,22 @@
       }
     ]
   },
-  "portrait-alain-stephane-olouou": {
+  "portrait-geometre-topographe": {
     "width": 1280,
     "height": 1130,
     "variants": [
       {
-        "src": "/images/photos/portrait-alain-stephane-olouou-400.webp",
+        "src": "/images/photos/portrait-geometre-topographe-400.webp",
         "width": 400,
         "height": 353
       },
       {
-        "src": "/images/photos/portrait-alain-stephane-olouou-720.webp",
+        "src": "/images/photos/portrait-geometre-topographe-720.webp",
         "width": 720,
         "height": 636
       },
       {
-        "src": "/images/photos/portrait-alain-stephane-olouou-1080.webp",
+        "src": "/images/photos/portrait-geometre-topographe-1080.webp",
         "width": 1080,
         "height": 953
       }

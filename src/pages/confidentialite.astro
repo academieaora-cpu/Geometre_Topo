@@ -21,7 +21,7 @@ const contact = site.email ? site.email : 'le formulaire de contact du site';
     <div class="container prose">
       <h2>1. Qui est responsable de vos données ?</h2>
       <p>
-        Le responsable du traitement est <strong>{site.owner}</strong>, exerçant sous le nom commercial
+        Le responsable du traitement est <strong><span data-nosnippet>{site.owner}</span></strong>, exerçant sous le nom commercial
         <strong>{site.name}</strong> (géomètre topographe, Yaoundé, Cameroun). Pour toute question relative à vos données :
         {site.email ? <a href={`mailto:${site.email}`}>{site.email}</a> : <a href="/contact">formulaire de contact</a>}.
       </p>

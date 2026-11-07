@@ -41,9 +41,9 @@ export const services: Service[] = [
     active: true,
     name: 'Levé topographique',
     title: 'Levé topographique à Yaoundé et environs',
-    metaTitle: 'Levé topographique à Yaoundé | Géomètre Topo',
+    metaTitle: 'Levé topographique à Yaoundé par un géomètre diplômé | Géomètre Topo',
     metaDescription:
-      'Levé topographique de terrain à Yaoundé : relevé des limites, des altitudes et des constructions existantes pour préparer un achat, un projet ou une construction.',
+      'Géomètre topographe à Yaoundé, diplômé de l’ENSTP : levé de votre terrain (limites, altitudes, constructions) au GNSS et à la station totale. Devis avant intervention.',
     summary: 'Mesurer le terrain tel qu’il est : limites, reliefs, constructions et éléments existants.',
     icon: 'survey',
     problem:
@@ -81,9 +81,9 @@ export const services: Service[] = [
     active: true,
     name: 'Bornage et recherche de bornes',
     title: 'Bornage et recherche de bornes de terrain à Yaoundé',
-    metaTitle: 'Bornage et recherche de bornes de terrain à Yaoundé | Géomètre Topo',
+    metaTitle: 'Bornage et recherche de bornes à Yaoundé – géomètre | Géomètre Topo',
     metaDescription:
-      'Bornes de terrain introuvables ou limites incertaines à Yaoundé ? Recherche de bornes existantes, vérification des limites et accompagnement aux opérations de bornage.',
+      'Bornes introuvables ou limites incertaines à Yaoundé ? Un géomètre topographe diplômé recherche les bornes existantes et vérifie vos limites. Devis avant intervention.',
     summary: 'Retrouver les bornes existantes et clarifier les limites de votre terrain.',
     icon: 'marker',
     problem:
@@ -122,9 +122,9 @@ export const services: Service[] = [
     active: true,
     name: 'Morcellement de terrain',
     title: 'Morcellement de terrain à Yaoundé',
-    metaTitle: 'Morcellement de terrain à Yaoundé : diviser votre parcelle | Géomètre Topo',
+    metaTitle: 'Morcellement de terrain à Yaoundé – géomètre diplômé | Géomètre Topo',
     metaDescription:
-      'Accompagnement technique pour diviser un terrain en plusieurs parcelles à Yaoundé : levé, proposition de découpage, implantation des nouvelles limites.',
+      'Géomètre topographe à Yaoundé pour diviser votre terrain : levé, proposition de découpage, implantation des nouvelles limites. Devis avant intervention.',
     summary: 'Diviser un terrain en plusieurs parcelles avec un découpage précis et réalisable.',
     icon: 'split',
     problem:
@@ -160,9 +160,9 @@ export const services: Service[] = [
     active: true,
     name: 'Dossier technique et immatriculation',
     title: 'Dossier technique pour l’immatriculation de votre terrain à Yaoundé',
-    metaTitle: 'Dossier technique et immatriculation de terrain à Yaoundé | Géomètre Topo',
+    metaTitle: 'Dossier technique d’immatriculation à Yaoundé – géomètre | Géomètre Topo',
     metaDescription:
-      'Dossier technique pour l’immatriculation d’un terrain à Yaoundé : levé, plan, bornes et coordonnées établis par un géomètre topographe. Demandez votre devis.',
+      'Géomètre topographe à Yaoundé : levé, plan, bornes et coordonnées pour le dossier technique d’immatriculation de votre terrain. Demandez votre devis.',
     summary: 'Le levé, le plan et les coordonnées des bornes qui composent le dossier technique d’une immatriculation.',
     icon: 'file',
     problem:
@@ -200,10 +200,10 @@ export const services: Service[] = [
     slug: 'plan-topographique',
     active: true,
     name: 'Plan topographique et plan de terrain',
-    title: 'Plan topographique et plan de terrain à Yaoundé',
-    metaTitle: 'Plan topographique de terrain à Yaoundé | Géomètre Topo',
+    title: 'Plan de terrain et plan topographique à Yaoundé, par un géomètre diplômé',
+    metaTitle: 'Plan de terrain à Yaoundé par un géomètre diplômé | Géomètre Topo',
     metaDescription:
-      'Plan topographique et plan de terrain à Yaoundé : superficie, limites, courbes de niveau et éléments existants, pour comprendre et préparer votre projet.',
+      'Géomètre topographe à Yaoundé, diplômé de l’ENSTP : plan précis de votre terrain avec superficie, limites et courbes de niveau. Devis avant intervention.',
     summary: 'Un plan lisible de votre terrain pour comprendre, décider et préparer vos travaux.',
     icon: 'map',
     problem:
@@ -238,9 +238,9 @@ export const services: Service[] = [
     active: true,
     name: 'Implantation de bâtiments',
     title: 'Implantation de bâtiments et d’ouvrages à Yaoundé',
-    metaTitle: 'Implantation de bâtiment à Yaoundé : implanter votre maison | Géomètre Topo',
+    metaTitle: 'Implantation de maison à Yaoundé – géomètre diplômé | Géomètre Topo',
     metaDescription:
-      'Implantation topographique de bâtiments et d’ouvrages à Yaoundé : report sur le terrain des axes, angles et niveaux de votre plan avant le démarrage du chantier.',
+      'Géomètre topographe à Yaoundé : report des axes, angles et niveaux de votre plan sur le terrain avant les travaux, pour construire au bon endroit.',
     summary: 'Placer votre construction exactement là où le plan le prévoit.',
     icon: 'building',
     problem:
@@ -276,9 +276,9 @@ export const services: Service[] = [
     active: true,
     name: 'Nivellement et altimétrie',
     title: 'Nivellement, pentes et altimétrie à Yaoundé',
-    metaTitle: 'Nivellement de terrain et calcul de pente à Yaoundé | Géomètre Topo',
+    metaTitle: 'Nivellement de terrain à Yaoundé – géomètre diplômé | Géomètre Topo',
     metaDescription:
-      'Nivellement et mesures altimétriques à Yaoundé : altitudes, profils, dénivelés et pentes de terrain pour vos travaux de construction et d’assainissement.',
+      'Géomètre topographe à Yaoundé : altitudes, profils, dénivelés et pentes de votre terrain pour vos travaux de construction et d’assainissement. Devis avant intervention.',
     summary: 'Connaître les altitudes, pentes et dénivelés pour éviter les mauvaises surprises.',
     icon: 'level',
     problem:
@@ -311,9 +311,9 @@ export const services: Service[] = [
     active: true,
     name: 'Topographie pour le BTP',
     title: 'Travaux topographiques pour le BTP à Yaoundé',
-    metaTitle: 'Topographie de chantier BTP à Yaoundé | Géomètre Topo',
+    metaTitle: 'Topographie de chantier BTP à Yaoundé – géomètre | Géomètre Topo',
     metaDescription:
-      'Levés, implantations et contrôles topographiques pour les entreprises du BTP, architectes et maîtres d’ouvrage à Yaoundé et environs.',
+      'Géomètre topographe à Yaoundé pour les entreprises du BTP, architectes et maîtres d’ouvrage : levés, implantations et contrôles de chantier. Devis avant intervention.',
     summary: 'Levés, implantations et contrôles pour les entreprises et maîtres d’ouvrage.',
     icon: 'crane',
     problem:
@@ -345,9 +345,9 @@ export const services: Service[] = [
     active: true,
     name: 'Lotissement',
     title: 'Travaux topographiques pour lotissement à Yaoundé',
-    metaTitle: 'Topographie pour projet de lotissement à Yaoundé | Géomètre Topo',
+    metaTitle: 'Lotissement à Yaoundé : topographie par un géomètre | Géomètre Topo',
     metaDescription:
-      'Accompagnement topographique des projets de lotissement à Yaoundé : levé, plan de découpage des lots et des voies, implantation sur le terrain.',
+      'Géomètre topographe à Yaoundé pour votre projet de lotissement : levé, plan de découpage des lots et des voies, implantation sur le terrain. Devis avant intervention.',
     summary: 'Levés, découpage des lots et implantation pour les projets de lotissement.',
     icon: 'grid',
     problem:
@@ -379,9 +379,9 @@ export const services: Service[] = [
     active: true,
     name: 'Conseil technique sur un terrain',
     title: 'Conseil technique avant d’acheter ou de construire à Yaoundé',
-    metaTitle: 'Vérifier un terrain avant achat à Yaoundé | Géomètre Topo',
+    metaTitle: 'Vérifier un terrain avant achat à Yaoundé – géomètre | Géomètre Topo',
     metaDescription:
-      'Vous hésitez avant d’acheter un terrain ou de lancer des travaux à Yaoundé ? Expliquez votre situation à un géomètre topographe et recevez une orientation claire.',
+      'Vous hésitez avant d’acheter un terrain à Yaoundé ? Un géomètre topographe diplômé vous explique ce qu’il faut vérifier et vous oriente clairement.',
     summary: 'Expliquez votre situation : nous vous orientons vers les vérifications utiles.',
     icon: 'chat',
     problem:

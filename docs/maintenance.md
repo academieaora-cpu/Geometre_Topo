@@ -120,6 +120,10 @@ Elles ne sont pas exposées aux visiteurs ; surveiller les nouvelles versions de
 
 ## Photos et visage du géomètre
 
+Le **nom** du géomètre ne figure sur aucune page indexée (demande du client) : uniquement dans les mentions légales et
+la politique de confidentialité, dans un `<span data-nosnippet>` pour que Google ne l'affiche jamais dans ses résultats.
+Ne pas le réintroduire dans un titre, une description, un texte alternatif, un nom de fichier ou les données structurées.
+
 Le visage d’Olou’ou Alain Stéphane n’apparaît qu’à **trois** endroits : la présentation « Votre interlocuteur » de
 l’accueil, la page « À propos » et une photo de terrain dans les actualités, sans son nom. Toute photo où il est
 reconnaissable porte `showsFace: true` dans `src/data/gallery.ts` : elle est alors exclue de la galerie, des pages

@@ -1,6 +1,7 @@
 /**
  * Données structurées (JSON-LD). Uniquement des informations réelles et validées :
  * aucune note, aucun avis ni aucun prix n'est déclaré ; l'adresse se limite au quartier publié sur la fiche Google.
+ * Le nom du responsable n'y figure pas, à la demande du client.
  */
 import { site } from '../config/site.ts';
 import { activeServices, type Service } from './services.ts';
@@ -48,12 +49,6 @@ export function organizationJsonLd(base: URL): Record<string, unknown> {
         itemOffered: { '@type': 'Service', name: s.name, url: `${url}/services/${s.slug}` },
       })),
     },
-    founder: {
-      '@type': 'Person',
-      '@id': `${url}/a-propos#personne`,
-      name: site.owner,
-      jobTitle: site.ownerTitle,
-    },
   };
   if (site.phone) data.telephone = site.phone;
   if (site.email) data.email = site.email;
@@ -100,24 +95,5 @@ export function serviceJsonLd(base: URL, service: Service): Record<string, unkno
     url: `${url}/services/${service.slug}`,
     provider: { '@id': `${url}/#entreprise` },
     areaServed: areaServed(),
-  };
-}
-
-export function personJsonLd(base: URL): Record<string, unknown> {
-  const url = base.href.replace(/\/$/, '');
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    '@id': `${url}/a-propos#personne`,
-    name: site.owner,
-    jobTitle: site.ownerTitle,
-    image: `${url}/images/photos/portrait-alain-stephane-olouou-720.webp`,
-    worksFor: { '@id': `${url}/#entreprise` },
-    alumniOf: {
-      '@type': 'CollegeOrUniversity',
-      name: 'École nationale supérieure des travaux publics de Yaoundé',
-      alternateName: 'ENSTP',
-    },
-    workLocation: { '@type': 'City', name: site.city },
   };
 }

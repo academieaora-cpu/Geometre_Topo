@@ -6,11 +6,11 @@ import { activeServices } from '../data/services.ts';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
-  <div class="container cols">
+  <div class="container cols" data-nosnippet>
     <div>
       <img src="/images/logo-96.webp" width="77" height="48" alt="Géomètre Topo" loading="lazy" />
       <p class="about">
-        {site.owner}, géomètre topographe. Levés, bornes, implantations et accompagnement de vos projets fonciers à Yaoundé et dans ses environs.
+        {site.name}, géomètre topographe à Yaoundé. Levés, bornes, implantations et accompagnement de vos projets fonciers à Yaoundé et dans ses environs.
       </p>
       {socialProfiles.length > 0 && (
         <ul class="socials" aria-label="Réseaux sociaux">
@@ -44,7 +44,7 @@ const year = new Date().getFullYear();
       <ContactLinks variant="list" location="footer" />
     </div>
   </div>
-  <div class="container legal">
+  <div class="container legal" data-nosnippet>
     <p>© {year} {site.name}. Tous droits réservés.</p>
     <ul>
       <li><a href="/mentions-legales">Mentions légales</a></li>

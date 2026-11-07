@@ -6,7 +6,6 @@ import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { site } from '../config/site.ts';
 import { about } from '../data/about.ts';
-import { personJsonLd } from '../data/seo.ts';
 
 const values = [
   { icon: 'target', title: 'La précision', text: 'Des mesures réalisées avec des instruments adaptés et vérifiées avant d’être remises.' },
@@ -16,25 +15,24 @@ const values = [
 ];
 ---
 <BaseLayout
-  title={`${site.owner}, géomètre topographe à Yaoundé | Géomètre Topo`}
-  description={`Découvrez ${site.owner}, géomètre topographe à Yaoundé : son approche du terrain, sa façon d’accompagner les clients et les équipements utilisés.`}
-  jsonLd={[personJsonLd(Astro.site!)]}
+  title="À propos de Géomètre Topo, géomètre topographe diplômé à Yaoundé"
+  description="Géomètre Topo, géomètre topographe diplômé de l’ENSTP à Yaoundé : notre approche du terrain, notre façon d’accompagner les clients et les équipements utilisés."
 >
   <section class="page-hero">
     <div class="container">
       <Breadcrumbs items={[{ name: 'À propos', href: '/a-propos' }]} />
-      <h1>{site.owner}, géomètre topographe à Yaoundé</h1>
+      <h1>{site.name}, géomètre topographe à Yaoundé</h1>
       <p class="lead">Un professionnel de terrain, au service des propriétaires, des familles et des acteurs de la construction à Yaoundé.</p>
     </div>
   </section>
 
   <section class="section">
     <div class="container two-col">
-      <Photo slug="portrait-alain-stephane-olouou" eager sizes="(min-width: 900px) 45vw, 90vw" class="portrait" />
+      <Photo slug="portrait-geometre-topographe" eager sizes="(min-width: 900px) 45vw, 90vw" class="portrait" />
       <div>
         <h2>Présentation</h2>
         <p>
-          Géomètre Topo a été fondé par {site.owner}, géomètre topographe diplômé de l’École nationale supérieure des
+          Géomètre Topo a été fondé par un géomètre topographe diplômé de l’École nationale supérieure des
           travaux publics (ENSTP) de Yaoundé. Nous intervenons à Yaoundé et dans ses environs pour les levés topographiques,
           la recherche de bornes, les implantations et l’accompagnement technique des projets fonciers.
         </p>

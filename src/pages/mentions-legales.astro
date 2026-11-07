@@ -22,7 +22,7 @@ const pending = 'en cours de mise à jour';
       <table>
         <tbody>
           <tr><th scope="row">Nom commercial</th><td>{site.name}</td></tr>
-          <tr><th scope="row">Responsable</th><td>{site.owner}, {site.ownerTitle}</td></tr>
+          <tr><th scope="row">Responsable</th><td><span data-nosnippet>{site.owner}</span>, {site.ownerTitle}</td></tr>
           <tr><th scope="row">Statut juridique</th><td>{legal.legalStatus || pending}</td></tr>
           <tr><th scope="row">RCCM</th><td>{legal.rccm || pending}</td></tr>
           <tr><th scope="row">NIU</th><td>{legal.niu || pending}</td></tr>
@@ -32,7 +32,7 @@ const pending = 'en cours de mise à jour';
           <tr><th scope="row">E-mail</th><td>{site.email ? <a href={`mailto:${site.email}`}>{site.email}</a> : pending}</td></tr>
         </tbody>
       </table>
-      <p>Responsable de la publication : {site.owner}.</p>
+      <p>Responsable de la publication : <span data-nosnippet>{site.owner}</span>.</p>
 
       <h2>Hébergement</h2>
       <p>{legal.host.name} – {legal.host.address} – <a href={legal.host.url} rel="noopener">{legal.host.url}</a></p>

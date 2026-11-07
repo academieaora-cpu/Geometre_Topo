@@ -20,6 +20,10 @@ const whatsappDigits = digits(env.PUBLIC_WHATSAPP_NUMBER) || digits(phoneRaw);
 export const site = {
   name: 'Géomètre Topo',
   legalName: 'Géomètre Topo',
+  /**
+   * Nom du responsable : à la demande du client, il ne figure que dans les mentions légales et la politique de
+   * confidentialité (obligation légale), marqué data-nosnippet pour que Google ne l'affiche jamais dans ses résultats.
+   */
   owner: 'Olou’ou Alain Stéphane',
   ownerTitle: 'Géomètre Topographe',
   tagline: 'Travaux topographiques et fonciers à Yaoundé et environs',

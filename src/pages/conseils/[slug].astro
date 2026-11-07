@@ -32,7 +32,7 @@ const jsonLd = {
   mainEntityOfPage: url,
   inLanguage: 'fr',
   image: d.image ? `${base}/images/photos/${d.image}-1080.webp` : `${base}/images/og-geometre-topo.jpg`,
-  author: { '@type': 'Person', '@id': `${base}/a-propos#personne`, name: site.owner },
+  author: { '@type': 'Organization', '@id': `${base}/#entreprise`, name: site.name, url: `${base}/` },
   publisher: { '@id': `${base}/#entreprise` },
 };
 ---
@@ -48,7 +48,7 @@ const jsonLd = {
       <Breadcrumbs items={[{ name: 'Conseils', href: '/conseils' }, { name: d.title, href: `/conseils/${article.id}` }]} />
       <h1>{d.title}</h1>
       <p class="small">
-        Par {site.owner}, géomètre topographe ·
+        Par {site.name}, géomètre topographe ·
         <time datetime={d.publishedAt.toISOString()}>{fmt.format(d.publishedAt)}</time>
         {d.updatedAt && <> · mis à jour le <time datetime={d.updatedAt.toISOString()}>{fmt.format(d.updatedAt)}</time></>}
       </p>
