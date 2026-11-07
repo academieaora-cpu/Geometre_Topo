@@ -1,0 +1,78 @@
+---
+/**
+ * Bandeau défilant « Suivez-nous sur Facebook ».
+ * Placé après le contenu (jamais en haut de page ni sur les pages de devis et de contact) pour ne pas
+ * détourner un visiteur prêt à appeler. S'ouvre dans un nouvel onglet : le site reste ouvert.
+ * Défilement en CSS uniquement (compatible CSP), arrêté au survol et pour les visiteurs qui limitent les animations.
+ */
+import Icon from './Icon.astro';
+import { socialProfiles } from '../config/site.ts';
+
+interface Props {
+  /** Emplacement, pour le comptage anonyme des clics. */
+  location: string;
+}
+const { location } = Astro.props;
+const facebook = socialProfiles.find((s) => s.icon === 'facebook');
+const messages = [
+  'Suivez-nous sur Facebook',
+  'Nos interventions en photos et en vidéo',
+  'Géomètre topographe à Yaoundé',
+  'Rejoignez notre page',
+];
+---
+{facebook && (
+  <a
+    class="fb-band"
+    href={facebook.url}
+    target="_blank"
+    rel="noopener me"
+    data-track="click_social"
+    data-track-location={location}
+    aria-label="Suivre Géomètre Topo sur Facebook (s’ouvre dans un nouvel onglet)"
+  >
+    <span class="fb-badge"><Icon name="facebook" size={20} /> Facebook</span>
+    <span class="fb-viewport" aria-hidden="true">
+      <span class="fb-track">
+        {[0, 1].map(() => (
+          <span class="fb-group">
+            {messages.map((m) => <span class="fb-item">{m}</span>)}
+          </span>
+        ))}
+      </span>
+    </span>
+    <span class="fb-cta">Suivre <Icon name="arrow" size={18} /></span>
+  </a>
+)}
+
+<style>
+  .fb-band {
+    display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 8px 10px 8px 8px;
+    background: var(--navy-900); color: var(--white); border-radius: 14px; text-decoration: none; overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+  .fb-band:hover, .fb-band:focus-visible { text-decoration: none; background: var(--navy-800); }
+  .fb-badge {
+    display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 8px 12px; border-radius: 10px;
+    background: #1877f2; font-weight: 700; font-size: .95rem;
+  }
+  .fb-viewport { flex: 1; min-width: 0; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .fb-track { display: flex; width: max-content; animation: fb-scroll 32s linear infinite; }
+  .fb-group { display: flex; flex: none; }
+  .fb-item { white-space: nowrap; padding: 0 22px; font-weight: 600; }
+  .fb-item::after { content: '•'; margin-left: 44px; color: var(--green-500); }
+  .fb-cta {
+    display: inline-flex; align-items: center; gap: 4px; flex: none; padding: 8px 14px; border-radius: 10px;
+    background: var(--green-700); font-weight: 700;
+  }
+  .fb-band:hover .fb-track, .fb-band:focus-visible .fb-track { animation-play-state: paused; }
+  @keyframes fb-scroll { to { transform: translateX(-50%); } }
+  @media (max-width: 600px) {
+    .fb-badge { padding: 8px; font-size: 0; gap: 0; }
+    .fb-cta { padding: 8px 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fb-track { animation: none; }
+    .fb-group + .fb-group { display: none; }
+  }
+</style>

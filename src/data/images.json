@@ -125,6 +125,27 @@
       }
     ]
   },
+  "extrait-plan-parcelle-leve-detail": {
+    "width": 1080,
+    "height": 1920,
+    "variants": [
+      {
+        "src": "/images/photos/extrait-plan-parcelle-leve-detail-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/extrait-plan-parcelle-leve-detail-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/extrait-plan-parcelle-leve-detail-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
   "extrait-plan-parcelle": {
     "width": 2400,
     "height": 1642,
@@ -269,6 +290,69 @@
         "src": "/images/photos/jalons-borne-existante-1080.webp",
         "width": 1080,
         "height": 1876
+      }
+    ]
+  },
+  "leve-detail-geometre-gnss": {
+    "width": 2028,
+    "height": 4032,
+    "variants": [
+      {
+        "src": "/images/photos/leve-detail-geometre-gnss-400.webp",
+        "width": 400,
+        "height": 795
+      },
+      {
+        "src": "/images/photos/leve-detail-geometre-gnss-720.webp",
+        "width": 720,
+        "height": 1431
+      },
+      {
+        "src": "/images/photos/leve-detail-geometre-gnss-1080.webp",
+        "width": 1080,
+        "height": 2147
+      }
+    ]
+  },
+  "leve-detail-gnss-angle-rue": {
+    "width": 2268,
+    "height": 4032,
+    "variants": [
+      {
+        "src": "/images/photos/leve-detail-gnss-angle-rue-400.webp",
+        "width": 400,
+        "height": 711
+      },
+      {
+        "src": "/images/photos/leve-detail-gnss-angle-rue-720.webp",
+        "width": 720,
+        "height": 1280
+      },
+      {
+        "src": "/images/photos/leve-detail-gnss-angle-rue-1080.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ]
+  },
+  "leve-detail-gnss-mur-parpaings": {
+    "width": 2180,
+    "height": 4032,
+    "variants": [
+      {
+        "src": "/images/photos/leve-detail-gnss-mur-parpaings-400.webp",
+        "width": 400,
+        "height": 740
+      },
+      {
+        "src": "/images/photos/leve-detail-gnss-mur-parpaings-720.webp",
+        "width": 720,
+        "height": 1332
+      },
+      {
+        "src": "/images/photos/leve-detail-gnss-mur-parpaings-1080.webp",
+        "width": 1080,
+        "height": 1998
       }
     ]
   },

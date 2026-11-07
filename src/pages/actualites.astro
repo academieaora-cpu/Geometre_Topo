@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Photo from '../components/Photo.astro';
+import CtaBand from '../components/CtaBand.astro';
+import FacebookBand from '../components/FacebookBand.astro';
+import { actualitesRecentes, dateLisible } from '../data/actualites.ts';
+import { photo } from '../data/gallery.ts';
+import { getService } from '../data/services.ts';
+---
+<BaseLayout
+  title="Actualités : nos dernières interventions de géomètre à Yaoundé | Géomètre Topo"
+  description="Les dernières interventions de Géomètre Topo à Yaoundé, en photos et en vidéo : levés de détail, relevés GNSS, plans de terrain."
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Actualités', href: '/actualites' }]} />
+      <h1>Actualités : nos interventions à Yaoundé</h1>
+      <p class="lead">
+        Nos dernières missions, en photos et en vidéo. Par respect pour nos clients, aucun nom, aucune adresse précise ni
+        aucune donnée foncière n’est publié.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container news">
+      {actualitesRecentes.map((a) => {
+        const service = a.service ? getService(a.service) : undefined;
+        return (
+          <article class="card news-item" id={a.slug} aria-labelledby={`${a.slug}-title`}>
+            <p class="news-date"><time datetime={a.date}>{dateLisible(a.date)}</time>{service && <span class="tag">{service.name}</span>}</p>
+            <h2 id={`${a.slug}-title`}>{a.title}</h2>
+            <div class="news-body">
+              <div class="news-text">
+                {a.paragraphs.map((p) => <p>{p}</p>)}
+                <div class="btn-row">
+                  <a class="btn btn--primary" href="/devis" data-track="cta_devis" data-track-location="actualite">Demander un devis</a>
+                  {service && <a class="btn btn--outline" href={`/services/${service.slug}`}>En savoir plus : {service.name.toLowerCase()}</a>}
+                </div>
+              </div>
+              {a.video && (
+                <div class="news-video">
+                  <video data-autoplay-video muted loop playsinline preload="none" poster={a.video.poster} width="540" height="960" aria-label={a.video.label}>
+                    <source src={a.video.src} type="video/mp4" />
+                  </video>
+                </div>
+              )}
+            </div>
+            <ul class="news-photos">
+              {a.photos.map((slug) => (
+                <li>
+                  <a href={`/images/photos/${slug}-1080.webp`} class="zoom" aria-label={`Agrandir : ${photo(slug).caption}`}>
+                    <Photo slug={slug} sizes="(min-width: 900px) 20vw, 45vw" ratio="3 / 4" />
+                  </a>
+                  <p class="caption">{photo(slug).caption}</p>
+                </li>
+              ))}
+            </ul>
+          </article>
+        );
+      })}
+
+      <FacebookBand location="actualites" />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <CtaBand location="actualites" title="Un projet de construction ou d’achat de terrain ?" text="Décrivez votre terrain et votre besoin : nous vous proposons une intervention adaptée." />
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Vidéos : chargées et lues seulement à l'écran, jamais si le visiteur limite les animations ou économise ses données.
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const videos = document.querySelectorAll<HTMLVideoElement>('[data-autoplay-video]');
+  if (videos.length && !reduce && !conn?.saveData && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const { target, isIntersecting } of entries) {
+        const v = target as HTMLVideoElement;
+        if (isIntersecting) {
+          v.preload = 'auto';
+          v.play().catch(() => { /* lecture automatique refusée : l'affiche reste visible */ });
+        } else {
+          v.pause();
+        }
+      }
+    }, { threshold: 0.3 });
+    videos.forEach((v) => io.observe(v));
+  }
+</script>
+
+<style>
+  .news { display: grid; gap: 32px; }
+  .news-item { padding: clamp(18px, 3vw, 32px); }
+  .news-date { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 6px; color: var(--muted); font-weight: 600; }
+  .news-item h2 { margin-top: 0; }
+  .news-body { display: grid; gap: 24px; align-items: start; }
+  @media (min-width: 900px) { .news-body { grid-template-columns: 1fr 300px; } }
+  .news-video { border-radius: 18px; overflow: hidden; aspect-ratio: 9 / 16; background: var(--surface); max-width: 300px; width: 100%; justify-self: center; box-shadow: var(--shadow-lg); }
+  .news-video video { width: 100%; height: 100%; object-fit: cover; }
+  .news-photos { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); }
+  .news-photos li { margin: 0; }
+  .news-photos :global(img) { aspect-ratio: 3 / 4; }
+  .zoom { display: block; }
+  .caption { font-size: .88rem; color: var(--muted); margin: 6px 0 0; }
+</style>

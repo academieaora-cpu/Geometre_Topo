@@ -29,6 +29,15 @@ situations, les étapes, les documents à préparer, les limites, la FAQ et le m
 3. Ajouter l’entrée dans `src/data/gallery.ts` : `slug`, `alt` (description précise de l’image), `caption`,
    `category`, `services` liés.
 
+## Ajouter une actualité
+
+1. Préparer les photos comme ci-dessus. Plans et écrans : flouter noms, numéros de titre foncier et de CCP,
+   coordonnées, cachets et signatures. Vidéos : couper les passages sensibles et retirer le son (musique soumise
+   aux droits d’auteur, voix) : `ffmpeg -i source.mp4 -an -vf scale=540:960 -crf 30 -movflags +faststart sortie.mp4`.
+2. Ajouter l’entrée **en tête** de `src/data/actualites.ts` : date, titre, résumé, paragraphes, photos, vidéo éventuelle.
+   La plus récente s’affiche automatiquement sur l’accueil (section « Sur le terrain »).
+3. `npm test` vérifie que chaque photo existe et que la couverture ne montre pas le visage du géomètre.
+
 ## Ajouter une réalisation (portfolio)
 
 `src/data/projects.ts` : un exemple commenté indique les champs. N’ajouter que des projets réels, anonymisés, avec
@@ -111,9 +120,10 @@ Elles ne sont pas exposées aux visiteurs ; surveiller les nouvelles versions de
 
 ## Photos et visage du géomètre
 
-Le visage d’Olou’ou Alain Stéphane n’apparaît que **deux fois** sur le site : la présentation « Votre interlocuteur »
-de l’accueil et la page « À propos ». Toute photo où il est reconnaissable porte `showsFace: true` dans
-`src/data/gallery.ts` : elle est alors exclue de la galerie, des pages services et des diaporamas.
+Le visage d’Olou’ou Alain Stéphane n’apparaît qu’à **trois** endroits : la présentation « Votre interlocuteur » de
+l’accueil, la page « À propos » et une photo de terrain dans les actualités, sans son nom. Toute photo où il est
+reconnaissable porte `showsFace: true` dans `src/data/gallery.ts` : elle est alors exclue de la galerie, des pages
+services et des diaporamas, et ne sert jamais de couverture d’actualité (un test le vérifie).
 Avant d’ajouter une photo, retirer les métadonnées (position GPS) : `npm run images` les supprime des versions
 publiées, mais le fichier déposé dans `photos/originals/` doit lui aussi en être débarrassé.
 

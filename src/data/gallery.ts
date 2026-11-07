@@ -27,8 +27,9 @@ export interface GalleryPhoto {
   /** Services que la photo peut illustrer (slugs de src/data/services.ts). */
   services: string[];
   /**
-   * Le géomètre est reconnaissable sur la photo. Son visage n'apparaît que deux fois sur le site
-   * (présentation de l'accueil et page « À propos ») : ces photos ne sont pas réutilisées ailleurs.
+   * Le géomètre est reconnaissable sur la photo. Son visage n'apparaît qu'à trois endroits, et jamais avec son nom
+   * hors de la page « À propos » : présentation de l'accueil, page « À propos » et une photo de terrain dans les
+   * actualités. Ces photos ne sont pas réutilisées automatiquement ailleurs (réalisations, services, défilé).
    */
   showsFace?: boolean;
 }
@@ -203,6 +204,35 @@ export const gallery: GalleryPhoto[] = [
     caption: 'Relevé GNSS sur une parcelle en quartier résidentiel, à Yaoundé.',
     category: 'mesures',
     services: ['leve-topographique', 'plan-topographique', 'implantation-batiment'],
+  },
+  {
+    slug: 'leve-detail-gnss-angle-rue',
+    alt: 'Récepteur GNSS sur sa canne et son bipied rouge et blanc, à l’angle d’une rue en terre rouge, au bord d’un caniveau',
+    caption: 'Levé de détail : point relevé à l’angle de la rue, au bord du caniveau.',
+    category: 'mesures',
+    services: ['leve-topographique', 'plan-topographique', 'topographie-btp'],
+  },
+  {
+    slug: 'leve-detail-gnss-mur-parpaings',
+    alt: 'Récepteur GNSS sur canne et bipied rouge et blanc, planté dans la terre au pied d’un mur de clôture en parpaings',
+    caption: 'Levé de détail : relevé le long d’une clôture en parpaings.',
+    category: 'mesures',
+    services: ['leve-topographique', 'plan-topographique', 'implantation-batiment'],
+  },
+  {
+    slug: 'leve-detail-geometre-gnss',
+    alt: 'Géomètre en gilet de sécurité jaune, contrôleur de terrain en main, à côté d’un récepteur GNSS sur bipied, dans une rue de Yaoundé',
+    caption: 'Relevé au récepteur GNSS pendant un levé de détail.',
+    category: 'mesures',
+    services: ['leve-topographique', 'plan-topographique'],
+    showsFace: true,
+  },
+  {
+    slug: 'extrait-plan-parcelle-leve-detail',
+    alt: 'Extrait d’un ancien plan de bornage montrant une parcelle, ses bornes, une servitude de passage et sa superficie, les informations du propriétaire étant floutées',
+    caption: 'Extrait d’un ancien plan de bornage (informations du propriétaire masquées).',
+    category: 'bureau',
+    services: ['plan-topographique', 'dossier-technique-immatriculation'],
   },
   {
     slug: 'station-gnss-angle-parcelle',
