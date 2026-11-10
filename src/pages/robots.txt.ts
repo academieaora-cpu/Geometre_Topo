@@ -1,22 +1,33 @@
 import type { APIRoute } from 'astro';
 
-/** Pages privées ou techniques, fermées à tous les robots. */
-export const PRIVATE_PATHS = ['/admin', '/api/', '/demande-envoyee', '/demande-non-envoyee', '/desabonnement'];
-
 /**
- * Robots de recherche nommés explicitement (autorisés comme tous les autres).
- * Un robot qui trouve un groupe à son nom ne lit que ce groupe : les pages fermées y sont donc répétées.
- * - OAI-SearchBot : robot de la recherche de ChatGPT.
+ * robots.txt, écrit en clair pour être lisible directement dans le code.
+ * Un robot qui trouve un groupe à son nom ne lit que celui-ci : les pages privées y sont donc répétées.
  */
-export const NAMED_BOTS = ['OAI-SearchBot'];
-
-function group(agent: string): string[] {
-  return [`User-agent: ${agent}`, 'Allow: /', ...PRIVATE_PATHS.map((p) => `Disallow: ${p}`), ''];
-}
-
 export function robotsTxt(site: URL): string {
   const sitemap = new URL('/sitemap-index.xml', site).href;
-  return [...NAMED_BOTS.flatMap(group), ...group('*'), `Sitemap: ${sitemap}`, ''].join('\n');
+  return [
+    // Robot de la recherche de ChatGPT : site public autorisé, pages privées fermées.
+    'User-agent: OAI-SearchBot',
+    'Allow: /',
+    'Disallow: /admin',
+    'Disallow: /api/',
+    'Disallow: /demande-envoyee',
+    'Disallow: /demande-non-envoyee',
+    'Disallow: /desabonnement',
+    '',
+    // Tous les autres robots (Google, Bing…).
+    'User-agent: *',
+    'Allow: /',
+    'Disallow: /admin',
+    'Disallow: /api/',
+    'Disallow: /demande-envoyee',
+    'Disallow: /demande-non-envoyee',
+    'Disallow: /desabonnement',
+    '',
+    `Sitemap: ${sitemap}`,
+    '',
+  ].join('\n');
 }
 
 export const GET: APIRoute = ({ site }) =>

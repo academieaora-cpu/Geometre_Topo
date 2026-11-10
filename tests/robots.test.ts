@@ -1,12 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { NAMED_BOTS, PRIVATE_PATHS, robotsTxt } from '../src/pages/robots.txt.ts';
+import { robotsTxt } from '../src/pages/robots.txt.ts';
 
+const PRIVATE_PATHS = ['/admin', '/api/', '/demande-envoyee', '/demande-non-envoyee', '/desabonnement'];
 const txt = robotsTxt(new URL('https://geometre-topo.vercel.app'));
 const groups = txt.split('\n\n').map((g) => g.split('\n'));
 
-test('chaque robot nommé et la règle générale ouvrent le site et ferment les pages privées', () => {
-  for (const agent of [...NAMED_BOTS, '*']) {
+test('le robot de ChatGPT et la règle générale ouvrent le site et ferment les pages privées', () => {
+  for (const agent of ['OAI-SearchBot', '*']) {
     const g = groups.find((lines) => lines[0] === `User-agent: ${agent}`);
     assert.ok(g, `groupe absent : ${agent}`);
     assert.ok(g.includes('Allow: /'), agent);
@@ -14,7 +15,6 @@ test('chaque robot nommé et la règle générale ouvrent le site et ferment les
   }
 });
 
-test('le robot de ChatGPT est nommé et le sitemap est annoncé', () => {
-  assert.ok(txt.includes('User-agent: OAI-SearchBot'));
+test('le sitemap est annoncé', () => {
   assert.ok(txt.includes('Sitemap: https://geometre-topo.vercel.app/sitemap-index.xml'));
 });
